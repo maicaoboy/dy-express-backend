@@ -18,12 +18,12 @@ spring:
     active: @pom.profile.name@
   cloud:
     nacos:
-      username: maicaoboy
-      password: 12345678
+      username: dy
+      password: lee20206698
       config:
         group: dy-express
-        namespace: 84899024-57e6-404a-be47-4b8e82cec9dc
-        server-addr: 127.0.0.1:8848
+        namespace: e07fe0dc-50cd-4e96-8bad-d04c911a3366
+        server-addr: 121.5.25.174:8848
         file-extension: yml
         shared-dataids: common.yml,redis.yml,mysql.yml
         refreshable-dataids: common.yml
@@ -31,8 +31,8 @@ spring:
       discovery:
 #        group: ${dy.nacos.group}
         group: dy-express
-        namespace: 84899024-57e6-404a-be47-4b8e82cec9dc
-        server-addr: 127.0.0.1:8848
+        namespace: e07fe0dc-50cd-4e96-8bad-d04c911a3366
+        server-addr: 121.5.25.174:8848
         metadata: # 元数据，用于权限服务实时获取各个服务的所有接口
           management.context-path: ${server.servlet.context-path:}${spring.mvc.servlet.path:}${management.endpoints.web.base-path:}
   aop:

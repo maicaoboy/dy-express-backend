@@ -25,12 +25,12 @@ import javax.servlet.http.HttpServletResponse;
 @Api(value = "UserAuthController", tags = "登录")
 @Slf4j
 public class LoginController extends BaseController {
-    @Autowired
-    private ValidateCodeService validateCodeService;
-
-    @ApiOperation(value = "验证码", notes = "验证码")
-    @GetMapping(value = "captcha", produces = "image/png")
-    public void captcha(@RequestParam(value = "key") String key, HttpServletResponse response) {
-        this.validateCodeService.create(key, response);
-    }
+//    @Autowired
+//    private ValidateCodeService validateCodeService;
+//
+//    @ApiOperation(value = "验证码", notes = "验证码")
+//    @GetMapping(value = "captcha", produces = "image/png")
+//    public void captcha(@RequestParam(value = "key") String key, HttpServletResponse response) {
+//        this.validateCodeService.create(key, response);
+//    }
 }
