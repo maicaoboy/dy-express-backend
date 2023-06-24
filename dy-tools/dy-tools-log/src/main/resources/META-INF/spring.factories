@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    com.neu.dy.log.LogAutoConfiguration
+org.springframework.context.ApplicationContextInitializer=\
+    com.neu.dy.log.init.ApplicationLoggerInitializer
