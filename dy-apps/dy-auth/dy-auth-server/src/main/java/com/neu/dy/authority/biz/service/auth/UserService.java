@@ -1,14 +1,73 @@
 package com.neu.dy.authority.biz.service.auth;
-
+import java.util.List;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.dy.authority.dto.auth.UserUpdatePasswordDTO;
 import com.neu.dy.authority.entity.auth.User;
+import com.neu.dy.database.mybatis.conditions.query.LbqWrapper;
+import org.springframework.stereotype.Service;
 
 /**
- * @Classname UserService
- * @Description 业务接口
- * @Version 1.0.0
- * @Date 2023/6/25 11:05
- * @Created by maicaoboy
+ * 业务接口
+ * 账号
  */
+@Service
 public interface UserService extends IService<User> {
+    /**
+     * 根据角色id 和 账号或名称 查询角色关联的用户
+     * 注意，该接口只返回 id，账号，姓名，手机，性别
+     * @param roleId  角色id
+     * @param keyword 账号或名称
+     */
+    List<User> findUserByRoleId(Long roleId, String keyword);
+
+    /**
+     * 修改输错密码的次数
+     */
+    void updatePasswordErrorNumById(Long id);
+
+    /**
+     * 根据账号查询用户
+     */
+    User getByAccount(String account);
+
+    /**
+     * 修改用户最后一次登录 时间
+     */
+    void updateLoginTime(String account);
+
+    /**
+     * 保存
+     */
+    User saveUser(User user);
+
+    /**
+     * 重置密码
+     */
+    boolean reset(List<Long> ids);
+
+    /**
+     * 修改
+     */
+    User updateUser(User user);
+
+    /**
+     * 删除
+     */
+    boolean remove(List<Long> ids);
+
+    /**
+     * 分页
+     */
+    IPage<User> findPage(IPage<User> page, LbqWrapper<User> wrapper);
+
+    /**
+     * 修改密码
+     */
+    Boolean updatePassword(UserUpdatePasswordDTO data);
+
+    /**
+     * 重置密码错误次数
+     */
+    int resetPassErrorNum(Long id);
 }

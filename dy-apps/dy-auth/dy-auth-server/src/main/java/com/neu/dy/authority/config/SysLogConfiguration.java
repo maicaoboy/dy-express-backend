@@ -1,6 +1,6 @@
 package com.neu.dy.authority.config;
 
-import com.neu.dy.authority.biz.service.commom.OptLogService;
+import com.neu.dy.authority.biz.service.common.OptLogService;
 import com.neu.dy.log.entity.OptLogDTO;
 import com.neu.dy.log.event.SysLogListener;
 import org.springframework.context.annotation.Bean;

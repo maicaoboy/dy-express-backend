@@ -1,15 +1,10 @@
-package com.neu.dy.authority.biz.service.commom;
-
+package com.neu.dy.authority.biz.service.common;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.dy.authority.entity.common.OptLog;
 import com.neu.dy.log.entity.OptLogDTO;
-
 /**
- * @Classname OptLogService
- * @Description 操作日志
- * @Version 1.0.0
- * @Date 2023/6/25 14:26
- * @Created by maicaoboy
+ * 业务接口
+ * 操作日志
  */
 public interface OptLogService extends IService<OptLog> {
     /**

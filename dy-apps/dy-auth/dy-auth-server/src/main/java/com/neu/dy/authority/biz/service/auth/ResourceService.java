@@ -1,21 +1,25 @@
 package com.neu.dy.authority.biz.service.auth;
-
+import java.util.List;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.dy.authority.dto.auth.ResourceQueryDTO;
 import com.neu.dy.authority.entity.auth.Resource;
-
-import java.util.List;
-
 /**
- * @Classname ResourceService
- * @Description TODO
- * @Version 1.0.0
- * @Date 2023/6/25 11:19
- * @Created by maicaoboy
+ * 业务接口
+ * 资源
  */
 public interface ResourceService extends IService<Resource> {
     /**
-     * 查询 用户拥有的资源权限
+     * 查询 拥有的资源
      */
     List<Resource> findVisibleResource(ResourceQueryDTO resource);
+
+    /**
+     * 根据菜单id删除资源
+     */
+    void removeByMenuId(List<Long> menuIds);
+
+    /**
+     * 根据资源id 查询菜单id
+     */
+    List<Long> findMenuIdByResourceId(List<Long> resourceIdList);
 }
