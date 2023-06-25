@@ -33,7 +33,7 @@ import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("pd_core_station")
+@TableName("dy_core_station")
 @ApiModel(value = "Station", description = "岗位")
 public class Station extends Entity<Long> {
     private static final long serialVersionUID = 1L;
@@ -48,7 +48,7 @@ public class Station extends Entity<Long> {
 
     /**
      * 组织ID
-     * #pd_core_org
+     * #dy_core_org
      */
     @ApiModelProperty(value = "组织ID")
     @TableField("org_id")

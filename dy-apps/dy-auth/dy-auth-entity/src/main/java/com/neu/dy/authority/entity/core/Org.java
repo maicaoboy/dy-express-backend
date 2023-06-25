@@ -33,7 +33,7 @@ import static com.baomidou.mybatisplus.annotation.SqlCondition.LIKE;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("pd_core_org")
+@TableName("dy_core_org")
 @ApiModel(value = "Org", description = "组织")
 public class Org extends Entity<Long> {
 

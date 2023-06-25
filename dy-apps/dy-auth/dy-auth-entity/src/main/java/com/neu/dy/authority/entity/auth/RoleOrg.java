@@ -29,7 +29,7 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("pd_auth_role_org")
+@TableName("dy_auth_role_org")
 @ApiModel(value = "RoleOrg", description = "角色组织关系")
 public class RoleOrg extends SuperEntity<Long> {
 

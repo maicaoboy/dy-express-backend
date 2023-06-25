@@ -32,7 +32,7 @@ import lombok.experimental.Accessors;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("pd_auth_role_authority")
+@TableName("dy_auth_role_authority")
 @ApiModel(value = "RoleAuthority", description = "角色的资源")
 public class RoleAuthority extends SuperEntity<Long> {
 
