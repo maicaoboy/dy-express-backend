@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.neu.dy.base.entity.Entity;
-//import com.itheima.pinda.database.mybatis.auth.DataScopeType;
+//import com.neu.dy.database.mybatis.auth.DataScopeType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

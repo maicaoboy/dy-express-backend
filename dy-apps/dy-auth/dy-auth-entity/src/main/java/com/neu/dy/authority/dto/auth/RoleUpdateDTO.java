@@ -5,7 +5,7 @@ import java.util.List;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import com.neu.dy.base.entity.SuperEntity;
-//import com.itheima.pinda.database.mybatis.auth.DataScopeType;
+//import com.neu.dy.database.mybatis.auth.DataScopeType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;

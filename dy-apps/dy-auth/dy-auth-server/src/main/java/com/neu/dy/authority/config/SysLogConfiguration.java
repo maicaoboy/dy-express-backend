@@ -22,7 +22,7 @@ public class SysLogConfiguration {
     //日志记录监听器
     @Bean
     public SysLogListener sysLogListener(OptLogService optLogService) {
-        Consumer<OptLogDTO> consumer = (optLog) -> optLogService.save(optLog);
+        Consumer<OptLogDTO> consumer = optLogService::save;
         return new SysLogListener(consumer);
     }
 }

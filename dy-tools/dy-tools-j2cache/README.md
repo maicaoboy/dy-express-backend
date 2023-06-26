@@ -60,7 +60,7 @@ j2cache.l2-cache-open=false（默认开启）
 ```
 2. 修改nacos中 redis.yml
 ```
-pinda:
+neu:
   redis:
     ip: 127.0.0.1
     port: 16379
@@ -92,7 +92,7 @@ caffeine:
 
 ## 场景2： 正式环境 开启2级缓存，1级缓存用： caffeine 2级缓存用： SpringRedisProvider  广播用：SpringRedisPubSubPolicy
 ```
-pinda:
+neu:
   redis:
     ip: 127.0.0.1
     port: 16379
@@ -127,8 +127,8 @@ lettuce:
   storage: generic
   channel: j2cache
   scheme: redis
-  hosts: ${pinda.redis.ip}:${pinda.redis.port}
-  password: ${pinda.redis.password}
+  hosts: ${neu.redis.ip}:${neu.redis.port}
+  password: ${neu.redis.password}
   database: 0
   sentinelMasterId:
   maxTotal: 100
@@ -140,7 +140,7 @@ lettuce:
 
 ## 场景3： 正式环境 开启2级缓存，1级缓存用： caffeine 2级缓存用： lettuce  广播用：lettuce
 ```
-pinda:
+neu:
   redis:
     ip: 127.0.0.1
     port: 16379
@@ -175,8 +175,8 @@ lettuce:
   storage: generic
   channel: j2cache
   scheme: redis
-  hosts: ${pinda.redis.ip}:${pinda.redis.port}
-  password: ${pinda.redis.password}
+  hosts: ${neu.redis.ip}:${neu.redis.port}
+  password: ${neu.redis.password}
   database: 0
   sentinelMasterId:
   maxTotal: 100

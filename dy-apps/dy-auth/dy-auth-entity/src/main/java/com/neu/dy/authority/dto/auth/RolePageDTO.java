@@ -2,7 +2,7 @@ package com.neu.dy.authority.dto.auth;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-//import com.itheima.pinda.database.mybatis.auth.DataScopeType;
+//import com.neu.dy.database.mybatis.auth.DataScopeType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
