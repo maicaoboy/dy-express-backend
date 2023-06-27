@@ -40,7 +40,7 @@ public class StationSaveDTO implements Serializable {
     private String name;
     /**
      * 组织ID
-     * #pd_core_org
+     * #dy_core_org
      */
     @ApiModelProperty(value = "组织ID")
     private Long orgId;

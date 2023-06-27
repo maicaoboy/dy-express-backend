@@ -38,7 +38,7 @@ public class UserRoleSaveDTO implements Serializable {
 
     /**
      * 角色ID
-     * #pd_auth_role
+     * #dy_auth_role
      */
     @ApiModelProperty(value = "角色ID")
     @NotNull(message = "角色ID不能为空")

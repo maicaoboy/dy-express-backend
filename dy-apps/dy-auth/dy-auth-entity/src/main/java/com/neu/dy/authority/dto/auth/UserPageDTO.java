@@ -37,13 +37,13 @@ public class UserPageDTO {
     private String name;
     /**
      * 组织ID
-     * #pd_core_org
+     * #dy_core_org
      */
     @ApiModelProperty(value = "组织ID")
     private Long orgId;
     /**
      * 岗位ID
-     * #pd_core_station
+     * #dy_core_station
      */
     @ApiModelProperty(value = "岗位ID")
     private Long stationId;

@@ -52,13 +52,13 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
             }
         });
 
-        //删除主表pd_auth_role数据
+        //删除主表dy_auth_role数据
         super.removeByIds(ids);
-        //删除pd_auth_role_org关系表数据
+        //删除dy_auth_role_org关系表数据
         roleOrgService.remove(Wraps.<RoleOrg>lbQ().in(RoleOrg::getRoleId, ids));
-        //删除pd_auth_role_authority关系表数据
+        //删除dy_auth_role_authority关系表数据
         roleAuthorityService.remove(Wraps.<RoleAuthority>lbQ().in(RoleAuthority::getRoleId, ids));
-        //删除pd_auth_user_role关系表数据
+        //删除dy_auth_user_role关系表数据
         userRoleService.remove(Wraps.<UserRole>lbQ().in(UserRole::getRoleId,ids));
 
         return true;

@@ -34,13 +34,13 @@ public class SysUser {
 
     /**
      * 组织ID
-     * #pd_core_org
+     * #dy_core_org
      */
     private Long orgId;
 
     /**
      * 岗位ID
-     * #pd_core_station
+     * #dy_core_station
      */
     private Long stationId;
 

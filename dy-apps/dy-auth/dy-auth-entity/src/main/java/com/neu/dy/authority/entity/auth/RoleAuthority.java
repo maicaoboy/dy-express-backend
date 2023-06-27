@@ -40,8 +40,8 @@ public class RoleAuthority extends SuperEntity<Long> {
 
     /**
      * 资源id
-     * #pd_auth_resource
-     * #pd_auth_menu
+     * #dy_auth_resource
+     * #dy_auth_menu
      */
     @ApiModelProperty(value = "资源id")
     @NotNull(message = "资源id不能为空")
@@ -59,7 +59,7 @@ public class RoleAuthority extends SuperEntity<Long> {
 
     /**
      * 角色id
-     * #pd_auth_role
+     * #dy_auth_role
      */
     @ApiModelProperty(value = "角色id")
     @NotNull(message = "角色id不能为空")

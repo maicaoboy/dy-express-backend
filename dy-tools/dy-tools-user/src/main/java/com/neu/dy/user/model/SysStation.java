@@ -28,7 +28,7 @@ public class SysStation {
 
     /**
      * 组织ID
-     * #pd_core_org
+     * #dy_core_org
      */
     private Long orgId;
 

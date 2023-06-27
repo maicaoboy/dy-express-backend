@@ -1,0 +1,43 @@
+server:
+  port: 8185
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  application:
+    name: @project.artifactId@
+  profiles:
+    active: @pom.profile.name@
+  cloud:
+    nacos:
+      username: dy
+      password: lee20206698
+      config:
+        group: dy-express
+        namespace: e07fe0dc-50cd-4e96-8bad-d04c911a3366
+        server-addr: 121.5.25.174:8848
+        file-extension: yml
+        shared-dataids: common.yml,redis.yml
+        refreshable-dataids: common.yml
+        enabled: true
+      discovery:
+        group: dy-express
+        namespace: e07fe0dc-50cd-4e96-8bad-d04c911a3366
+        server-addr: 121.5.25.174:8848
+  aop:
+    proxy-target-class: true
+    auto: true
+
+# 只能配置在bootstrap.yml ，否则会生成 log.path_IS_UNDEFINED 文件夹
+# window会自动在 代码所在盘 根目录下自动创建文件夹，  如： D:/data/projects/logs
+logging:
+  file:
+    path: /data/projects/logs
+    name: ${logging.file.path}/${spring.application.name}/root.log
+
+# 用于/actuator/info
+info:
+  name: '@project.name@'
+  description: '@project.description@'
+  version: '@project.version@'
+  spring-boot-version: '@spring.boot.version@'
+  spring-cloud-version: '@spring.cloud.version@'

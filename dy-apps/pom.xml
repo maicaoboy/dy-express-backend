@@ -18,7 +18,7 @@
     <modules>
         <module>dy-auth</module>
         <module>dy-gateway</module>
-        <!--<module>dy-file</module>-->
+        <module>dy-base</module>
     </modules>
     <dependencyManagement>
         <dependencies>

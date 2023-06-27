@@ -61,7 +61,7 @@ public class User extends Entity<Long> {
 
     /**
      * 组织ID
-     * #pd_core_org
+     * #dy_core_org
      */
     @ApiModelProperty(value = "组织ID")
     @TableField("org_id")
@@ -69,7 +69,7 @@ public class User extends Entity<Long> {
 
     /**
      * 岗位ID
-     * #pd_core_station
+     * #dy_core_station
      */
     @ApiModelProperty(value = "岗位ID")
     @TableField("station_id")

@@ -37,7 +37,7 @@ public class RoleOrg extends SuperEntity<Long> {
 
     /**
      * 角色ID
-     * #pd_auth_role
+     * #dy_auth_role
      */
     @ApiModelProperty(value = "角色ID")
     @TableField("role_id")
@@ -45,7 +45,7 @@ public class RoleOrg extends SuperEntity<Long> {
 
     /**
      * 部门ID
-     * #pd_core_org
+     * #dy_core_org
      */
     @ApiModelProperty(value = "部门ID")
     @TableField("org_id")
