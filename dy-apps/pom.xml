@@ -18,6 +18,7 @@
     <modules>
         <module>dy-auth</module>
         <module>dy-gateway</module>
+        <module>dy-gatewaypro</module>
         <!--<module>dy-file</module>-->
     </modules>
     <dependencyManagement>

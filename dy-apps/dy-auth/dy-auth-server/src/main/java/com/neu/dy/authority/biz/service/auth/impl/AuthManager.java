@@ -11,10 +11,12 @@ import com.neu.dy.authority.dto.auth.UserDTO;
 import com.neu.dy.authority.entity.auth.Resource;
 import com.neu.dy.authority.entity.auth.User;
 import com.neu.dy.base.R;
+import com.neu.dy.common.constant.CacheKey;
 import com.neu.dy.dozer.DozerUtils;
 import com.neu.dy.exception.code.ExceptionCode;
 import com.neu.dy.authority.biz.service.auth.UserService;
 import lombok.extern.slf4j.Slf4j;
+import net.oschina.j2cache.CacheChannel;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,8 @@ public class AuthManager {
     private ResourceService resourceService;
     @Autowired
     private DozerUtils dozer;
+    @Autowired
+    private CacheChannel cacheChannel;
     /**
      * 账号登录
      * @param account
@@ -60,14 +64,19 @@ public class AuthManager {
         // 生成jwt token
         Token token = this.generateUserToken(user);
 
-        List<Resource> resourceList =this.resourceService.
-                findVisibleResource(ResourceQueryDTO.builder().
-                        userId(user.getId()).build());
+        List<Resource> userResource =this.resourceService.findVisibleResource(ResourceQueryDTO.builder().userId(user.getId()).build());
+
         List<String> permissionsList = null;
-        if(resourceList != null && resourceList.size() > 0){
-            permissionsList = resourceList.stream().
-                    map(Resource::getCode).
-                    collect(Collectors.toList());
+        if(userResource != null && userResource.size() > 0){
+
+            //前端使用的
+            permissionsList = userResource.stream().map((Resource::getCode)).collect(Collectors.toList());
+            //后端网关调用,进行缓存
+            List<String> visibleResource = userResource.stream().map((resource) -> {
+                return resource.getMethod() + resource.getUrl();
+            }).collect(Collectors.toList());
+            //缓存权限数据
+            cacheChannel.set(CacheKey.USER_RESOURCE,user.getId().toString(),visibleResource);
         }
         //封装数据
         LoginDTO loginDTO = LoginDTO.builder()
