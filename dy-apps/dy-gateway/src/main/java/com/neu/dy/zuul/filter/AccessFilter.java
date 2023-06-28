@@ -64,8 +64,11 @@ public class AccessFilter extends BaseFilter {
         String requestURI = requestContext.getRequest().getRequestURI();
         requestURI = StrUtil.subSuf(requestURI, zuulPrefix.length());
         requestURI = StrUtil.subSuf(requestURI, requestURI.indexOf("/", 1));
+
+
         String method = requestContext.getRequest().getMethod();
         String permission = method + requestURI;
+
 
         //从缓存中获取所有需要进行鉴权的资源
         CacheObject resourceNeed2AuthObject =
@@ -75,6 +78,7 @@ public class AccessFilter extends BaseFilter {
                 (List<String>) resourceNeed2AuthObject.getValue();
         if(resourceNeed2Auth == null){
             resourceNeed2Auth = resourceApi.list().getData();
+            System.out.println(resourceNeed2Auth);
             if(resourceNeed2Auth != null){
                 cacheChannel.set(CacheKey.RESOURCE,
                         CacheKey.RESOURCE_NEED_TO_CHECK,

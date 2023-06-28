@@ -5,6 +5,7 @@ import com.neu.dy.authority.entity.auth.Resource;
 import com.neu.dy.base.R;
 import com.neu.dy.gatewaypro.api.fallback.ResourceApiFallback;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;

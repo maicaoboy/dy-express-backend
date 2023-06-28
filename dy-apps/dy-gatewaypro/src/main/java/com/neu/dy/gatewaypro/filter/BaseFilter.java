@@ -20,11 +20,12 @@ public abstract class BaseFilter {
     //判断当前请求的uri是否需要忽略
     protected boolean isIgnoreToken(ServerWebExchange exchange){
         ServerHttpRequest request = exchange.getRequest();
-        String uri = request.getURI().toString();
+        String uri = request.getPath().toString();
+//        String uri = request.getURI().toString();
 
-        uri = StrUtil.subSuf(uri,prefix.length());
-        uri = StrUtil.subSuf(uri,uri.indexOf("/",1));
-
+//        uri = StrUtil.subSuf(uri, prefix.length());
+//        uri = StrUtil.subSuf(uri, uri.indexOf("/", 1));
+        System.out.println(uri);
         boolean ignoreToken = IgnoreTokenConfig.isIgnoreToken(uri);
         return ignoreToken;
     }

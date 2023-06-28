@@ -27,10 +27,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-@Order(1)
+@Order(100)
 public class AccessFilter extends BaseFilter implements GlobalFilter {
 
     @Qualifier("com.neu.dy.gatewaypro.api.ResourceApi")
+    @Autowired
     private ResourceApi resourceApi;
 
     @Autowired
@@ -45,9 +46,13 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
         //2.获取当前请求的请求方式和uri，拼接成GET/user/page(即method+uri)形式，称为权限标识符
         ServerHttpRequest request = exchange.getRequest();
         String method = String.valueOf(request.getMethod());
-        String uri = String.valueOf(exchange.getRequest().getURI());
-        uri = StrUtil.subSuf(uri,prefix.length());
-        uri = StrUtil.subSuf(uri,uri.indexOf("/",1));
+        String uri = String.valueOf(exchange.getRequest().getPath());
+        System.out.println(uri);
+
+//        uri = StrUtil.subSuf(uri, prefix.length());
+//        uri = StrUtil.subSuf(uri, uri.indexOf("/", 1));
+
+        System.out.println(uri);
 
         String permission = method + uri;
 
@@ -55,20 +60,26 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
         CacheObject cacheObject = cacheChannel.get(CacheKey.RESOURCE, CacheKey.RESOURCE_NEED_TO_CHECK);
         List<String> list  = (List<String>) cacheObject.getValue();
         if(list == null){
+            R<List> list1 = resourceApi.list();
             list = resourceApi.list().getData();
+            System.out.println(list);
+
             if(list != null && list.size() > 0){
                 cacheChannel.set(CacheKey.RESOURCE, CacheKey.RESOURCE_NEED_TO_CHECK,list); //从数据库中查出的数据放入缓存中
             }
         }
 
         //4判断这些资源是否包含当前请求的标识符，如果不包含说明当前请求是个非法请求
-        long count = list.stream().filter((resource) -> {
-            return resource.startsWith(permission);
-        }).count();
-        if(count  == 0){
-            //当前请求是一个未知请求,直接返回
-            errorResponse(exchange, ExceptionCode.UNAUTHORIZED.getMsg(), ExceptionCode.UNAUTHORIZED.getCode(), 200);
+        if(list != null){
+            long count = list.stream().filter((resource) -> {
+                return resource.startsWith(permission);
+            }).count();
+            if(count  == 0){
+                //当前请求是一个未知请求,直接返回
+                return errorResponse(exchange, ExceptionCode.UNAUTHORIZED.getMsg(), ExceptionCode.UNAUTHORIZED.getCode(), 200);
+            }
         }
+
 
         //5.请求头中获取用户id,根据用户id取出缓存中用户拥有的权限，如果没有取到通过feign调用数据库取
         String userId = request.getHeaders().getFirst(BaseContextConstants.JWT_KEY_USER_ID);
@@ -84,7 +95,7 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
             //将当前用户拥有的权限再放入缓存
             cacheChannel.set(CacheKey.USER_RESOURCE, userId, visibleResource);
         }
-        count = visibleResource.stream().filter((resource) -> {
+        long count = visibleResource.stream().filter((resource) -> {
             return resource.startsWith(permission);
         }).count();
         if(count > 0){
@@ -92,8 +103,7 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
             return chain.filter(exchange);
         }else{
             //没有权限
-            errorResponse(exchange, ExceptionCode.UNAUTHORIZED.getMsg(), ExceptionCode.UNAUTHORIZED.getCode(), 200);
+            return errorResponse(exchange, ExceptionCode.UNAUTHORIZED.getMsg(), ExceptionCode.UNAUTHORIZED.getCode(), 200);
         }
-        return null;
     }
 }

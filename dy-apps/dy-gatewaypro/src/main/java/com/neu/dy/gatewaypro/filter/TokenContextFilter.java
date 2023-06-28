@@ -8,6 +8,7 @@ import com.neu.dy.base.R;
 import com.neu.dy.common.adapter.IgnoreTokenConfig;
 import com.neu.dy.context.BaseContextConstants;
 import com.neu.dy.exception.BizException;
+import com.neu.dy.utils.StrHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +32,7 @@ import java.nio.charset.StandardCharsets;
 //认证用户令牌过滤器
 @Slf4j
 @Component
-@Order(0)
+@Order(99)
 public class TokenContextFilter extends BaseFilter implements GlobalFilter{
     @Autowired
     private AuthClientProperties authClientProperties;
@@ -53,17 +54,23 @@ public class TokenContextFilter extends BaseFilter implements GlobalFilter{
         try {
             userInfo = jwtTokenClientUtils.getUserInfo(userToken);
         }catch (BizException e){
-            errorResponse(exchange,e.getMessage(),e.getCode(),200);
+            return errorResponse(exchange,e.getMessage(),e.getCode(),200);
         }catch (Exception e){
-            errorResponse(exchange,"解析jwt令牌出错",R.FAIL_CODE,200);
+            return errorResponse(exchange,"解析jwt令牌出错",R.FAIL_CODE,200);
         }
+        ServerWebExchange modifiedExchange = null;
         //将解析出的用户信息放到header中
-        addHeader(request, BaseContextConstants.JWT_KEY_NAME,userInfo.getName());
-        addHeader(request, BaseContextConstants.JWT_KEY_ACCOUNT,userInfo.getAccount());
-        addHeader(request, BaseContextConstants.JWT_KEY_ORG_ID,userInfo.getOrgId());
-        addHeader(request, BaseContextConstants.JWT_KEY_STATION_ID,userInfo.getStationId());
-        addHeader(request, BaseContextConstants.JWT_KEY_USER_ID,userInfo.getUserId());
-        return chain.filter(exchange); //放行
+        if(userInfo != null){
+            ServerHttpRequest modifiedRequest = request.mutate()
+                    .header(BaseContextConstants.JWT_KEY_NAME,StrHelper.encode(userInfo.getName().toString()))
+                    .header(BaseContextConstants.JWT_KEY_ACCOUNT,StrHelper.encode(userInfo.getAccount().toString()))
+                    .header(BaseContextConstants.JWT_KEY_ORG_ID,StrHelper.encode(userInfo.getOrgId().toString()))
+                    .header(BaseContextConstants.JWT_KEY_STATION_ID,StrHelper.encode(userInfo.getStationId().toString()))
+                    .header(BaseContextConstants.JWT_KEY_USER_ID,StrHelper.encode(userInfo.getUserId().toString()))
+                    .build();
+            modifiedExchange = exchange.mutate().request(modifiedRequest).build();
+        }
+        return chain.filter(modifiedExchange); //放行
     }
 
     //单纯抽取一个添加的方法
@@ -71,7 +78,7 @@ public class TokenContextFilter extends BaseFilter implements GlobalFilter{
         if (StringUtils.isEmpty(value)) {
             return;
         }
-        request.getHeaders().add("name",value.toString());
+        request.getHeaders().add(name, StrHelper.encode(value.toString()));
     }
 
 }
