@@ -5,6 +5,7 @@ dy:
     ip: ${NACOS_IP:@pom.nacos.ip@}
     port: ${NACOS_PORT:@pom.nacos.port@}
     namespace: ${NACOS_ID:@pom.nacos.namespace@}
+    mynamespace: ${NACOS_ID:@pom.nacos.mynamespace@}
 
 spring:
   main:
@@ -28,7 +29,7 @@ spring:
       discovery:
         group: dy-express
         server-addr: ${dy.nacos.ip}:${dy.nacos.port}
-        namespace: ${dy.nacos.namespace}
+        namespace: ${dy.nacos.mynamespace}
         metadata:
           management.context-path: ${server.servlet.context-path:}${spring.mvc.servlet.path:}${management.endpoints.web.base-path:}
           #http://localhost:8760/api/gate/actuator
