@@ -1,3 +1,12 @@
+dy:
+  # docker部署时，需要指定， 表示运行该服务的宿主机IP
+  local-ip: ${LOCAL_IP:${spring.cloud.client.ip-address}}
+  nacos:
+    ip: ${NACOS_IP:@pom.nacos.ip@}
+    port: ${NACOS_PORT:@pom.nacos.port@}
+    namespace: ${NACOS_ID:@pom.nacos.namespace@}
+    mynamespace: ${NACOS_ID:@pom.nacos.mynamespace@}
+
 server:
   port: 8185
 spring:
@@ -13,16 +22,16 @@ spring:
       password: lee20206698
       config:
         group: dy-express
-        namespace: e07fe0dc-50cd-4e96-8bad-d04c911a3366
-        server-addr: 121.5.25.174:8848
+        server-addr: ${dy.nacos.ip}:${dy.nacos.port}
         file-extension: yml
-        shared-dataids: common.yml,mysql.yml,redis.yml
+        namespace: ${dy.nacos.namespace}
+        shared-dataids: common.yml,redis.yml,mysql.yml
         refreshable-dataids: common.yml
         enabled: true
       discovery:
         group: dy-express
-        namespace: e07fe0dc-50cd-4e96-8bad-d04c911a3366
-        server-addr: 121.5.25.174:8848
+        server-addr: ${dy.nacos.ip}:${dy.nacos.port}
+        namespace: ${dy.nacos.mynamespace}
   aop:
     proxy-target-class: true
     auto: true
