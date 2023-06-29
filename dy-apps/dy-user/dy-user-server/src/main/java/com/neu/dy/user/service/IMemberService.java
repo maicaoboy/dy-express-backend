@@ -1,4 +1,4 @@
-package com.neu.dy.server.service;
+package com.neu.dy.user.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;

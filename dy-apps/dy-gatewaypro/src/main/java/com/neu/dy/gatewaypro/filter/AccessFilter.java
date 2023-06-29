@@ -61,6 +61,8 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
         List<String> list  = (List<String>) cacheObject.getValue();
         if(list == null){
             R<List> list1 = resourceApi.list();
+            System.out.println("-----------------");
+            System.out.println(list1);
             list = resourceApi.list().getData();
             System.out.println(list);
 

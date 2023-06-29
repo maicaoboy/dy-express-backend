@@ -13,11 +13,12 @@ import java.util.List;
  * @Description TODO
  * @Version 1.0.0
  * @Date 2023/6/25 21:29
- * @Created by maicaoboy
+ * @Created by wangxing
  */
 @Component
 public class ResourceApiFallback implements ResourceApi {
     public R<List> list() {
+        System.out.println("熔断降级");
         return null;
     }
 

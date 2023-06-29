@@ -53,6 +53,12 @@
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-openfeign</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>guava</artifactId>
+					<groupId>com.google.guava</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.neu</groupId>
@@ -67,8 +73,8 @@
 			<artifactId>dy-tools-databases</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.baomidou</groupId>
-			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<groupId>com.neu</groupId>
+			<artifactId>dy-tools-swagger2</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.neu</groupId>

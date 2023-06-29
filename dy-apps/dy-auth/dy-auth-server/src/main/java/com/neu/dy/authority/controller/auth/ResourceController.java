@@ -133,9 +133,12 @@ public class ResourceController extends BaseController {
     @SysLog("查询所有资源")
     public R<List> list() {
         List<Resource> list = resourceService.list();
+        System.out.println(list);
         List<String> resourceList = list.stream().map((Resource r) -> {
             return r.getMethod() + r.getUrl();
         }).collect(Collectors.toList());
+        System.out.println("-------------------------");
+        System.out.println("resourceList"+resourceList);
         return success(resourceList);
     }
 }

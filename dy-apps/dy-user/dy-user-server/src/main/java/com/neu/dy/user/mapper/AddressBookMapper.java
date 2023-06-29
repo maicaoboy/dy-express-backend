@@ -1,4 +1,4 @@
-package com.neu.dy.server.mapper;
+package com.neu.dy.user.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;

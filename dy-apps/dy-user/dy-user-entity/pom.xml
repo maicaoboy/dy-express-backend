@@ -19,10 +19,6 @@
             <groupId>com.neu</groupId>
             <artifactId>dy-tools-common</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
-        </dependency>
     </dependencies>
 
     <properties>

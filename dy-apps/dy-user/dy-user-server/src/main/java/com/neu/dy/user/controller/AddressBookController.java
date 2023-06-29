@@ -1,14 +1,12 @@
-package com.neu.dy.server.controller;
+package com.neu.dy.user.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-
-import com.neu.dy.server.service.IAddressBookService;
+import com.neu.dy.base.R;
 import com.neu.dy.user.eneity.AddressBook;
+import com.neu.dy.user.service.IAddressBookService;
 import lombok.extern.log4j.Log4j2;
 
 
 import net.oschina.j2cache.CacheChannel;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,39 +26,38 @@ public class AddressBookController {
     private String region = "addressBook";
 
 
-//    /**
-//     * 新增地址簿
-//     *
-//     * @param entity
-//     * @return
-//     */
-//    @PostMapping("")
-//    public Result save(@RequestBody AddressBook entity) {
-//        if (1 == entity.getIsDefault()) {
-//            addressBookService.lambdaUpdate().set(AddressBook::getIsDefault, 0).eq(AddressBook::getUserId, entity.getUserId()).update();
-//        }
-//
-//        boolean result = addressBookService.save(entity);
-//        if (result) {
-//            //载入缓存
-//            cacheChannel.set(region,entity.getId(),entity);
-//            return Result.ok();
-//        }
-//        return Result.error();
-//    }
-//
-//    /**
-//     * 查询地址簿详情
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @GetMapping("detail/{id}")
+    /**
+     * 新增地址簿
+     *
+     * @param entity
+     * @return
+     */
+    @PostMapping("")
+    public R save(@RequestBody AddressBook entity) {
+        if (1 == entity.getIsDefault()) {
+            addressBookService.lambdaUpdate().set(AddressBook::getIsDefault, 0).eq(AddressBook::getUserId, entity.getUserId()).update();
+        }
+
+        boolean result = addressBookService.save(entity);
+        if (result) {
+            //载入缓存
+            cacheChannel.set(region,entity.getId(),entity);
+        }
+        return R.success();
+    }
+
+    /**
+     * 查询地址簿详情
+     *
+     * @param id
+     * @return
+     */
+    @GetMapping("detail/{id}")
 //    @Cache(region = "addressBook",key = "ab",params = "id")
-//    public AddressBook detail(@PathVariable(name = "id") String id) {
-//       AddressBook addressBook = addressBookService.getById(id);
-//        return addressBook;
-//    }
+    public AddressBook detail(@PathVariable(name = "id") String id) {
+       AddressBook addressBook = addressBookService.getById(id);
+       return addressBook;
+    }
 //
 //    /**
 //     * 分页查询

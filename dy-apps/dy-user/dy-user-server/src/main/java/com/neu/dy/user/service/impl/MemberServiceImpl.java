@@ -1,8 +1,8 @@
-package com.neu.dy.server.service.impl;
+package com.neu.dy.user.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.neu.dy.server.mapper.MemberMapper;
-import com.neu.dy.server.service.IMemberService;
+import com.neu.dy.user.mapper.MemberMapper;
+import com.neu.dy.user.service.IMemberService;
 import com.neu.dy.user.eneity.Member;
 import org.springframework.stereotype.Service;
 
