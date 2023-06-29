@@ -21,6 +21,7 @@
         <module>dy-gatewaypro</module>
         <!--<module>dy-file</module>-->
         <module>dy-base</module>
+        <module>dy-user</module>
     </modules>
     <dependencyManagement>
         <dependencies>
