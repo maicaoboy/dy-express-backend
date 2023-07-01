@@ -22,6 +22,7 @@
         <!--<module>dy-file</module>-->
         <module>dy-base</module>
         <module>dy-user</module>
+        <module>dy-order</module>
     </modules>
     <dependencyManagement>
         <dependencies>

@@ -1,5 +1,8 @@
 package com.neu.dy.user.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.neu.dy.base.R;
 import com.neu.dy.user.eneity.AddressBook;
 import com.neu.dy.user.service.IAddressBookService;
@@ -58,69 +61,55 @@ public class AddressBookController {
        AddressBook addressBook = addressBookService.getById(id);
        return addressBook;
     }
-//
-//    /**
-//     * 分页查询
-//     *
-//     * @param page
-//     * @param pageSize
-//     * @param userId
-//     * @return
-//     */
-//    @GetMapping("page")
-//    public PageResponse<AddressBook> page(Integer page, Integer pageSize, String userId, String keyword) {
-//        Page<AddressBook> iPage = new Page(page, pageSize);
-//        Page<AddressBook> pageResult = addressBookService.lambdaQuery()
-//                .eq(StringUtils.isNotEmpty(userId), AddressBook::getUserId, userId)
-//                .and(StringUtils.isNotEmpty(keyword), wrapper ->
-//                        wrapper.like(AddressBook::getName, keyword).or()
-//                                .like(AddressBook::getPhoneNumber, keyword).or()
-//                                .like(AddressBook::getCompanyName, keyword))
-//                .page(iPage);
-//
-//        return PageResponse.<AddressBook>builder()
-//                .items(pageResult.getRecords())
-//                .page(page)
-//                .pagesize(pageSize)
-//                .pages(pageResult.getPages())
-//                .counts(pageResult.getTotal())
-//                .build();
-//    }
-//
-//    /**
-//     * 修改
-//     *
-//     * @param id
-//     * @param entity
-//     * @return
-//     */
-//    @PutMapping("/{id}")
+
+    /**
+     * 分页查询
+     *
+     * @param page
+     * @param pageSize
+     * @param userId
+     * @return
+     */
+    @GetMapping("page")
+    public R page(Integer page, Integer pageSize, String userId, String keyword) {
+        Page<AddressBook> iPage = new Page(page, pageSize);
+        LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(StringUtils.isNotBlank(userId),AddressBook::getUserId,userId);
+        queryWrapper.like(StringUtils.isNotBlank(keyword),AddressBook::getName, keyword);
+        queryWrapper.like(StringUtils.isNotBlank(keyword),AddressBook::getPhoneNumber, keyword);
+        queryWrapper.like(StringUtils.isNotBlank(keyword),AddressBook::getCompanyName, keyword);
+        addressBookService.page(iPage,queryWrapper);
+
+        return R.success(iPage);
+    }
+
+    /**
+     * 修改
+     *
+     * @param id
+     * @param entity
+     * @return
+     */
+    @PutMapping("/{id}")
 //    @CacheEvictor(value = {@Cache(region = "addressBook",key = "ab",params = "1.id")})
-//    public Result update(@PathVariable(name = "id") String id, @RequestBody AddressBook entity) {
-//        entity.setId(id);
-//        if (1 == entity.getIsDefault()) {
-//            addressBookService.lambdaUpdate().set(AddressBook::getIsDefault, 0).eq(AddressBook::getUserId, entity.getUserId()).update();
-//        }
-//        boolean result = addressBookService.updateById(entity);
-//        if (result) {
-//            return Result.ok();
-//        }
-//        return Result.error();
-//    }
-//
-//    /**
-//     * 删除
-//     *
-//     * @param id
-//     * @return
-//     */
-//    @DeleteMapping("/{id}")
+    public R update(@PathVariable(name = "id") String id, @RequestBody AddressBook entity) {
+        entity.setId(id);
+        if (1 == entity.getIsDefault()) {
+            addressBookService.lambdaUpdate().set(AddressBook::getIsDefault, 0).eq(AddressBook::getUserId, entity.getUserId()).update();
+        }
+        boolean result = addressBookService.updateById(entity);
+        return R.success();
+    }
+    /**
+     * 删除
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
 //    @CacheEvictor({@Cache(region = "addressBook",key = "ab",params = "id")})
-//    public Result del(@PathVariable(name = "id") String id) {
-//        boolean result = addressBookService.removeById(id);
-//        if (result) {
-//            return Result.ok();
-//        }
-//        return Result.error();
-//    }
+    public R delete(@PathVariable(name = "id") String id) {
+        boolean result = addressBookService.removeById(id);
+        return R.success();
+    }
 }
