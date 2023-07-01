@@ -2,6 +2,7 @@ package com.neu.dy.order.entitiy.fact;
 
 /**
  * 封装计算订单价格所需的参数
+ * fact是我们的应用和规则引擎进行数据交互的桥梁或通道。
  */
 public class AddressRule {
     /**

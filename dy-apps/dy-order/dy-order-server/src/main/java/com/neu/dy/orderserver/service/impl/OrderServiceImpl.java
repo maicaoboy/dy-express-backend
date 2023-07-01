@@ -1,22 +1,32 @@
 package com.neu.dy.orderserver.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.neu.dy.base.common.CustomIdGenerator;
 import com.neu.dy.base.id.IdGenerate;
 import com.neu.dy.order.dto.OrderDTO;
 import com.neu.dy.order.dto.OrderSearchDTO;
 import com.neu.dy.order.entitiy.Order;
+import com.neu.dy.order.entitiy.fact.AddressCheckResult;
+import com.neu.dy.order.entitiy.fact.AddressRule;
 import com.neu.dy.order.enums.OrderPaymentStatus;
 import com.neu.dy.order.enums.OrderPickupType;
 import com.neu.dy.order.enums.OrderStatus;
 import com.neu.dy.orderserver.mapper.OrderMapper;
 import com.neu.dy.orderserver.service.OrderService;
-//import org.kie.api.runtime.KieSession;
+import com.neu.dy.utils.BaiduMapUtils;
+import org.apache.commons.lang.StringUtils;
+import org.kie.api.runtime.KieSession;
+import org.mvel2.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +59,26 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public IPage<Order> findByPage(Integer page, Integer pageSize, Order order) {
-        return null;
+        IPage<Order> pageInfo = new Page<>(page,pageSize);
+
+        //构造查询条件
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(order.getId() != null, Order::getId, order.getId());
+        queryWrapper.eq(order.getStatus() != null, Order::getStatus, order.getStatus());
+        queryWrapper.eq(order.getPaymentStatus() != null, Order::getPaymentStatus,order.getPaymentStatus());
+        queryWrapper.like(order.getSenderName() != null, Order::getSenderName, order.getSenderName());
+        queryWrapper.like(order.getSenderPhone() != null, Order::getSenderPhone, order.getSenderPhone());
+        queryWrapper.eq(order.getSenderProvinceId() != null, Order::getSenderProvinceId, order.getSenderProvinceId());
+        queryWrapper.eq(order.getSenderCityId() != null, Order::getSenderCityId, order.getSenderCityId());
+        queryWrapper.eq(order.getSenderCountyId() != null, Order::getSenderCountyId, order.getSenderCountyId());
+        queryWrapper.like(order.getReceiverName() != null, Order::getReceiverName, order.getReceiverName());
+        queryWrapper.like(order.getReceiverPhone() != null, Order::getReceiverPhone, order.getReceiverPhone());
+        queryWrapper.eq(order.getReceiverProvinceId() != null, Order::getReceiverProvinceId, order.getReceiverProvinceId());
+        queryWrapper.eq(order.getReceiverCityId() != null, Order::getReceiverCityId, order.getReceiverCityId());
+        queryWrapper.eq(order.getReceiverCountyId() != null, Order::getReceiverCountyId, order.getReceiverCountyId());
+        queryWrapper.orderBy(true, false, Order::getId);
+
+        return page(pageInfo, queryWrapper);
     }
 
     @Override
@@ -62,9 +91,83 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return null;
     }
 
+    /**
+     * 计算订单价格
+     * @param orderDTO
+     * @return
+     */
     @Override
     public Map calculateAmount(OrderDTO orderDTO) {
+        //调用百度地图接口计算订单距离
+        orderDTO = this.getDistance(orderDTO);
+
+        if("sender error msg".equals(orderDTO.getSenderAddress()) || "receiver error msg".equals(orderDTO.getReceiverAddress())){
+            //地址解析失败，直接返回
+            Map map = new HashMap();
+            map.put("amount","0");
+            map.put("errorMsg","无法计算订单距离和订单价格，请输入真实地址");
+            map.put("orderDto",orderDTO);
+            return map;
+        }
+
+        //使用Drools规则引擎计算价格
+        KieSession kieSession = ReloadDroolsRulesService.kieContainer.newKieSession();
+        //封装计算订单价格所需要的参数,fact对象和规则引擎相关
+        AddressRule addressRule = new AddressRule();
+        addressRule.setTotalWeight(orderDTO.getOrderCargoDto().getTotalWeight().doubleValue()); //从购买物品dto中获取总重量
+        addressRule.setDistance(orderDTO.getDistance().doubleValue()); //设置订单距离
+
+        //将对象加入到工作内存中
+        kieSession.insert(addressRule);
+
+        AddressCheckResult addressCheckResult = new AddressCheckResult();
+        kieSession.insert(addressCheckResult);
+
+        int i = kieSession.fireAllRules();
+        System.out.println("触发了" + i + "条规则");
+        kieSession.destroy();
+
+        if(addressCheckResult.isPostCodeResult()){
+            System.out.println("规则匹配成功，订单价格为：" + addressCheckResult.getResult());
+            orderDTO.setAmount(new BigDecimal(addressCheckResult.getResult()));
+
+            Map map = new HashMap();
+            map.put("orderDto",orderDTO);
+            map.put("amount",addressCheckResult.getResult());
+
+            return map;
+        }
+
         return null;
+    }
+
+    /**
+     * 调用百度地图服务接口，根据寄件人地址和收件人地址计算订单距离
+     * @param orderDTO
+     * @return
+     */
+    public OrderDTO getDistance(OrderDTO orderDTO){
+        //调用百度地图服务接口获取寄件人地址对应的坐标经纬度
+        String begin = BaiduMapUtils.getCoordinate(orderDTO.getSenderAddress());
+        if(begin == null){
+            orderDTO.setSenderAddress("sender error msg");
+            return orderDTO;
+        }
+
+        //调用百度地图服务接口获取收件人地址对应的坐标经纬度
+        String end = BaiduMapUtils.getCoordinate(orderDTO.getReceiverAddress());
+        if(end == null){
+            orderDTO.setReceiverAddress("receiver error msg");
+            return orderDTO;
+        }
+
+        Double distance = BaiduMapUtils.getDistance(begin, end);
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        String distanceStr = decimalFormat.format(distance/1000);
+
+        orderDTO.setDistance(new BigDecimal(distanceStr));
+
+        return orderDTO;
     }
 
 //    private CustomIdGenerator idGenerator;
