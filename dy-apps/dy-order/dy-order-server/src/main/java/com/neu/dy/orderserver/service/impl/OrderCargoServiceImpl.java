@@ -18,6 +18,7 @@ import java.util.List;
  */
 @Service
 public class OrderCargoServiceImpl extends ServiceImpl<OrderCargoMapper, OrderCargo> implements OrderCargoService {
+
     @Autowired
     private CustomIdGenerator idGenerator;
 

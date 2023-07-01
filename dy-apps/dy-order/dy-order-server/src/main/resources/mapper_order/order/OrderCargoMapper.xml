@@ -19,19 +19,19 @@
   <resultMap id="ResultMapWithBLOBs" type="com.neu.dy.order.entitiy.OrderCargo" extends="BaseResultMap" >
     <result column="remark" property="remark" jdbcType="LONGVARCHAR" />
   </resultMap>
-  <sql id="Base_Column_List" >
-    id, order_id, tran_order_id,goods_type_id, name, unit, cargo_value, cargo_barcode, quantity, volume, weight,
-    total_volume, total_weight
-  </sql>
-  <sql id="Blob_Column_List" >remark</sql>
-  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >
-    select
-    <include refid="Base_Column_List" />
-    ,
-    <include refid="Blob_Column_List" />
-    from pd_order_cargo
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
+<!--  <sql id="Base_Column_List" >-->
+<!--    id, order_id, tran_order_id,goods_type_id, name, unit, cargo_value, cargo_barcode, quantity, volume, weight,-->
+<!--    total_volume, total_weight-->
+<!--  </sql>-->
+<!--  <sql id="Blob_Column_List" >remark</sql>-->
+<!--  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Long" >-->
+<!--    select-->
+<!--    <include refid="Base_Column_List" />-->
+<!--    ,-->
+<!--    <include refid="Blob_Column_List" />-->
+<!--    from pd_order_cargo-->
+<!--    where id = #{id,jdbcType=VARCHAR}-->
+<!--  </select>-->
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from dy_order _cargo
     where id = #{id,jdbcType=VARCHAR}

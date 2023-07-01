@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/cargo")
 public class OrderCargoController {
+
     @Autowired
     private OrderCargoService cargoService;
 
@@ -76,7 +77,7 @@ public class OrderCargoController {
      * @param orderCargoDto
      * @return
      */
-    @GetMapping("/{id}")
+    @PutMapping("/{id}")
     public R update(@PathVariable(name = "id") String id, @RequestBody OrderCargoDto orderCargoDto){
         orderCargoDto.setId(id);
         OrderCargo orderCargo = new OrderCargo();
