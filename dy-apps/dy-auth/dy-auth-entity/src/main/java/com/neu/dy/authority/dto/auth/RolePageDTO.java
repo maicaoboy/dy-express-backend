@@ -69,4 +69,5 @@ public class RolePageDTO implements Serializable {
     private LocalDateTime startCreateTime;
     @ApiModelProperty(value = "结束创建时间")
     private LocalDateTime endCreateTime;
+    
 }

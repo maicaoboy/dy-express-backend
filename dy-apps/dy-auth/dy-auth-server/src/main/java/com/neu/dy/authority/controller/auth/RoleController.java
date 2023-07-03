@@ -1,7 +1,10 @@
 package com.neu.dy.authority.controller.auth;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.neu.dy.authority.biz.service.auth.RoleAuthorityService;
 import com.neu.dy.authority.biz.service.auth.RoleOrgService;
 import com.neu.dy.authority.biz.service.auth.RoleService;
@@ -28,6 +31,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,13 +75,16 @@ public class RoleController extends BaseController {
     @SysLog("分页查询角色")
     public R<IPage<Role>> page(RolePageDTO param) {
         IPage<Role> page = getPage();
-        Role role = dozer.map(param, Role.class);
         // 构建值不为null的查询条件
-        LbqWrapper<Role> query = Wraps.lbQ(role)
-                .geHeader(Role::getCreateTime, param.getStartCreateTime())
-                .leFooter(Role::getCreateTime, param.getEndCreateTime())
-                .orderByDesc(Role::getId);
-        roleService.page(page, query);
+        LambdaQueryWrapper<Role> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.ge(param.getStartCreateTime() != null,Role::getCreateTime,param.getStartCreateTime());
+        queryWrapper.le(param.getEndCreateTime() != null,Role::getCreateTime,param.getEndCreateTime());
+        queryWrapper.orderByDesc(Role::getId);
+//        LbqWrapper<Role> query = Wraps.lbQ(role)
+//                .geHeader(Role::getCreateTime, param.getStartCreateTime())
+//                .leFooter(Role::getCreateTime, param.getEndCreateTime())
+//                .orderByDesc(Role::getId);
+        roleService.page(page, queryWrapper);
         return success(page);
     }
 

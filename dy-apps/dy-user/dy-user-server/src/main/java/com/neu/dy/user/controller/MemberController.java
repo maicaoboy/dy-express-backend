@@ -56,6 +56,7 @@ public class MemberController {
     public R page(Integer page, Integer pageSize){
         Page<Member> pageInfo = new Page<>(page, pageSize);
         memberService.page(pageInfo);
+        System.out.println(pageInfo.getTotal());
         return R.success(pageInfo);
     }
 
