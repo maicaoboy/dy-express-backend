@@ -2,6 +2,7 @@ package com.neu.dy.base.controller.goods;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.base.IDyGoodsTypeService;
 import com.neu.dy.base.biz.service.truck.IDyTruckTypeGoodsTypeService;
 import com.neu.dy.base.common.Constant;
@@ -44,7 +45,7 @@ public class GoodsTypeController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加货物类型")
-    public GoodsTypeDto saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
+    public R saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
         DyGoodsType pdGoodsType = new DyGoodsType();
         BeanUtils.copyProperties(dto, pdGoodsType);
         pdGoodsType = goodsTypeService.saveGoodsType(pdGoodsType);
@@ -58,7 +59,7 @@ public class GoodsTypeController {
             }).collect(Collectors.toList()));
         }
         BeanUtils.copyProperties(pdGoodsType, dto);
-        return dto;
+        return R.success(dto);
     }
 
     /**
@@ -68,7 +69,7 @@ public class GoodsTypeController {
      * @return 货物类型信息
      */
     @GetMapping("/{id}")
-    public GoodsTypeDto fineById(@PathVariable(name = "id") String id) {
+    public R fineById(@PathVariable(name = "id") String id) {
         DyGoodsType pdGoodsType = goodsTypeService.getById(id);
         GoodsTypeDto dto = null;
         if (pdGoodsType != null) {
@@ -76,7 +77,7 @@ public class GoodsTypeController {
             BeanUtils.copyProperties(pdGoodsType, dto);
             dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType -> truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
         }
-        return dto;
+        return R.success(dto);
     }
 
     /**
@@ -85,14 +86,14 @@ public class GoodsTypeController {
      */
     @GetMapping("/all")
     @ApiOperation(value = "查询所有货物类型")
-    public List<GoodsTypeDto> findAll() {
+    public R findAll() {
         List<DyGoodsType> goodsType = goodsTypeService.findAll();
         List<GoodsTypeDto> goodsTypeDtoList = goodsType.stream().map(item -> {
             GoodsTypeDto dto = new GoodsTypeDto();
             BeanUtils.copyProperties(item, dto);
             return dto;
         }).collect(Collectors.toList());
-        return goodsTypeDtoList;
+        return R.success(goodsTypeDtoList);
     }
 
     /**
@@ -130,13 +131,14 @@ public class GoodsTypeController {
      */
     @GetMapping("")
     @ApiOperation(value = "获取货物类型列表")
-    public List<GoodsTypeDto> findAll(@RequestParam(name = "ids", required = false) List<String> ids) {
-        return goodsTypeService.findAll(ids).stream().map(pdGoodsType -> {
+    public R findAll(@RequestParam(name = "ids", required = false) List<String> ids) {
+        List<GoodsTypeDto> goodsTypeDtoList = goodsTypeService.findAll(ids).stream().map(pdGoodsType -> {
             GoodsTypeDto dto = new GoodsTypeDto();
             BeanUtils.copyProperties(pdGoodsType, dto);
             dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType -> truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
             return dto;
         }).collect(Collectors.toList());
+        return R.success(goodsTypeDtoList);
     }
 
     /**
@@ -147,11 +149,11 @@ public class GoodsTypeController {
      */
     @PutMapping("/{id}/disable")
     @ApiOperation(value = "删除货物类型")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public R disable(@PathVariable(name = "id") String id) {
         DyGoodsType pdGoodsType = new DyGoodsType();
         pdGoodsType.setId(id);
         pdGoodsType.setStatus(Constant.DATA_DISABLE_STATUS);
         goodsTypeService.updateById(pdGoodsType);
-        return Result.ok();
+        return R.success();
     }
 }

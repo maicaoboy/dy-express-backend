@@ -2,6 +2,7 @@ package com.neu.dy.base.controller.agency;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.agency.IDyFleetService;
 import com.neu.dy.base.common.PageResponse;
 import com.neu.dy.base.common.Result;
@@ -31,12 +32,12 @@ public class FleetController {
      * @return 车队信息
      */
     @PostMapping("")
-    public FleetDto saveAgencyType(@RequestBody FleetDto dto) {
+    public R saveAgencyType(@RequestBody FleetDto dto) {
         DyFleet pdFleet = new DyFleet();
         BeanUtils.copyProperties(dto, pdFleet);
         pdFleet = fleetService.saveFleet(pdFleet);
         BeanUtils.copyProperties(pdFleet, dto);
-        return dto;
+        return R.success(dto);
     }
 
     /**
@@ -46,11 +47,11 @@ public class FleetController {
      * @return 车队信息
      */
     @GetMapping("/{id}")
-    public FleetDto fineById(@PathVariable(name = "id") String id) {
+    public R fineById(@PathVariable(name = "id") String id) {
         DyFleet pdFleet = fleetService.getById(id);
         FleetDto dto = new FleetDto();
         BeanUtils.copyProperties(pdFleet, dto);
-        return dto;
+        return R.success(dto);
     }
 
     /**
@@ -87,12 +88,14 @@ public class FleetController {
      * @return 车队列表
      */
     @GetMapping("")
-    public List<FleetDto> findAll(@RequestParam(value = "ids", required = false) List<String> ids, @RequestParam(value = "agencyId", required = false) String agencyId) {
-        return fleetService.findAll(ids, agencyId).stream().map(pdFleet -> {
+    public R findAll(@RequestParam(value = "ids", required = false) List<String> ids, @RequestParam(value = "agencyId", required = false) String agencyId) {
+        List<FleetDto> fleetDtoList = fleetService.findAll(ids, agencyId).stream().map(pdFleet -> {
             FleetDto dto = new FleetDto();
             BeanUtils.copyProperties(pdFleet, dto);
             return dto;
         }).collect(Collectors.toList());
+        return R.success(fleetDtoList);
+
     }
 
     /**
@@ -102,12 +105,12 @@ public class FleetController {
      * @return 车队信息
      */
     @PutMapping("/{id}")
-    public FleetDto update(@PathVariable(name = "id") String id, @RequestBody FleetDto dto) {
+    public R update(@PathVariable(name = "id") String id, @RequestBody FleetDto dto) {
         dto.setId(id);
         DyFleet pdFleet = new DyFleet();
         BeanUtils.copyProperties(dto, pdFleet);
         fleetService.updateById(pdFleet);
-        return dto;
+        return R.success(dto);
     }
 
     /**
@@ -117,8 +120,8 @@ public class FleetController {
      * @return 返回信息
      */
     @PutMapping("/{id}/disable")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public R disable(@PathVariable(name = "id") String id) {
         fleetService.disableById(id);
-        return Result.ok();
+        return R.success();
     }
 }

@@ -21,8 +21,6 @@
         <module>dy-parent</module>
         <module>dy-apps</module>
         <module>dy-tools</module>
-        <module>dy-apps/dy-order</module>
-        <module>dy-apps/dy-order</module>
     </modules>
     <packaging>pom</packaging>
 </project>
