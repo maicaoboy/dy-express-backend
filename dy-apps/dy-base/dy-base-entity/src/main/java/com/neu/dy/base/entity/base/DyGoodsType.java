@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
+//实体和表的映射，mybatis-plus使用
 @TableName("dy_goods_type")
 public class DyGoodsType implements Serializable {
 

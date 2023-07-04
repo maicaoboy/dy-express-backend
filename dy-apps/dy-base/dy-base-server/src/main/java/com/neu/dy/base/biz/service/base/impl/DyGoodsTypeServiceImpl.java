@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class DyGoodsTypeServiceImpl extends ServiceImpl<DyGoodsTypeMapper, DyGoodsType> implements IDyGoodsTypeService {
+    //id自增组件
     @Autowired
     private CustomIdGenerator idGenerator;
 

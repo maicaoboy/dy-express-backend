@@ -14,6 +14,7 @@ import java.util.List;
  * @Date 2023/6/20 21:52
  * @Created by maicaoboy
  */
+//继承mybatis-plus的IService接口
 public interface IDyGoodsTypeService extends IService<DyGoodsType>{
     /**
      * 添加货物类型

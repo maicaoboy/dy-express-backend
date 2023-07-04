@@ -7,6 +7,8 @@ import com.neu.dy.base.common.PageResponse;
 import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.truck.TruckDto;
 import com.neu.dy.base.entity.truck.DyTruck;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("base/truck")
+@Api(tags = "车辆管理")
 public class TruckController {
     @Autowired
     private IDyTruckService truckService;
@@ -32,6 +35,7 @@ public class TruckController {
      * @return 车辆信息
      */
     @PostMapping("")
+    @ApiOperation(value = "添加车辆")
     public TruckDto saveTruck(@RequestBody TruckDto dto) {
         DyTruck pdTruck = new DyTruck();
         BeanUtils.copyProperties(dto, pdTruck);
@@ -47,6 +51,7 @@ public class TruckController {
      * @return 车辆信息
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "根据id获取车辆详情")
     public TruckDto fineById(@PathVariable(name = "id") String id) {
         DyTruck pdTruck = truckService.getById(id);
         if (ObjectUtils.isEmpty(pdTruck)) {
@@ -67,6 +72,7 @@ public class TruckController {
      * @return 车辆分页数据
      */
     @GetMapping("/page")
+    @ApiOperation(value = "获取车辆分页数据")
     public PageResponse<TruckDto> findByPage(@RequestParam(name = "page") Integer page,
                                              @RequestParam(name = "pageSize") Integer pageSize,
                                              @RequestParam(name = "truckTypeId", required = false) String truckTypeId,
@@ -91,6 +97,7 @@ public class TruckController {
      * @return 车辆数量
      */
     @GetMapping("/count")
+    @ApiOperation(value = "统计车辆数量")
     public Integer count(@RequestParam(name = "fleetId", required = false) String fleetId) {
         return truckService.count(fleetId);
     }
@@ -102,6 +109,7 @@ public class TruckController {
      * @return 车辆列表
      */
     @GetMapping("")
+    @ApiOperation(value = "获取车辆列表")
     public List<TruckDto> findAll(@RequestParam(name = "ids", required = false) List<String> ids, @RequestParam(name = "fleetId", required = false) String fleetId) {
         return truckService.findAll(ids, fleetId).stream().map(pdTruck -> {
             TruckDto dto = new TruckDto();
@@ -118,6 +126,7 @@ public class TruckController {
      * @return 车辆信息
      */
     @PutMapping("/{id}")
+    @ApiOperation(value = "更新车辆信息")
     public TruckDto update(@PathVariable(name = "id") String id, @RequestBody TruckDto dto) {
         dto.setId(id);
         DyTruck pdTruck = new DyTruck();
@@ -133,6 +142,7 @@ public class TruckController {
      * @return 返回信息
      */
     @PutMapping("/{id}/disable")
+    @ApiOperation(value = "删除车辆")
     public Result disable(@PathVariable(name = "id") String id) {
         //TODO 检查车辆当前状态，如处于非空闲状态，则不允许删除
         truckService.disableById(id);

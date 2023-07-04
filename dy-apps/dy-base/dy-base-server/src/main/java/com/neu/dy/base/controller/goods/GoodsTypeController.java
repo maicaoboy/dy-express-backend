@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,19 +46,26 @@ public class GoodsTypeController {
     @PostMapping("")
     @ApiOperation(value = "添加货物类型")
     public GoodsTypeDto saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
-        DyGoodsType pdGoodsType = new DyGoodsType();
-        BeanUtils.copyProperties(dto, pdGoodsType);
-        pdGoodsType = goodsTypeService.saveGoodsType(pdGoodsType);
-        String goodsTypeId = pdGoodsType.getId();
+        //保存货物类型到数据库
+        DyGoodsType dyGoodsType = new DyGoodsType();
+        /*使用org.apache.commons.beanutils.BeanUtils进行copy对象时，被copy的对象（source/orig）中包含的字段目标对象（target/dest）
+        必须包含与之对应的字段，否则会报错，使用org.springframework.beans.BeanUtils.copyProperties则不会报错，只是不会copy对应的字段
+         */
+        BeanUtils.copyProperties(dto, dyGoodsType);
+        dyGoodsType = goodsTypeService.saveGoodsType(dyGoodsType);
+        String goodsTypeId = dyGoodsType.getId();
+        //通常情况下，map()方法用于将一个流中的元素映射为另一种类型
         if (dto.getTruckTypeIds() != null) {
-            truckTypeGoodsTypeService.batchSave(dto.getTruckTypeIds().stream().map(truckTypeId -> {
+            List<DyTruckTypeGoodsType> list = dto.getTruckTypeIds().stream().map(truckTypeId -> {
                 DyTruckTypeGoodsType truckTypeGoodsType = new DyTruckTypeGoodsType();
                 truckTypeGoodsType.setTruckTypeId(truckTypeId);
                 truckTypeGoodsType.setGoodsTypeId(goodsTypeId);
                 return truckTypeGoodsType;
-            }).collect(Collectors.toList()));
+            }).collect(Collectors.toList());
+            truckTypeGoodsTypeService.batchSave(list);
         }
-        BeanUtils.copyProperties(pdGoodsType, dto);
+        //相较于之前添加了id
+        BeanUtils.copyProperties(dyGoodsType, dto);
         return dto;
     }
 
@@ -67,14 +75,22 @@ public class GoodsTypeController {
      * @param id 货物类型id
      * @return 货物类型信息
      */
+    /*
+    @PathVariable是Spring框架中的一个注解标签，用于处理RESTful风格的URL中的路径参数。
+    它用于从URL中提取参数值并将其绑定到方法的参数上。
+    在Spring MVC中，当使用@RequestMapping注解定义Controller的方法时，
+    可以在方法参数上使用@PathVariable注解来指定路径参数。
+     */
     @GetMapping("/{id}")
+    @ApiOperation(value = "通过id查询商品")
     public GoodsTypeDto fineById(@PathVariable(name = "id") String id) {
-        DyGoodsType pdGoodsType = goodsTypeService.getById(id);
+        DyGoodsType dyGoodsType = goodsTypeService.getById(id);
         GoodsTypeDto dto = null;
-        if (pdGoodsType != null) {
+        if (dyGoodsType != null) {
             dto = new GoodsTypeDto();
-            BeanUtils.copyProperties(pdGoodsType, dto);
-            dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType -> truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
+            BeanUtils.copyProperties(dyGoodsType, dto);
+            dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType ->
+                    truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
         }
         return dto;
     }
@@ -113,11 +129,14 @@ public class GoodsTypeController {
             @RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "truckTypeId", required = false) String truckTypeId,
             @RequestParam(name = "truckTypeName", required = false) String truckTypeName) {
+        //mybatis-plus实现分页
         IPage<DyGoodsType> goodsTypePage = goodsTypeService.findByPage(page, pageSize, name, truckTypeId, truckTypeName);
+        //类型转换与关联信息查询
         List<GoodsTypeDto> goodsTypeDtoList = goodsTypePage.getRecords().stream().map(goodsType -> {
             GoodsTypeDto dto = new GoodsTypeDto();
             BeanUtils.copyProperties(goodsType, dto);
-            dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType -> truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
+            dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType ->
+                    truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
             return dto;
         }).collect(Collectors.toList());
         return PageResponse.<GoodsTypeDto>builder().items(goodsTypeDtoList).counts(goodsTypePage.getTotal()).page(page).pages(goodsTypePage.getPages()).pagesize(pageSize).build();
@@ -131,9 +150,9 @@ public class GoodsTypeController {
     @GetMapping("")
     @ApiOperation(value = "获取货物类型列表")
     public List<GoodsTypeDto> findAll(@RequestParam(name = "ids", required = false) List<String> ids) {
-        return goodsTypeService.findAll(ids).stream().map(pdGoodsType -> {
+        return goodsTypeService.findAll(ids).stream().map(dyGoodsType -> {
             GoodsTypeDto dto = new GoodsTypeDto();
-            BeanUtils.copyProperties(pdGoodsType, dto);
+            BeanUtils.copyProperties(dyGoodsType, dto);
             dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType -> truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
             return dto;
         }).collect(Collectors.toList());
@@ -148,10 +167,10 @@ public class GoodsTypeController {
     @PutMapping("/{id}/disable")
     @ApiOperation(value = "删除货物类型")
     public Result disable(@PathVariable(name = "id") String id) {
-        DyGoodsType pdGoodsType = new DyGoodsType();
-        pdGoodsType.setId(id);
-        pdGoodsType.setStatus(Constant.DATA_DISABLE_STATUS);
-        goodsTypeService.updateById(pdGoodsType);
+        DyGoodsType dyGoodsType = new DyGoodsType();
+        dyGoodsType.setId(id);
+        dyGoodsType.setStatus(Constant.DATA_DISABLE_STATUS);
+        goodsTypeService.updateById(dyGoodsType);
         return Result.ok();
     }
 }
