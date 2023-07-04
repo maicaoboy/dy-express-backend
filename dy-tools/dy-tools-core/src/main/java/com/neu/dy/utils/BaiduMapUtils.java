@@ -26,7 +26,7 @@ public class BaiduMapUtils {
         System.out.println("线路耗时"+time+"秒");
     }
 
-    private static String AK = "UEBQm9c3KZ5LrsO2C2qsOAs1eSdLvlzM";
+    private static String AK = "y3XDSLIvhWQmzqI3GwZG3HhLYPnAPRXj";
 
     /**
      * 调用百度地图地理编码服务接口，根据地址获取坐标（经度、纬度）
@@ -82,7 +82,7 @@ public class BaiduMapUtils {
     }
 
     /**
-     * 调用百度地图驾车路线规划服务接口，根据寄件人地址和收件人地址坐标计算订单距离
+         * 调用百度地图驾车路线规划服务接口，根据寄件人地址和收件人地址坐标计算订单距离
      * @param origin
      * @param destination
      * @return

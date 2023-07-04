@@ -22,10 +22,8 @@ public abstract class BaseFilter {
         ServerHttpRequest request = exchange.getRequest();
         String uri = request.getPath().toString();
 //        String uri = request.getURI().toString();
-
 //        uri = StrUtil.subSuf(uri, prefix.length());
 //        uri = StrUtil.subSuf(uri, uri.indexOf("/", 1));
-        System.out.println(uri);
         boolean ignoreToken = IgnoreTokenConfig.isIgnoreToken(uri);
         return ignoreToken;
     }

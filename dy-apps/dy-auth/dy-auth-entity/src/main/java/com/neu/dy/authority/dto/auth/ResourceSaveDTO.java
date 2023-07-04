@@ -64,4 +64,16 @@ public class ResourceSaveDTO implements Serializable {
     @Length(max = 255, message = "接口描述长度不能超过255")
     private String describe;
 
+    /**
+     * 请求方式
+     */
+    @ApiModelProperty(value = "请求方式")
+    private String method;
+
+    /**
+     * 请求路径
+     */
+    @ApiModelProperty(value = "请求路径")
+    private String url;
+
 }

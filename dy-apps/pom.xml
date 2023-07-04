@@ -25,6 +25,7 @@
         <module>dy-user</module>
         <module>dy-order</module>
         <module>dy-work</module>
+        <module>dy-dispatch</module>
     </modules>
     <dependencyManagement>
         <dependencies>
