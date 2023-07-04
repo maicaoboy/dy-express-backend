@@ -11,10 +11,10 @@ public interface IDyTruckService extends IService<DyTruck> {
     /**
      * 添加车辆
      *
-     * @param pdTruck 车辆信息
+     * @param dyTruck 车辆信息
      * @return 车辆信息
      */
-    DyTruck saveTruck(DyTruck pdTruck);
+    DyTruck saveTruck(DyTruck dyTruck);
 
     /**
      * 获取车辆分页数据

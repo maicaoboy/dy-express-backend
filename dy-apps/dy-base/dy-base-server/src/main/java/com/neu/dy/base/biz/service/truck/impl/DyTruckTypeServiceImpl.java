@@ -24,10 +24,10 @@ public class DyTruckTypeServiceImpl extends ServiceImpl<DyTruckTypeMapper, DyTru
     private CustomIdGenerator idGenerator;
 
     @Override
-    public DyTruckType saveTruckType(DyTruckType pdTruckType) {
-        pdTruckType.setId(idGenerator.nextId(pdTruckType) + "");
-        baseMapper.insert(pdTruckType);
-        return pdTruckType;
+    public DyTruckType saveTruckType(DyTruckType dyTruckType) {
+        dyTruckType.setId(idGenerator.nextId(dyTruckType) + "");
+        baseMapper.insert(dyTruckType);
+        return dyTruckType;
     }
 
     @Override

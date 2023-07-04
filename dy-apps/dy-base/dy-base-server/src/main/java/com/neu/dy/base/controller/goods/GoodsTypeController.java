@@ -17,17 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @Classname GoodsTypeController
- * @Description TODO
- * @Version 1.0.0
- * @Date 2023/6/20 21:51
- * @Created by maicaoboy
- */
 @RestController
 @RequestMapping("base/goodsType")
 @Api(tags = "货物类型管理")
@@ -143,19 +135,27 @@ public class GoodsTypeController {
     }
 
     /**
-     * 获取货物类型列表
+     * 获取货物类型列表，多个id的集合查询
      *
      * @return 货物类型列表
      */
     @GetMapping("")
-    @ApiOperation(value = "获取货物类型列表")
+    @ApiOperation(value = "货物id集合查询货物类型")
     public List<GoodsTypeDto> findAll(@RequestParam(name = "ids", required = false) List<String> ids) {
-        return goodsTypeService.findAll(ids).stream().map(dyGoodsType -> {
-            GoodsTypeDto dto = new GoodsTypeDto();
-            BeanUtils.copyProperties(dyGoodsType, dto);
-            dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType -> truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
-            return dto;
-        }).collect(Collectors.toList());
+        List<DyGoodsType> dyGoodsTypeList = goodsTypeService.findAll(ids);
+        if(dyGoodsTypeList!=null&&dyGoodsTypeList.size()>0){
+            //list内DyGoodsType转成dto
+           return dyGoodsTypeList.stream().map(dyGoodsType -> {
+                List<DyTruckTypeGoodsType> dyTruckTypeGoodsTypeList = truckTypeGoodsTypeService.findAll(null, dyGoodsType.getId());
+                //将dyTruckTypeGoodsType转成其id
+                List<String> truckTypeIds = dyTruckTypeGoodsTypeList.stream().map(dyTruckTypeGoodsType -> dyTruckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList());
+                GoodsTypeDto goodsTypeDto = new GoodsTypeDto();
+                BeanUtils.copyProperties(dyGoodsType,goodsTypeDto);
+                goodsTypeDto.setTruckTypeIds(truckTypeIds);
+                return goodsTypeDto;
+            }).collect(Collectors.toList());
+        }
+        return null;
     }
 
     /**

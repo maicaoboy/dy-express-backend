@@ -45,10 +45,10 @@ public class DyGoodsTypeServiceImpl extends ServiceImpl<DyGoodsTypeMapper, DyGoo
     private IDyTruckTypeGoodsTypeService truckTypeGoodsTypeService;
 
     @Override
-    public DyGoodsType saveGoodsType(DyGoodsType pdGoodsType) {
-        pdGoodsType.setId(idGenerator.nextId(pdGoodsType) + "");
-        baseMapper.insert(pdGoodsType);
-        return pdGoodsType;
+    public DyGoodsType saveGoodsType(DyGoodsType dyGoodsType) {
+        dyGoodsType.setId(idGenerator.nextId(dyGoodsType) + "");
+        baseMapper.insert(dyGoodsType);
+        return dyGoodsType;
     }
 
     @Override
@@ -85,9 +85,9 @@ public class DyGoodsTypeServiceImpl extends ServiceImpl<DyGoodsTypeMapper, DyGoo
     @ApiOperation(value = "更新货物类型信息")
     public GoodsTypeDto update(@PathVariable(name = "id") String id, @RequestBody GoodsTypeDto dto) {
         dto.setId(id);
-        DyGoodsType pdGoodsType = new DyGoodsType();
-        BeanUtils.copyProperties(dto, pdGoodsType);
-        goodsTypeService.updateById(pdGoodsType);
+        DyGoodsType dyGoodsType = new DyGoodsType();
+        BeanUtils.copyProperties(dto, dyGoodsType);
+        goodsTypeService.updateById(dyGoodsType);
         if (dto.getTruckTypeIds() != null) {
             truckTypeGoodsTypeService.delete(null, id);
             truckTypeGoodsTypeService.batchSave(dto.getTruckTypeIds().stream().map(truckTypeId -> {

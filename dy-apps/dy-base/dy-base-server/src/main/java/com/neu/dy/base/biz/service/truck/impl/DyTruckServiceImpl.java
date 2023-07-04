@@ -67,7 +67,7 @@ public class DyTruckServiceImpl extends ServiceImpl<DyTruckMapper, DyTruck> impl
     public Integer count(String fleetId) {
         LambdaQueryWrapper<DyTruck> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotEmpty(fleetId)) {
-            lambdaQueryWrapper.eq(DyTruck::getId, fleetId);
+            lambdaQueryWrapper.eq(DyTruck::getFleetId, fleetId);
         }
         lambdaQueryWrapper.eq(DyTruck::getStatus, Constant.DATA_DEFAULT_STATUS);
         return baseMapper.selectCount(lambdaQueryWrapper);
@@ -75,10 +75,10 @@ public class DyTruckServiceImpl extends ServiceImpl<DyTruckMapper, DyTruck> impl
 
     @Override
     public void disableById(String id) {
-        DyTruck pdTruck = new DyTruck();
-        pdTruck.setId(id);
-        pdTruck.setStatus(Constant.DATA_DISABLE_STATUS);
-        baseMapper.updateById(pdTruck);
+        DyTruck dyTruck = new DyTruck();
+        dyTruck.setId(id);
+        dyTruck.setStatus(Constant.DATA_DISABLE_STATUS);
+        baseMapper.updateById(dyTruck);
     }
 
 }

@@ -24,15 +24,15 @@ public class DyTruckDriverServiceImpl extends ServiceImpl<DyTruckDriverMapper, D
     private CustomIdGenerator idGenerator;
 
     @Override
-    public DyTruckDriver saveTruckDriver(DyTruckDriver pdTruckDriver) {
-        DyTruckDriver driver = baseMapper.selectOne(new LambdaQueryWrapper<DyTruckDriver>().eq(DyTruckDriver::getUserId, pdTruckDriver.getUserId()));
+    public DyTruckDriver saveTruckDriver(DyTruckDriver dyTruckDriver) {
+        DyTruckDriver driver = baseMapper.selectOne(new LambdaQueryWrapper<DyTruckDriver>().eq(DyTruckDriver::getUserId, dyTruckDriver.getUserId()));
         if (driver == null) {
-            pdTruckDriver.setId(idGenerator.nextId(pdTruckDriver) + "");
+            dyTruckDriver.setId(idGenerator.nextId(dyTruckDriver) + "");
         } else {
-            pdTruckDriver.setId(driver.getId());
+            dyTruckDriver.setId(driver.getId());
         }
-        saveOrUpdate(pdTruckDriver);
-        return pdTruckDriver;
+        saveOrUpdate(dyTruckDriver);
+        return dyTruckDriver;
     }
 
     @Override

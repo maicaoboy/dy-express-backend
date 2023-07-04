@@ -5,12 +5,12 @@
         SELECT
         goods_type.*
         FROM
-        pd_goods_type goods_type
+        dy_goods_type goods_type
         <if test="truckTypeId != null || truckTypeName != null">
-            LEFT JOIN pd_truck_type_goods_type truck_type_goods_type ON goods_type.id = truck_type_goods_type.goods_type_id
+            LEFT JOIN dy_truck_type_goods_type truck_type_goods_type ON goods_type.id = truck_type_goods_type.goods_type_id
         </if>
         <if test="truckTypeName != null">
-            LEFT JOIN pd_truck_type truck_type ON   truck_type_goods_type.truck_type_id=truck_type.id
+            LEFT JOIN dy_truck_type truck_type ON   truck_type_goods_type.truck_type_id=truck_type.id
         </if>
         <where>
             goods_type.status=1
@@ -18,13 +18,13 @@
                 AND truck_type.status=1
             </if>
             <if test="name != null">
-                AND goods_type.name LIKE "%"#{name}"%"
+                AND goods_type.name LIKE #{name}
             </if>
             <if test="truckTypeId != null">
                 AND truck_type_goods_type.truck_type_id = #{truckTypeId}
             </if>
             <if test="truckTypeName != null">
-                AND truck_type.name LIKE "%"#{truckTypeName}"%"
+                AND truck_type.name LIKE #{truckTypeName}
             </if>
         </where>
     </select>

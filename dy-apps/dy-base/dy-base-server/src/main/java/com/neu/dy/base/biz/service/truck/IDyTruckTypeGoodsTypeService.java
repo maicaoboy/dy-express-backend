@@ -10,9 +10,9 @@ public interface IDyTruckTypeGoodsTypeService extends IService<DyTruckTypeGoodsT
     /**
      * 添加车辆类型与货物类型关联
      *
-     * @param pdTruckTypeGoodsType 车辆类型与货物类型信息
+     * @param dyTruckTypeGoodsType 车辆类型与货物类型信息
      */
-    void saveTruckTypeGoodsType(DyTruckTypeGoodsType pdTruckTypeGoodsType);
+    void saveTruckTypeGoodsType(DyTruckTypeGoodsType dyTruckTypeGoodsType);
 
     /**
      * 批量添加车辆类型与货物类型关联

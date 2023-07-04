@@ -1,5 +1,6 @@
 package com.neu.dy.base.dto.truck;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,41 +15,51 @@ public class TruckDto implements Serializable {
     /**
      * id
      */
+    @ApiModelProperty("主键")
     private String id;
     /**
      * 车辆类型id
      */
+    @ApiModelProperty("车辆类型id")
     private String truckTypeId;
     /**
      * 所属车队id
      */
+    @ApiModelProperty("所属车队id")
     private String fleetId;
     /**
      * 品牌
      */
+    @ApiModelProperty("品牌")
     private String brand;
     /**
      * 车牌号码
      */
+    @ApiModelProperty("车牌号码")
     private String licensePlate;
     /**
      * GPS设备id
      */
+    @ApiModelProperty("GPS设备id（暂时未使用）")
     private String deviceGpsId;
     /**
      * 准载重量
      */
+    @ApiModelProperty("准载重量")
     private BigDecimal allowableLoad;
     /**
      * 准载体积
      */
+    @ApiModelProperty("准载体积")
     private BigDecimal allowableVolume;
     /**
      * 车辆行驶证信息id
      */
+    @ApiModelProperty("车辆行驶证信息id（不需要了）")
     private String truckLicenseId;
     /**
      * 状态 0：禁用 1：正常
      */
+    @ApiModelProperty("状态")
     private Integer status;
 }

@@ -28,14 +28,14 @@ public class DyTruckTypeGoodsTypeServiceImpl extends ServiceImpl<DyTruckTypeGood
     private CustomIdGenerator idGenerator;
 
     @Override
-    public void saveTruckTypeGoodsType(DyTruckTypeGoodsType pdTruckTypeGoodsType) {
-        pdTruckTypeGoodsType.setId(idGenerator.nextId(pdTruckTypeGoodsType) + "");
-        baseMapper.insert(pdTruckTypeGoodsType);
+    public void saveTruckTypeGoodsType(DyTruckTypeGoodsType dyTruckTypeGoodsType) {
+        dyTruckTypeGoodsType.setId(idGenerator.nextId(dyTruckTypeGoodsType) + "");
+        baseMapper.insert(dyTruckTypeGoodsType);
     }
 
     @Override
     public void batchSave(List<DyTruckTypeGoodsType> truckTypeGoodsTypeList) {
-        truckTypeGoodsTypeList.forEach(pdTruckTypeGoodsType -> pdTruckTypeGoodsType.setId(idGenerator.nextId(pdTruckTypeGoodsType) + ""));
+        truckTypeGoodsTypeList.forEach(dyTruckTypeGoodsType -> dyTruckTypeGoodsType.setId(idGenerator.nextId(dyTruckTypeGoodsType) + ""));
         saveBatch(truckTypeGoodsTypeList);
     }
 

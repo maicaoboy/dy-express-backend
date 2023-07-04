@@ -12,13 +12,6 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-/**
- * @Classname DyGoodsType
- * @Description 货物类型
- * @Version 1.0.0
- * @Date 2023/6/20 21:48
- * @Created by maicaoboy
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

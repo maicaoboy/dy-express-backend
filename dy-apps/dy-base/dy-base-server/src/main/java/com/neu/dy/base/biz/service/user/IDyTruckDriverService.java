@@ -18,10 +18,10 @@ public interface IDyTruckDriverService extends IService<DyTruckDriver> {
     /**
      * 添加司机
      *
-     * @param pdTruckDriver 司机信息
+     * @param dyTruckDriver 司机信息
      * @return 司机信息
      */
-    DyTruckDriver saveTruckDriver(DyTruckDriver pdTruckDriver);
+    DyTruckDriver saveTruckDriver(DyTruckDriver dyTruckDriver);
 
     /**
      * 获取司机基本信息列表

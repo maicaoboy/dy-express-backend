@@ -8,6 +8,8 @@ import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.truck.TruckDto;
 import com.neu.dy.base.entity.truck.DyTruck;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +39,10 @@ public class TruckController {
     @PostMapping("")
     @ApiOperation(value = "添加车辆")
     public TruckDto saveTruck(@RequestBody TruckDto dto) {
-        DyTruck pdTruck = new DyTruck();
-        BeanUtils.copyProperties(dto, pdTruck);
-        pdTruck = truckService.saveTruck(pdTruck);
-        BeanUtils.copyProperties(pdTruck, dto);
+        DyTruck dyTruck = new DyTruck();
+        BeanUtils.copyProperties(dto, dyTruck);
+        dyTruck = truckService.saveTruck(dyTruck);
+        BeanUtils.copyProperties(dyTruck, dto);
         return dto;
     }
 
@@ -53,12 +55,12 @@ public class TruckController {
     @GetMapping("/{id}")
     @ApiOperation(value = "根据id获取车辆详情")
     public TruckDto fineById(@PathVariable(name = "id") String id) {
-        DyTruck pdTruck = truckService.getById(id);
-        if (ObjectUtils.isEmpty(pdTruck)) {
+        DyTruck dyTruck = truckService.getById(id);
+        if (ObjectUtils.isEmpty(dyTruck)) {
             return null;
         }
         TruckDto dto = new TruckDto();
-        BeanUtils.copyProperties(pdTruck, dto);
+        BeanUtils.copyProperties(dyTruck, dto);
         return dto;
     }
 
@@ -73,6 +75,14 @@ public class TruckController {
      */
     @GetMapping("/page")
     @ApiOperation(value = "获取车辆分页数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "truckTypeId", value = "车辆类型id",
+                    required = false, type = "String"),
+            @ApiImplicitParam(name = "licensePlate", value = "车辆牌照",
+                    required = false, type = "String"),
+            @ApiImplicitParam(name = "fleetId", value = "车队id",
+                    required = false, type = "String"),
+    })
     public PageResponse<TruckDto> findByPage(@RequestParam(name = "page") Integer page,
                                              @RequestParam(name = "pageSize") Integer pageSize,
                                              @RequestParam(name = "truckTypeId", required = false) String truckTypeId,
@@ -81,9 +91,9 @@ public class TruckController {
         // TODO: 2020/1/9 通过车队名称查询待实现
         IPage<DyTruck> truckPage = truckService.findByPage(page, pageSize, truckTypeId, licensePlate, fleetId);
         List<TruckDto> dtoList = new ArrayList<>();
-        truckPage.getRecords().forEach(pdTruck -> {
+        truckPage.getRecords().forEach(dyTruck -> {
             TruckDto dto = new TruckDto();
-            BeanUtils.copyProperties(pdTruck, dto);
+            BeanUtils.copyProperties(dyTruck, dto);
             dtoList.add(dto);
         });
         return PageResponse.<TruckDto>builder().items(dtoList).pagesize(pageSize).page(page).counts(truckPage.getTotal())
@@ -97,7 +107,7 @@ public class TruckController {
      * @return 车辆数量
      */
     @GetMapping("/count")
-    @ApiOperation(value = "统计车辆数量")
+    @ApiOperation(value = "根据车队id统计车辆数量")
     public Integer count(@RequestParam(name = "fleetId", required = false) String fleetId) {
         return truckService.count(fleetId);
     }
@@ -109,11 +119,11 @@ public class TruckController {
      * @return 车辆列表
      */
     @GetMapping("")
-    @ApiOperation(value = "获取车辆列表")
+    @ApiOperation(value = "车辆id集合查询车辆列表")
     public List<TruckDto> findAll(@RequestParam(name = "ids", required = false) List<String> ids, @RequestParam(name = "fleetId", required = false) String fleetId) {
-        return truckService.findAll(ids, fleetId).stream().map(pdTruck -> {
+        return truckService.findAll(ids, fleetId).stream().map(dyTruck -> {
             TruckDto dto = new TruckDto();
-            BeanUtils.copyProperties(pdTruck, dto);
+            BeanUtils.copyProperties(dyTruck, dto);
             return dto;
         }).collect(Collectors.toList());
     }
@@ -129,9 +139,9 @@ public class TruckController {
     @ApiOperation(value = "更新车辆信息")
     public TruckDto update(@PathVariable(name = "id") String id, @RequestBody TruckDto dto) {
         dto.setId(id);
-        DyTruck pdTruck = new DyTruck();
-        BeanUtils.copyProperties(dto, pdTruck);
-        truckService.updateById(pdTruck);
+        DyTruck dyTruck = new DyTruck();
+        BeanUtils.copyProperties(dto, dyTruck);
+        truckService.updateById(dyTruck);
         return dto;
     }
 

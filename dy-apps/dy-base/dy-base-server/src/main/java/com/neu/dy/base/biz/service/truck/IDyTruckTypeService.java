@@ -19,10 +19,10 @@ public interface IDyTruckTypeService extends IService<DyTruckType> {
     /**
      * 添加车辆类型
      *
-     * @param pdTruckType 车辆类型信息
+     * @param dyTruckType 车辆类型信息
      * @return 车辆类型信息
      */
-    DyTruckType saveTruckType(DyTruckType pdTruckType);
+    DyTruckType saveTruckType(DyTruckType dyTruckType);
 
     /**
      * 获取车辆类型分页数据

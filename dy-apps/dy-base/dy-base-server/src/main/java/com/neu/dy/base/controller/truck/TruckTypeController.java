@@ -10,6 +10,10 @@ import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.truck.TruckTypeDto;
 import com.neu.dy.base.entity.truck.DyTruckType;
 import com.neu.dy.base.entity.truck.DyTruckTypeGoodsType;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +28,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("base/truck/type")
+@Api(tags = "车辆类型管理")
 public class TruckTypeController {
     @Autowired
     private IDyTruckTypeService truckTypeService;
@@ -37,11 +42,12 @@ public class TruckTypeController {
      * @return 车辆类型信息
      */
     @PostMapping("")
+    @ApiOperation(value = "添加车辆类型")
     public TruckTypeDto saveTruckType(@RequestBody TruckTypeDto dto) {
-        DyTruckType pdTruckType = new DyTruckType();
-        BeanUtils.copyProperties(dto, pdTruckType);
-        pdTruckType = truckTypeService.saveTruckType(pdTruckType);
-        String truckTypeId = pdTruckType.getId();
+        DyTruckType dyTruckType = new DyTruckType();
+        BeanUtils.copyProperties(dto, dyTruckType);
+        dyTruckType = truckTypeService.saveTruckType(dyTruckType);
+        String truckTypeId = dyTruckType.getId();
         //处理与货物类型的关联
         if (dto.getGoodsTypeIds() != null) {
             truckTypeGoodsTypeService.batchSave(dto.getGoodsTypeIds().stream().map(id -> {
@@ -51,7 +57,7 @@ public class TruckTypeController {
                 return truckTypeGoodsType;
             }).collect(Collectors.toList()));
         }
-        BeanUtils.copyProperties(pdTruckType, dto);
+        BeanUtils.copyProperties(dyTruckType, dto);
         return dto;
     }
 
@@ -62,11 +68,12 @@ public class TruckTypeController {
      * @return 车辆类型信息
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "根据id获取车辆类型详情")
     public TruckTypeDto fineById(@PathVariable(name = "id") String id) {
-        DyTruckType pdTruckType = truckTypeService.getById(id);
+        DyTruckType dyTruckType = truckTypeService.getById(id);
         TruckTypeDto dto = new TruckTypeDto();
-        BeanUtils.copyProperties(pdTruckType, dto);
-        dto.setGoodsTypeIds(truckTypeGoodsTypeService.findAll(dto.getId(), null).stream().map(pdTruckTypeGoodsType -> pdTruckTypeGoodsType.getGoodsTypeId()).collect(Collectors.toList()));
+        BeanUtils.copyProperties(dyTruckType, dto);
+        dto.setGoodsTypeIds(truckTypeGoodsTypeService.findAll(dto.getId(), null).stream().map(dyTruckTypeGoodsType -> dyTruckTypeGoodsType.getGoodsTypeId()).collect(Collectors.toList()));
         return dto;
     }
 
@@ -81,22 +88,31 @@ public class TruckTypeController {
      * @return 车辆类型分页数据
      */
     @GetMapping("/page")
+    @ApiOperation(value = "获取车辆类型分页数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "name", value = "车辆类型名称",
+                    required = false, type = "String"),
+            @ApiImplicitParam(name = "allowableLoad", value = "车辆载重（查询相等）",
+                    required = false, type = "BigDecimal"),
+            @ApiImplicitParam(name = "allowableVolume", value = "车载体积（查询相等）",
+                    required = false, type = "BigDecimal"),
+    })
     public PageResponse<TruckTypeDto> findByPage(@RequestParam(name = "page") Integer page,
                                                  @RequestParam(name = "pageSize") Integer pageSize,
                                                  @RequestParam(name = "name", required = false) String name,
                                                  @RequestParam(name = "allowableLoad", required = false) BigDecimal allowableLoad,
                                                  @RequestParam(name = "allowableVolume", required = false) BigDecimal allowableVolume) {
-        IPage<DyTruckType> pdTruckTypePage = truckTypeService.findByPage(page, pageSize, name, allowableLoad,
+        IPage<DyTruckType> dyTruckTypePage = truckTypeService.findByPage(page, pageSize, name, allowableLoad,
                 allowableVolume);
         List<TruckTypeDto> dtoList = new ArrayList<>();
-        pdTruckTypePage.getRecords().forEach(pdTruckType -> {
+        dyTruckTypePage.getRecords().forEach(dyTruckType -> {
             TruckTypeDto dto = new TruckTypeDto();
-            BeanUtils.copyProperties(pdTruckType, dto);
-            dto.setGoodsTypeIds(truckTypeGoodsTypeService.findAll(dto.getId(), null).stream().map(pdTruckTypeGoodsType -> pdTruckTypeGoodsType.getGoodsTypeId()).collect(Collectors.toList()));
+            BeanUtils.copyProperties(dyTruckType, dto);
+            dto.setGoodsTypeIds(truckTypeGoodsTypeService.findAll(dto.getId(), null).stream().map(dyTruckTypeGoodsType -> dyTruckTypeGoodsType.getGoodsTypeId()).collect(Collectors.toList()));
             dtoList.add(dto);
         });
         return PageResponse.<TruckTypeDto>builder().items(dtoList).pagesize(pageSize).page(page)
-                .counts(pdTruckTypePage.getTotal()).pages(pdTruckTypePage.getPages()).build();
+                .counts(dyTruckTypePage.getTotal()).pages(dyTruckTypePage.getPages()).build();
     }
 
     /**
@@ -106,11 +122,12 @@ public class TruckTypeController {
      * @return 车辆类型列表
      */
     @GetMapping("")
+    @ApiOperation(value = "车辆id集合获取车辆类型列表")
     public List<TruckTypeDto> findAll(@RequestParam(name = "ids",required = false) List<String> ids) {
         return truckTypeService.findAll(ids).stream().map(truckType -> {
             TruckTypeDto dto = new TruckTypeDto();
             BeanUtils.copyProperties(truckType, dto);
-            dto.setGoodsTypeIds(truckTypeGoodsTypeService.findAll(dto.getId(), null).stream().map(pdTruckTypeGoodsType -> pdTruckTypeGoodsType.getGoodsTypeId()).collect(Collectors.toList()));
+            dto.setGoodsTypeIds(truckTypeGoodsTypeService.findAll(dto.getId(), null).stream().map(dyTruckTypeGoodsType -> dyTruckTypeGoodsType.getGoodsTypeId()).collect(Collectors.toList()));
             return dto;
         }).collect(Collectors.toList());
     }
@@ -123,6 +140,7 @@ public class TruckTypeController {
      * @return 车辆类型信息
      */
     @PutMapping("/{id}")
+    @ApiOperation(value = "更新车辆类型信息")
     public TruckTypeDto update(@PathVariable(name = "id") String id, @RequestBody TruckTypeDto dto) {
         dto.setId(id);
         DyTruckType truckType = new DyTruckType();
@@ -149,6 +167,7 @@ public class TruckTypeController {
      * @return 返回信息
      */
     @PutMapping("/{id}/disable")
+    @ApiOperation(value = "删除车辆类型")
     public Result disable(@PathVariable(name = "id") String id) {
         // TODO: 2020/1/8 待实现，是否关联数据
         DyTruckType truckType = new DyTruckType();
