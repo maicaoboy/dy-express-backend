@@ -80,6 +80,7 @@ public class ResourceController extends BaseController {
     @SysLog("新增资源")
     public R<Resource> save(@RequestBody @Validated ResourceSaveDTO data) {
         Resource resource = dozer.map(data, Resource.class);
+
         resourceService.save(resource);
         return success(resource);
     }
@@ -137,8 +138,6 @@ public class ResourceController extends BaseController {
         List<String> resourceList = list.stream().map((Resource r) -> {
             return r.getMethod() + r.getUrl();
         }).collect(Collectors.toList());
-        System.out.println("-------------------------");
-        System.out.println("resourceList"+resourceList);
         return success(resourceList);
     }
 }

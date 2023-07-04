@@ -16,6 +16,7 @@ import com.neu.dy.order.enums.OrderStatus;
 import com.neu.dy.order.mapper.OrderMapper;
 import com.neu.dy.order.service.OrderService;
 import com.neu.dy.utils.BaiduMapUtils;
+import org.apache.commons.lang.StringUtils;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,26 +57,51 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public IPage<Order> findByPage(Integer page, Integer pageSize, Order order) {
-        IPage<Order> pageInfo = new Page<>(page,pageSize);
-
-        //构造查询条件
-        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(order.getId() != null, Order::getId, order.getId());
-        queryWrapper.eq(order.getStatus() != null, Order::getStatus, order.getStatus());
-        queryWrapper.eq(order.getPaymentStatus() != null, Order::getPaymentStatus,order.getPaymentStatus());
-        queryWrapper.like(order.getSenderName() != null, Order::getSenderName, order.getSenderName());
-        queryWrapper.like(order.getSenderPhone() != null, Order::getSenderPhone, order.getSenderPhone());
-        queryWrapper.eq(order.getSenderProvinceId() != null, Order::getSenderProvinceId, order.getSenderProvinceId());
-        queryWrapper.eq(order.getSenderCityId() != null, Order::getSenderCityId, order.getSenderCityId());
-        queryWrapper.eq(order.getSenderCountyId() != null, Order::getSenderCountyId, order.getSenderCountyId());
-        queryWrapper.like(order.getReceiverName() != null, Order::getReceiverName, order.getReceiverName());
-        queryWrapper.like(order.getReceiverPhone() != null, Order::getReceiverPhone, order.getReceiverPhone());
-        queryWrapper.eq(order.getReceiverProvinceId() != null, Order::getReceiverProvinceId, order.getReceiverProvinceId());
-        queryWrapper.eq(order.getReceiverCityId() != null, Order::getReceiverCityId, order.getReceiverCityId());
-        queryWrapper.eq(order.getReceiverCountyId() != null, Order::getReceiverCountyId, order.getReceiverCountyId());
-        queryWrapper.orderBy(true, false, Order::getId);
-
-        return page(pageInfo, queryWrapper);
+        Page<Order> iPage = new Page(page, pageSize);
+        LambdaQueryWrapper<Order> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(order.getId())) {
+            lambdaQueryWrapper.like(Order::getId, order.getId());
+        }
+        if (order.getStatus() != null) {
+            lambdaQueryWrapper.eq(Order::getStatus, order.getStatus());
+        }
+        if (order.getPaymentStatus() != null) {
+            lambdaQueryWrapper.eq(Order::getPaymentStatus, order.getPaymentStatus());
+        }
+        //发件人信息
+        if (StringUtils.isNotEmpty(order.getSenderName())) {
+            lambdaQueryWrapper.like(Order::getSenderName, order.getSenderName());
+        }
+        if (StringUtils.isNotEmpty(order.getSenderPhone())) {
+            lambdaQueryWrapper.like(Order::getSenderPhone, order.getSenderPhone());
+        }
+        if (StringUtils.isNotEmpty(order.getSenderProvinceId())) {
+            lambdaQueryWrapper.eq(Order::getSenderProvinceId, order.getSenderProvinceId());
+        }
+        if (StringUtils.isNotEmpty(order.getSenderCityId())) {
+            lambdaQueryWrapper.eq(Order::getSenderCityId, order.getSenderCityId());
+        }
+        if (StringUtils.isNotEmpty(order.getSenderCountyId())) {
+            lambdaQueryWrapper.eq(Order::getSenderCountyId, order.getSenderCountyId());
+        }
+        //收件人信息
+        if (StringUtils.isNotEmpty(order.getReceiverName())) {
+            lambdaQueryWrapper.like(Order::getReceiverName, order.getReceiverName());
+        }
+        if (StringUtils.isNotEmpty(order.getReceiverPhone())) {
+            lambdaQueryWrapper.like(Order::getReceiverPhone, order.getReceiverPhone());
+        }
+        if (StringUtils.isNotEmpty(order.getReceiverProvinceId())) {
+            lambdaQueryWrapper.eq(Order::getReceiverProvinceId, order.getReceiverProvinceId());
+        }
+        if (StringUtils.isNotEmpty(order.getReceiverCityId())) {
+            lambdaQueryWrapper.eq(Order::getReceiverCityId, order.getReceiverCityId());
+        }
+        if (StringUtils.isNotEmpty(order.getReceiverCountyId())) {
+            lambdaQueryWrapper.eq(Order::getReceiverCountyId, order.getReceiverCountyId());
+        }
+        lambdaQueryWrapper.orderBy(true, false, Order::getId);
+        return page(iPage, lambdaQueryWrapper);
     }
 
     @Override

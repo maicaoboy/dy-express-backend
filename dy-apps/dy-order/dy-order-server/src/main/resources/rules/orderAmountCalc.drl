@@ -2,8 +2,8 @@ package rules;
 
 import com.neu.dy.order.entitiy.fact.AddressRule
 import com.neu.dy.order.entitiy.fact.AddressCheckResult
-import com.neu.dy.orderserver.service.DroolsRulesService
-import com.neu.dy.orderserver.service.impl.DroolsRulesServiceImpl
+import com.neu.dy.order.service.DroolsRulesService
+import com.neu.dy.order.service.impl.DroolsRulesServiceImpl
 
 dialect "java"
 

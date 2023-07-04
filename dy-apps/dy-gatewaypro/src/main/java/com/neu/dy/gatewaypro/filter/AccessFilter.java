@@ -49,20 +49,12 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
         String uri = String.valueOf(exchange.getRequest().getPath());
         System.out.println(uri);
 
-//        uri = StrUtil.subSuf(uri, prefix.length());
-//        uri = StrUtil.subSuf(uri, uri.indexOf("/", 1));
-
-        System.out.println(uri);
-
         String permission = method + uri;
 
         //3.从缓存中获取所有需要鉴权的资源
         CacheObject cacheObject = cacheChannel.get(CacheKey.RESOURCE, CacheKey.RESOURCE_NEED_TO_CHECK);
         List<String> list  = (List<String>) cacheObject.getValue();
         if(list == null){
-            R<List> list1 = resourceApi.list();
-            System.out.println("-----------------");
-            System.out.println(list1);
             list = resourceApi.list().getData();
             System.out.println(list);
 

@@ -20,9 +20,12 @@
         <module>dy-gateway</module>
         <module>dy-gatewaypro</module>
         <!--<module>dy-file</module>-->
+        <module>dy-service-api</module>
         <module>dy-base</module>
         <module>dy-user</module>
         <module>dy-order</module>
+        <module>dy-work</module>
+        <module>dy-dispatch</module>
     </modules>
     <dependencyManagement>
         <dependencies>
