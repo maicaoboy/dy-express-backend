@@ -73,6 +73,19 @@ public class OrderController {
     }
 
     /**
+     * 修改订单信息
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/update")
+    public R updateByIdNoId(@RequestBody OrderDTO orderDTO){
+        Order order = new Order();
+        BeanUtils.copyProperties(orderDTO,order);
+        orderService.updateById(order);
+        return R.success(orderDTO);
+    }
+
+    /**
      * 分页查询
      * @param orderDTO
      * @return
