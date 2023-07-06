@@ -49,8 +49,9 @@ public class DyTruck implements Serializable {
 
     /**
      * GPS设备id（暂时未用到）
-     */
+
     private String deviceGpsId;
+     */
 
     /**
      * 准载重量
@@ -64,8 +65,9 @@ public class DyTruck implements Serializable {
 
     /**
      * 车辆行驶证信息id(已经不需要了）
-     */
+
     private String truckLicenseId;
+     */
     
     /**
      * 状态 0：禁用 1：正常

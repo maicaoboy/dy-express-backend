@@ -25,11 +25,11 @@ public class DyTransportLineTypeServiceImpl extends ServiceImpl<DyTransportLineT
     private CustomIdGenerator idGenerator;
 
     @Override
-    public DyTransportLineType saveTransportLineType(DyTransportLineType pdTransportLineType) {
-        pdTransportLineType.setId(idGenerator.nextId(pdTransportLineType) + "");
-        pdTransportLineType.setLastUpdateTime(LocalDateTime.now());
-        baseMapper.insert(pdTransportLineType);
-        return pdTransportLineType;
+    public DyTransportLineType saveTransportLineType(DyTransportLineType dyTransportLineType) {
+        dyTransportLineType.setId(idGenerator.nextId(dyTransportLineType) + "");
+        dyTransportLineType.setLastUpdateTime(LocalDateTime.now());
+        baseMapper.insert(dyTransportLineType);
+        return dyTransportLineType;
     }
 
     @Override
@@ -65,10 +65,10 @@ public class DyTransportLineTypeServiceImpl extends ServiceImpl<DyTransportLineT
 
     @Override
     public void disableById(String id) {
-        DyTransportLineType pdTransportLineType = new DyTransportLineType();
-        pdTransportLineType.setId(id);
-        pdTransportLineType.setStatus(Constant.DATA_DISABLE_STATUS);
-        baseMapper.updateById(pdTransportLineType);
+        DyTransportLineType dyTransportLineType = new DyTransportLineType();
+        dyTransportLineType.setId(id);
+        dyTransportLineType.setStatus(Constant.DATA_DISABLE_STATUS);
+        baseMapper.updateById(dyTransportLineType);
     }
 
 }

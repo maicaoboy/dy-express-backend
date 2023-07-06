@@ -39,9 +39,10 @@ public class TruckDto implements Serializable {
     private String licensePlate;
     /**
      * GPS设备id
-     */
+
     @ApiModelProperty("GPS设备id（暂时未使用）")
     private String deviceGpsId;
+     */
     /**
      * 准载重量
      */
@@ -54,9 +55,11 @@ public class TruckDto implements Serializable {
     private BigDecimal allowableVolume;
     /**
      * 车辆行驶证信息id
-     */
+
     @ApiModelProperty("车辆行驶证信息id（不需要了）")
     private String truckLicenseId;
+     */
+
     /**
      * 状态 0：禁用 1：正常
      */

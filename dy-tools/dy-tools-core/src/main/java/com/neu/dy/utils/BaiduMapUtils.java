@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * 百度地图操作工具类
+ * com.neu.dy.utils.BaiduMapUtils
  */
 public class BaiduMapUtils {
     public static void main(String[] args) {
@@ -27,7 +28,7 @@ public class BaiduMapUtils {
     }
 
     private static String AK = "y3XDSLIvhWQmzqI3GwZG3HhLYPnAPRXj";
-
+    //private static String AK="Np2TtKZLfOEzrm8k6GQkAQE85svy6U2d" ;//jjj的百度地图AK，服务器端类型
     /**
      * 调用百度地图地理编码服务接口，根据地址获取坐标（经度、纬度）
      * @param address
@@ -82,7 +83,7 @@ public class BaiduMapUtils {
     }
 
     /**
-         * 调用百度地图驾车路线规划服务接口，根据寄件人地址和收件人地址坐标计算订单距离
+         * 调用百度地图驾车路线规划服务接口，根据寄件人地址和收件人地址坐标计算订单时间
      * @param origin
      * @param destination
      * @return
@@ -107,23 +108,27 @@ public class BaiduMapUtils {
     }
 
     /**
-     * 调用服务接口，返回百度地图服务端的结果
-     * @param httpUrl
+     * 调用百度地图接口获取返回的json数据
+     * @param httpurl
      * @return
      */
-    public static String loadJSON(String httpUrl){
-        StringBuilder json = new StringBuilder();
+    public static String loadJSON(String httpurl) {
+        StringBuilder json=new StringBuilder();
         try {
-            URL url = new URL(httpUrl);
-            URLConnection urlConnection = url.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), "UTF-8"));
-            String inputLine = null;
-            while ((inputLine = in.readLine()) != null) {
+            URL url=new URL(httpurl);
+            //打开和url之间的连接，获取连接的输入流
+            URLConnection connection=url.openConnection();
+            BufferedReader in=new BufferedReader(new InputStreamReader
+                    (connection.getInputStream(),"UTF-8"));
+            String inputLine=null;
+            while((inputLine=in.readLine())!=null){
                 json.append(inputLine);
             }
             in.close();
         } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
+            throw new RuntimeException(e);
         }
         System.out.println(json.toString());
         return json.toString();

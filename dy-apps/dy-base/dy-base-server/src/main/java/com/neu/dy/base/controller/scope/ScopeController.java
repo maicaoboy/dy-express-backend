@@ -23,8 +23,6 @@ import java.util.stream.Collectors;
  * 业务范围表 前端控制器
  * </p>
  *
- * @author jpf
- * @since 2019-12-23
  */
 @RestController
 @RequestMapping("scope")

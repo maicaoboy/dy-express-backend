@@ -12,10 +12,10 @@ public interface IDyTransportLineTypeService extends IService<DyTransportLineTyp
     /**
      * 添加线路类型
      *
-     * @param pdTransportLineType 线路类型信息
+     * @param dyTransportLineType 线路类型信息
      * @return 线路类型信息
      */
-    DyTransportLineType saveTransportLineType(DyTransportLineType pdTransportLineType);
+    DyTransportLineType saveTransportLineType(DyTransportLineType dyTransportLineType);
 
     /**
      * 获取线路类型分页数据

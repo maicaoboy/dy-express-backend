@@ -8,6 +8,10 @@ import com.neu.dy.base.common.PageResponse;
 import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.transportline.TransportLineDto;
 import com.neu.dy.base.entity.transportline.DyTransportLine;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("base/transportLine")
+@Api(tags = "线路管理")
 public class TransportLineController {
     @Autowired
     private IDyTransportLineService transportLineService;
@@ -33,6 +38,7 @@ public class TransportLineController {
      * @return 线路信息
      */
     @PostMapping("")
+    @ApiOperation(value = "添加线路")
     public TransportLineDto saveTransportLine(@RequestBody TransportLineDto dto) {
         DyTransportLine pdTransportLine = new DyTransportLine();
         BeanUtils.copyProperties(dto, pdTransportLine);
@@ -48,6 +54,7 @@ public class TransportLineController {
      * @return 线路详情
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "根据id获取线路详情")
     public TransportLineDto fineById(@PathVariable(name = "id") String id) {
         DyTransportLine pdTransportLine = transportLineService.getById(id);
         TransportLineDto dto = new TransportLineDto();
@@ -70,6 +77,12 @@ public class TransportLineController {
      * @return 线路分页信息
      */
     @GetMapping("/page")
+    @ApiOperation(value = "获取线路分页信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="lineNumber",value="线路编号",dataType="String", required = false),
+            @ApiImplicitParam(name="name",value="线路名称",dataType="String", required = false),
+            @ApiImplicitParam(name="transportLineTypeId",value="线路类型id",dataType="String", required = false)
+    })
     public PageResponse<TransportLineDto> findByPage(@RequestParam(name = "page") Integer page,
                                                      @RequestParam(name = "pageSize") Integer pageSize,
                                                      @RequestParam(name = "lineNumber", required = false) String lineNumber,
@@ -93,6 +106,7 @@ public class TransportLineController {
      * @return 线路列表
      */
     @GetMapping("")
+    @ApiOperation(value = "根据id、机构id、机构ids获取线路列表")
     public List<TransportLineDto> findAll(@RequestParam(name = "ids", required = false) List<String> ids,
                                           @RequestParam(name = "agencyId", required = false) String agencyId,
                                           @RequestParam(name = "agencyIds", required = false) List<String> agencyIds) {
@@ -111,6 +125,7 @@ public class TransportLineController {
      * @return 线路信息
      */
     @PutMapping("/{id}")
+    @ApiOperation(value = "更新线路信息")
     public TransportLineDto update(@PathVariable(name = "id") String id, @RequestBody TransportLineDto dto) {
         dto.setId(id);
         DyTransportLine pdTransportLine = new DyTransportLine();
@@ -126,6 +141,7 @@ public class TransportLineController {
      * @return 返回信息
      */
     @PutMapping("/{id}/disable")
+    @ApiOperation(value = "删除线路")
     public Result disable(@PathVariable(name = "id") String id) {
         transportLineService.disable(id);
         return Result.ok();
@@ -138,9 +154,10 @@ public class TransportLineController {
      * @return 线路列表
      */
     @PostMapping("list")
+    @ApiOperation(value = "获取线路列表（方法很奇怪不知所云）")
     public List<TransportLineDto> list(@RequestBody TransportLineDto transportLineDto) {
-        LambdaQueryWrapper<DyTransportLine> wrapper = new LambdaQueryWrapper<>();
 
+        LambdaQueryWrapper<DyTransportLine> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(StringUtils.isNotEmpty(transportLineDto.getStartAgencyId()), DyTransportLine::getStartAgencyId, transportLineDto.getStartAgencyId());
         wrapper.eq(StringUtils.isNotEmpty(transportLineDto.getEndAgencyId()), DyTransportLine::getEndAgencyId, transportLineDto.getEndAgencyId());
         wrapper.eq(StringUtils.isNotEmpty(transportLineDto.getAgencyId()), DyTransportLine::getAgencyId, transportLineDto.getAgencyId());

@@ -140,6 +140,7 @@
         <jjwt.version>0.7.0</jjwt.version>
         <qcloudsms.version>1.0.6</qcloudsms.version>
         <bce-java-sdk.version>0.10.21</bce-java-sdk.version>
+        <drools.version>6.5.0.Final</drools.version>
 
 
         <hutool.version>5.1.0</hutool.version>
