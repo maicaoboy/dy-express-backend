@@ -54,4 +54,6 @@ public interface OrderService extends IService<Order> {
      * @return
      */
     public Map calculateAmount(OrderDTO orderDTO);
+
+    Integer calculatetime(OrderDTO orderDTO);
 }
