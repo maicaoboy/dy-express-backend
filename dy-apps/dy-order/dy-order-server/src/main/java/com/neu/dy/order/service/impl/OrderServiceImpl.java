@@ -115,6 +115,24 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     /**
+     * 计算订单预计时间
+     * @param orderDTO
+     * @return
+     */
+    @Override
+    public Integer calculatetime(OrderDTO orderDTO) {
+        //地址解析失败，无法获取时间
+        if("sender error msg".equals(orderDTO.getSenderAddress()) || "receiver error msg".equals(orderDTO.getReceiverAddress())){
+            return 0;
+        }
+        //调用百度地图接口计算订单时间
+        String orgin =BaiduMapUtils.getCoordinate(orderDTO.getSenderAddress());
+        String destination =BaiduMapUtils.getCoordinate(orderDTO.getReceiverAddress());
+        int time = BaiduMapUtils.getTime(orgin,destination);
+        return time;
+    }
+
+    /**
      * 计算订单价格
      * @param orderDTO
      * @return
@@ -163,6 +181,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         return null;
     }
+
 
     /**
      * 调用百度地图服务接口，根据寄件人地址和收件人地址计算订单距离

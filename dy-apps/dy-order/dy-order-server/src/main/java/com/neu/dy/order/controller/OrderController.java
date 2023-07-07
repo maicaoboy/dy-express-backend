@@ -6,6 +6,7 @@ import com.neu.dy.base.R;
 import com.neu.dy.order.dto.OrderDTO;
 import com.neu.dy.order.entitiy.Order;
 import com.neu.dy.order.service.OrderService;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,13 @@ public class OrderController {
      * @return
      */
     @PostMapping("/save")
+    @ApiOperation("保存订单信息")
     public R save(@RequestBody OrderDTO orderDTO){
         log.info("保存订单信息：{}", JSON.toJSONString(orderDTO));
         Order order = new Order();
-        //计算预计到达时间,两天
-        order.setEstimatedArrivalTime(LocalDateTime.now().plus(2, ChronoUnit.DAYS));
+        //计算预计到达时间
+        Integer seconds = orderService.calculatetime(orderDTO);
+        order.setEstimatedArrivalTime(LocalDateTime.now().plus(seconds, ChronoUnit.SECONDS));
 
         //调用sevice根据指定的规则计算运费
         Map map = orderService.calculateAmount(orderDTO);
@@ -54,7 +57,7 @@ public class OrderController {
         //返回order对象
         OrderDTO result = new OrderDTO();
         BeanUtils.copyProperties(order, result);
-        return R.success(order);
+        return R.success(result);
     }
 
     /**
@@ -66,6 +69,19 @@ public class OrderController {
     @PostMapping("/update/{id}")
     public R updateById(@PathVariable(name = "id")String id, @RequestBody OrderDTO orderDTO){
         orderDTO.setId(id);
+        Order order = new Order();
+        BeanUtils.copyProperties(orderDTO,order);
+        orderService.updateById(order);
+        return R.success(orderDTO);
+    }
+
+    /**
+     * 修改订单信息
+     * @param orderDTO
+     * @return
+     */
+    @PostMapping("/update")
+    public R updateByIdNoId(@RequestBody OrderDTO orderDTO){
         Order order = new Order();
         BeanUtils.copyProperties(orderDTO,order);
         orderService.updateById(order);

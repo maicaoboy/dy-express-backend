@@ -117,6 +117,7 @@
         <p6spy.version>3.8.7</p6spy.version>
         <fastjson.version>1.2.62</fastjson.version>
         <druid.version>1.1.21</druid.version>
+        <drools.version>6.5.0.Final</drools.version>
         <mysql.version>8.0.30</mysql.version>
         <knife4j.version>2.0.1</knife4j.version>
         <springfox.swagger2.version>2.9.2</springfox.swagger2.version>
