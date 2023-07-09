@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  *
  */
 @RestController
-@RequestMapping("scope")
+@RequestMapping("/scope")
 @Log
 public class ScopeController {
     @Autowired

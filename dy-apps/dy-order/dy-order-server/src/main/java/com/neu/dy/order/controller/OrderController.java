@@ -1,15 +1,19 @@
 package com.neu.dy.order.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.base.R;
 import com.neu.dy.order.dto.OrderDTO;
+import com.neu.dy.order.dto.OrderSearchDTO;
 import com.neu.dy.order.entitiy.Order;
 import com.neu.dy.order.service.OrderService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -134,6 +138,23 @@ public class OrderController {
             return orderDTO;
         }).collect(Collectors.toList());
         return R.success(orderDTOList);
+    }
+
+    /**
+     * 根据条件查询订单
+     * @param orderSearchDTO
+     * @return
+     */
+    @PostMapping("list")
+    public R list(@RequestBody OrderSearchDTO orderSearchDTO){
+        LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(orderSearchDTO.getStatus() != null,Order::getStatus,orderSearchDTO.getStatus());
+        queryWrapper.in(!CollectionUtils.isEmpty(orderSearchDTO.getReceiverCountyIds()),Order::getReceiverCountyId,orderSearchDTO.getReceiverCountyIds());
+        queryWrapper.in(!CollectionUtils.isEmpty(orderSearchDTO.getSenderCountyIds()),Order::getSenderCountyId,orderSearchDTO.getSenderCountyIds());
+        queryWrapper.eq(StringUtils.isNotEmpty(orderSearchDTO.getCurrentAgencyId()),Order::getCurrentAgencyId,orderSearchDTO.getCurrentAgencyId());
+
+        List<Order> orderList = orderService.list(queryWrapper);
+        return R.success(orderList);
     }
 
 }

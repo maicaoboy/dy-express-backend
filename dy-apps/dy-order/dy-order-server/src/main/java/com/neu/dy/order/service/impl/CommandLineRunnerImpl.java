@@ -1,6 +1,7 @@
 package com.neu.dy.order.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
@@ -10,15 +11,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class CommandLineRunnerImpl implements CommandLineRunner {
+
+    @Autowired
+    private ReloadDroolsRulesService reloadDroolsRulesService;
+
     @Override
     public void run(String... args) throws Exception {
-
+        reloadDroolsRulesService.reload();
     }
-//    @Autowired
-//    private ReloadDroolsRulesService reloadDroolsRulesService;
-//
-//    @Override
-//    public void run(String... args) throws Exception {
-//        reloadDroolsRulesService.reload();
-//    }
 }

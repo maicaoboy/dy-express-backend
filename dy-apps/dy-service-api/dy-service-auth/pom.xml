@@ -5,26 +5,26 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.neu</groupId>
-        <artifactId>dy-apps</artifactId>
+        <artifactId>dy-service-api</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>dy-service-api</artifactId>
+    <artifactId>dy-service-auth</artifactId>
 
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>dy-service-order</module>
-        <module>dy-service-auth</module>
-        <module>dy-service-base</module>
-        <module>dy-service-work</module>
-    </modules>
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.neu</groupId>
             <artifactId>dy-auth-entity</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
     </dependencies>
 

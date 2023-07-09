@@ -10,6 +10,7 @@ package com.neu.dy.dispatch.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.neu.dy.entity.OrderClassifyAttachEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
  *
  * @author
  */
+@Service
 public interface OrderClassifyAttachService extends IService<OrderClassifyAttachEntity> {
 
     List<OrderClassifyAttachEntity> findAttachByClassifyId(String classifyId);
