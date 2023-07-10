@@ -57,6 +57,13 @@ public class Org extends Entity<Long> {
     private String abbreviation;
 
     /**
+     * 机构类型
+     */
+    @ApiModelProperty(value = "机构类型")
+    @TableField("org_type")
+    private Integer orgType;
+
+    /**
      * 父ID
      */
     @ApiModelProperty(value = "父ID")

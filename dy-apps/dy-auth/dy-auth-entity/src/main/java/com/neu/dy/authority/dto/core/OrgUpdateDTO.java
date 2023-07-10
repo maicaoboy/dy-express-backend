@@ -52,6 +52,11 @@ public class OrgUpdateDTO implements Serializable {
     @Length(max = 255, message = "简称长度不能超过255")
     private String abbreviation;
     /**
+     * 机构类型
+     */
+    @ApiModelProperty(value = "机构类型")
+    private Integer orgType;
+    /**
      * 父ID
      */
     @ApiModelProperty(value = "父ID")
