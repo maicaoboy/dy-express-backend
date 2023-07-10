@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Component
 public class ResourceApiFallback implements ResourceApi {
-    public R<List> list() {
+    public R<List<String>> list() {
         System.out.println("熔断降级");
         return null;
     }

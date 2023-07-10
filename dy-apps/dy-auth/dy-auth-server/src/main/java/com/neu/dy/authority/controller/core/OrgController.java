@@ -1,4 +1,5 @@
 package com.neu.dy.authority.controller.core;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.authority.biz.service.core.OrgService;
 import com.neu.dy.authority.dto.core.OrgSaveDTO;
@@ -123,5 +124,15 @@ public class OrgController extends BaseController {
                 .eq(Org::getStatus, status).orderByAsc(Org::getSortValue));
         List<OrgTreeDTO> treeList = this.dozer.mapList(list, OrgTreeDTO.class);
         return this.success(TreeUtil.build(treeList));
+    }
+
+    @GetMapping
+    R<List<Org>> list(@RequestParam(name = "orgType", required = false) Integer orgType, @RequestParam(name = "ids", required = false) List<Long> ids, @RequestParam(name = "countyId", required = false) Long countyId, @RequestParam(name = "pid", required = false) Long paramLong2, @RequestParam(name = "pids", required = false) List<Long> paramList2){
+        LambdaQueryWrapper<Org> queryWrapper = new LambdaQueryWrapper<>();
+        if(ids != null&&ids.size()>0){
+            queryWrapper.in(Org::getId,ids);
+        }
+        List<Org> list = orgService.list(queryWrapper);
+        return R.success(list);
     }
 }

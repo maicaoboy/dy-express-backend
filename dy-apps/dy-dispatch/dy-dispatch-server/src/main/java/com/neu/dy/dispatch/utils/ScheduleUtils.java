@@ -46,7 +46,7 @@ public class ScheduleUtils {
     /**
      * 创建定时任务
      */
-    public static void createScheduleJob(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
+    public static void  createScheduleJob(Scheduler scheduler, ScheduleJobEntity scheduleJob) {
         try {
             //构建job信息
             JobDetail jobDetail = JobBuilder.newJob(ScheduleJob.class).withIdentity(getJobKey(scheduleJob.getId())).build();

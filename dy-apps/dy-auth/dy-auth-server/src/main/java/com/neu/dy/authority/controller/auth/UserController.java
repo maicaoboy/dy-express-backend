@@ -1,4 +1,5 @@
 package com.neu.dy.authority.controller.auth;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.authority.dto.auth.*;
 import com.neu.dy.authority.entity.auth.Role;
@@ -25,9 +26,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -204,4 +208,21 @@ public class UserController extends BaseController {
         List<Long> idList = list.stream().mapToLong(User::getId).boxed().collect(Collectors.toList());
         return success(UserRoleDTO.builder().idList(idList).userList(list).build());
     }
+
+
+    @GetMapping({"/list"})
+    R<List<User>> list(@RequestParam(name = "ids", required = false) List<Long> ids, @RequestParam(name = "stationId", required = false) Long stationId, @RequestParam(name = "name", required = false) String name, @RequestParam(name = "orgId", required = false) Long orgId){
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        if(ids != null && ids.size() > 0){
+            queryWrapper.in(User::getId,ids);
+        }
+        queryWrapper.eq(stationId!=null,User::getStationId,stationId);
+        queryWrapper.eq(orgId!=null,User::getOrgId,orgId);
+        if(StringUtils.isNotBlank(name)){
+            queryWrapper.like(User::getName,name);
+        }
+        List<User> users = userService.list(queryWrapper);
+        return R.success(users);
+    }
+
 }

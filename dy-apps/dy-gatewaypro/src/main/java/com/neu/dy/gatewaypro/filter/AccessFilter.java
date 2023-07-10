@@ -65,9 +65,7 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
 
         //4判断这些资源是否包含当前请求的标识符，如果不包含说明当前请求是个非法请求
         if(list != null){
-            long count = list.stream().filter((resource) -> {
-                return resource.startsWith(permission);
-            }).count();
+            long count = list.stream().filter(permission::startsWith).count();
             if(count  == 0){
                 //当前请求是一个未知请求,直接返回
                 return errorResponse(exchange, ExceptionCode.UNAUTHORIZED.getMsg(), ExceptionCode.UNAUTHORIZED.getCode(), 200);
@@ -90,7 +88,7 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
             cacheChannel.set(CacheKey.USER_RESOURCE, userId, visibleResource);
         }
         long count = visibleResource.stream().filter((resource) -> {
-            return resource.startsWith(permission);
+            return permission.startsWith(resource);
         }).count();
         if(count > 0){
             //当前用户拥有访问权限，直接放行

@@ -14,6 +14,18 @@
 
     <packaging>pom</packaging>
 
-    <modules></modules>
+    <modules>
+        <module>dy-service-order</module>
+        <module>dy-service-auth</module>
+        <module>dy-service-base</module>
+        <module>dy-service-work</module>
+    </modules>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.neu</groupId>
+            <artifactId>dy-auth-entity</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
