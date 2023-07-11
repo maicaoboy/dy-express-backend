@@ -102,13 +102,6 @@ public class Org extends Entity<Long> {
     private Boolean status;
 
     /**
-     * 机构类型
-     */
-    @ApiModelProperty(value = "组织类型")
-    @TableField("org_type")
-    private Integer orgType;
-
-    /**
      * 组织覆盖范围
      */
     @ApiModelProperty(value = "组织覆盖范围")

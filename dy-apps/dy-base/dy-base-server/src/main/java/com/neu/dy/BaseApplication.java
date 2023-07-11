@@ -1,6 +1,5 @@
 package com.neu.dy;
 
-import com.neu.dy.auth.client.EnableAuthClient;
 import com.neu.dy.validator.config.EnableFormValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
