@@ -14,8 +14,11 @@ import java.io.Serializable;
 @Data
 @TableName("dy_common_area")
 @ApiModel(value = "Area", description = "行政区域")
-public class Area extends Entity<Long> implements Serializable {
+public class Area implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    @TableField(value = "id")
+    private Long id;
 
     @ApiModelProperty("父级区域id")
     @TableField("parent_id")
@@ -77,8 +80,8 @@ public class Area extends Entity<Long> implements Serializable {
 
     @Builder
     public Area(Long id, Long parentId, String name, String areaCode, String cityCode, String mergerName, String shortName, String zipCode, Integer level, String lng, String lat, String pinyin, String first) {
-         this.id = id;
-         this.parentId = parentId;
+        this.id = id;
+        this.parentId = parentId;
          this.name = name;
          this.areaCode = areaCode;
          this.cityCode = cityCode;

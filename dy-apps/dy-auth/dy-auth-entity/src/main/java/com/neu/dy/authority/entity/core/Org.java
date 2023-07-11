@@ -1,6 +1,8 @@
 package com.neu.dy.authority.entity.core;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 import javax.validation.constraints.NotEmpty;
 
@@ -64,6 +66,13 @@ public class Org extends Entity<Long> {
     private Long parentId;
 
     /**
+     * 所属城市或区id
+     */
+    @ApiModelProperty(value = "区域ID")
+    @TableField("area_id")
+    private Long areaId;
+
+    /**
      * 树结构
      */
     @ApiModelProperty(value = "树结构")
@@ -86,6 +95,20 @@ public class Org extends Entity<Long> {
     private Boolean status;
 
     /**
+     * 机构类型
+     */
+    @ApiModelProperty(value = "组织类型")
+    @TableField("org_type")
+    private Integer orgType;
+
+    /**
+     * 组织覆盖范围
+     */
+    @ApiModelProperty(value = "组织覆盖范围")
+    @TableField("muti_points")
+    private List<List<Map>> mutiPoints;
+
+    /**
      * 描述
      */
     @ApiModelProperty(value = "描述")
@@ -95,9 +118,9 @@ public class Org extends Entity<Long> {
 
 
     @Builder
-    public Org(Long id, LocalDateTime createTime, Long createUser, LocalDateTime updateTime, Long updateUser,
-               String name, String abbreviation, Long parentId, String treePath, Integer sortValue,
-               Boolean status, String describe) {
+    public Org(Long id,Long areaId, LocalDateTime createTime, Long createUser, LocalDateTime updateTime, Long updateUser,
+               String name, String abbreviation, Long parentId, String treePath, Integer sortValue,Integer orgType,
+               List<List<Map>> mutiPoints,Boolean status, String describe) {
         this.id = id;
         this.createTime = createTime;
         this.createUser = createUser;
@@ -109,6 +132,9 @@ public class Org extends Entity<Long> {
         this.treePath = treePath;
         this.sortValue = sortValue;
         this.status = status;
+        this.areaId = areaId;
+        this.orgType = orgType;
+        this.mutiPoints = mutiPoints;
         this.describe = describe;
     }
 
