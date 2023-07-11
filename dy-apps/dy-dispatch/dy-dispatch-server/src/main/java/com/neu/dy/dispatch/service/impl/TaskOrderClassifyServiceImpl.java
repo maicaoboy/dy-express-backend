@@ -1,7 +1,6 @@
 package com.neu.dy.dispatch.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.google.common.collect.Maps;
 import com.neu.dy.api.AgencyScopeFeign;
 import com.neu.dy.api.AreaApi;
 import com.neu.dy.authority.entity.common.Area;
@@ -31,7 +30,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Slf4j

@@ -17,6 +17,11 @@ public class AreaController {
     @Autowired
     private AreaService areaService;
 
+    @PostMapping("")
+    public void save(@RequestBody List<Area> areas){
+        areaService.saveBatch(areas);
+    }
+
     /**
      * 根据id查询
      * @param id
