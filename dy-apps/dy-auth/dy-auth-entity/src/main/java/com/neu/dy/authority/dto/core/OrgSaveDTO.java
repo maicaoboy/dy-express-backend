@@ -2,6 +2,7 @@ package com.neu.dy.authority.dto.core;
 
 import java.io.Serializable;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,11 @@ public class OrgSaveDTO implements Serializable {
     @Length(max = 255, message = "简称长度不能超过255")
     private String abbreviation;
     /**
+     * 机构类型
+     */
+    @ApiModelProperty(value = "机构类型")
+    private Integer orgType;
+    /**
      * 父ID
      */
     @ApiModelProperty(value = "父ID")
@@ -55,6 +61,7 @@ public class OrgSaveDTO implements Serializable {
      */
     @ApiModelProperty(value = "排序")
     private Integer sortValue;
+
     /**
      * 状态
      */
