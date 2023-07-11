@@ -131,7 +131,7 @@ public class TransportLineTypeController {
      * @return 返回信息
      */
     @ApiOperation(value = "删除线路类型")
-    @PutMapping("/{id}/disable")
+    @DeleteMapping("/{id}")
     public Result disable(@PathVariable(name = "id") String id) {
         transportLineTypeService.disableById(id);
         return Result.ok();
