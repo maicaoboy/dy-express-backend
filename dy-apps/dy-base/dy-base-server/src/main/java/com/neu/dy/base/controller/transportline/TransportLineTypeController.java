@@ -2,15 +2,20 @@ package com.neu.dy.base.controller.transportline;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.neu.dy.auth.client.utils.JwtTokenClientUtils;
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.transportline.IDyTransportLineTypeService;
 import com.neu.dy.base.dto.transportline.TransportLineTypeDto;
 import com.neu.dy.base.entity.transportline.DyTransportLineType;
 import io.swagger.annotations.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.web.bind.annotation.*;
 import com.neu.dy.base.common.PageResponse;
 import com.neu.dy.base.common.Result;
+
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +39,14 @@ public class TransportLineTypeController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加线路类型")
-    public TransportLineTypeDto saveTransportLineType(@RequestBody TransportLineTypeDto dto) {
+    public R saveTransportLineType(@RequestBody TransportLineTypeDto dto, HttpServletRequest request ) {
         DyTransportLineType dyTransportLineType = new DyTransportLineType();
         BeanUtils.copyProperties(dto, dyTransportLineType);
+        String jwtKeyName = request.getHeader("name");
+        dyTransportLineType.setUpdater(jwtKeyName);
         dyTransportLineType = transportLineTypeService.saveTransportLineType(dyTransportLineType);
-        BeanUtils.copyProperties(dyTransportLineType, dto);
-        return dto;
+//        BeanUtils.copyProperties(dyTransportLineType, dto);
+        return R.success();
     }
 
     /**
@@ -115,13 +122,13 @@ public class TransportLineTypeController {
      */
     @PutMapping("/{id}")
     @ApiOperation(value = "更新线路类型信息")
-    public TransportLineTypeDto update(@PathVariable(name = "id") String id, @RequestBody TransportLineTypeDto dto) {
+    public R update(@PathVariable(name = "id") String id, @RequestBody TransportLineTypeDto dto) {
         dto.setId(id);
         DyTransportLineType dyTransportLineType = new DyTransportLineType();
         BeanUtils.copyProperties(dto, dyTransportLineType);
         dyTransportLineType.setLastUpdateTime(LocalDateTime.now());
         transportLineTypeService.updateById(dyTransportLineType);
-        return dto;
+        return R.success();
     }
 
     /**
@@ -132,8 +139,8 @@ public class TransportLineTypeController {
      */
     @ApiOperation(value = "删除线路类型")
     @DeleteMapping("/{id}")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public R disable(@PathVariable(name = "id") String id) {
         transportLineTypeService.disableById(id);
-        return Result.ok();
+        return R.success();
     }
 }

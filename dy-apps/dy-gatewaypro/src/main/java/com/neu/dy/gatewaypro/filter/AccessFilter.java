@@ -75,7 +75,12 @@ public class AccessFilter extends BaseFilter implements GlobalFilter {
 
         //5.请求头中获取用户id,根据用户id取出缓存中用户拥有的权限，如果没有取到通过feign调用数据库取
         String userId = request.getHeaders().getFirst(BaseContextConstants.JWT_KEY_USER_ID);
-        List<String> visibleResource = (List<String>) cacheChannel.get(CacheKey.USER_RESOURCE,userId).getValue();
+        List<String> visibleResource = null;
+        try {
+            visibleResource = (List<String>) cacheChannel.get(CacheKey.USER_RESOURCE, userId).getValue();
+        }catch (Exception e){
+            log.error("获取用户权限失败", e);
+        }
         if(visibleResource == null){
             //缓存中不存在
             List<Resource> resourceList = resourceApi.visible(ResourceQueryDTO.builder().userId(new Long(userId)).build()).getData();

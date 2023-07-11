@@ -1,14 +1,17 @@
 package com.neu.dy;
 
+import com.neu.dy.auth.client.EnableAuthClient;
 import com.neu.dy.validator.config.EnableFormValidator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.hystrix.EnableHystrix;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -25,6 +28,8 @@ import java.net.UnknownHostException;
 @EnableFeignClients(value = {
         "com.neu.dy",
 })
+@EnableAsync
+@EnableHystrix
 @Slf4j
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @EnableFormValidator
