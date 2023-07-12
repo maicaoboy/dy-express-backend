@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 
 import com.neu.dy.base.biz.service.base.IDyGoodsTypeService;
 import com.neu.dy.base.biz.service.truck.IDyTruckTypeGoodsTypeService;
+import com.neu.dy.base.biz.service.truck.IDyTruckTypeService;
 import com.neu.dy.base.common.Constant;
 import com.neu.dy.base.common.PageResponse;
 import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.base.GoodsTypeDto;
 import com.neu.dy.base.entity.base.DyGoodsType;
+import com.neu.dy.base.entity.truck.DyTruck;
+import com.neu.dy.base.entity.truck.DyTruckType;
 import com.neu.dy.base.entity.truck.DyTruckTypeGoodsType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +32,8 @@ public class GoodsTypeController {
     private IDyGoodsTypeService goodsTypeService;
     @Autowired
     private IDyTruckTypeGoodsTypeService truckTypeGoodsTypeService;
-
+    @Autowired
+    private IDyTruckTypeService truckTypeService;
     /**
      * 添加货物类型
      *
@@ -153,6 +158,16 @@ public class GoodsTypeController {
             BeanUtils.copyProperties(goodsType, dto);
             dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType ->
                     truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
+            //根据车辆类型id查询车辆类型名称
+            if (dto.getTruckTypeIds() != null && dto.getTruckTypeIds().size() > 0) {
+                List<String> truckTypeNames = new ArrayList<String>();
+                for ( String truckTypeIdtemp : dto.getTruckTypeIds()) {
+                    //todo：健壮性判断如果没有查到车辆类型名称，要做判断
+                    String n = truckTypeService.getById(truckTypeIdtemp).getName();
+                    truckTypeNames.add(n);
+                }
+                dto.setTruckTypeNames(truckTypeNames);
+            }
             return dto;
         }).collect(Collectors.toList());
         PageResponse<GoodsTypeDto> build = PageResponse.<GoodsTypeDto>builder().items(goodsTypeDtoList).counts(goodsTypePage.getTotal()).page(page).pages(goodsTypePage.getPages()).pagesize(pageSize).build();

@@ -47,6 +47,10 @@ public class GoodsTypeDto implements Serializable {
      */
     private List<String> truckTypeIds;
     /**
+     * 车辆类型名称列表
+     */
+    private List<String> truckTypeNames;
+    /**
      * 状态 0：禁用 1：正常
      */
     @ApiModelProperty("状态 0：禁用 1：正常")
