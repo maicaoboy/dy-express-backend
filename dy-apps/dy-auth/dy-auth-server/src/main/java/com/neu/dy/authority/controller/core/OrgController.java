@@ -135,4 +135,6 @@ public class OrgController extends BaseController {
         List<Org> list = orgService.list(queryWrapper);
         return R.success(list);
     }
+
+
 }

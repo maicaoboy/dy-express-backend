@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.neu.dy.base.R;
+
 
 /**
  * TransportLineController
@@ -39,12 +41,12 @@ public class TransportLineController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加线路")
-    public TransportLineDto saveTransportLine(@RequestBody TransportLineDto dto) {
+    public R saveTransportLine(@RequestBody TransportLineDto dto) {
         DyTransportLine pdTransportLine = new DyTransportLine();
         BeanUtils.copyProperties(dto, pdTransportLine);
         pdTransportLine = transportLineService.saveTransportLine(pdTransportLine);
         BeanUtils.copyProperties(pdTransportLine, dto);
-        return dto;
+        return R.success();
     }
 
     /**
@@ -83,7 +85,7 @@ public class TransportLineController {
             @ApiImplicitParam(name="name",value="线路名称",dataType="String", required = false),
             @ApiImplicitParam(name="transportLineTypeId",value="线路类型id",dataType="String", required = false)
     })
-    public PageResponse<TransportLineDto> findByPage(@RequestParam(name = "page") Integer page,
+    public R<PageResponse<TransportLineDto>> findByPage(@RequestParam(name = "page") Integer page,
                                                      @RequestParam(name = "pageSize") Integer pageSize,
                                                      @RequestParam(name = "lineNumber", required = false) String lineNumber,
                                                      @RequestParam(name = "name", required = false) String name,
@@ -95,8 +97,8 @@ public class TransportLineController {
             BeanUtils.copyProperties(pdTransportLine, dto);
             dtoList.add(dto);
         });
-        return PageResponse.<TransportLineDto>builder().items(dtoList).pagesize(pageSize).page(page)
-                .counts(transportLinePage.getTotal()).pages(transportLinePage.getPages()).build();
+        return R.success(PageResponse.<TransportLineDto>builder().items(dtoList).pagesize(pageSize).page(page)
+                .counts(transportLinePage.getTotal()).pages(transportLinePage.getPages()).build());
     }
 
     /**
@@ -126,12 +128,12 @@ public class TransportLineController {
      */
     @PutMapping("/{id}")
     @ApiOperation(value = "更新线路信息")
-    public TransportLineDto update(@PathVariable(name = "id") String id, @RequestBody TransportLineDto dto) {
+    public R update(@PathVariable(name = "id") String id, @RequestBody TransportLineDto dto) {
         dto.setId(id);
         DyTransportLine pdTransportLine = new DyTransportLine();
         BeanUtils.copyProperties(dto, pdTransportLine);
         transportLineService.updateById(pdTransportLine);
-        return dto;
+        return R.success();
     }
 
     /**
@@ -140,11 +142,11 @@ public class TransportLineController {
      * @param id 线路id
      * @return 返回信息
      */
-    @PutMapping("/{id}/disable")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "删除线路")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public R disable(@PathVariable(name = "id") String id) {
         transportLineService.disable(id);
-        return Result.ok();
+        return R.success();
     }
 
 

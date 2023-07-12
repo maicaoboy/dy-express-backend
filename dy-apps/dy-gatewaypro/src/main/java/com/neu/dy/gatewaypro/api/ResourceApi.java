@@ -18,14 +18,15 @@ import java.util.List;
  * @Date 2023/6/25 21:27
  * @Created by maicaoboy
  */
-@FeignClient(name = "${dy.feign.authority-server:dy-auth-server}",
+@FeignClient(value = "dy-auth-server",
+        path = "/resource",
         fallback = ResourceApiFallback.class)
 public interface ResourceApi {
     //获取所有需要鉴权的资源
-    @GetMapping("/resource/list")
-    public R<List<String>> list();
+    @GetMapping("/list")
+    public List<String> list();
 
     //查询当前登录用户拥有的资源权限
-    @GetMapping("/resource")
-    public R<List<Resource>> visible(ResourceQueryDTO resource);
+    @GetMapping
+    public List<Resource> visible(ResourceQueryDTO resource);
 }
