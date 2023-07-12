@@ -59,7 +59,7 @@ public class ResourceController extends BaseController {
         // 构建值不为null的查询条件
         LbqWrapper<Resource> query = Wraps.lbQ(data);
         resourceService.page(page, query);
-        return success(page);
+        return R.success(page);
     }
 
     /**
@@ -82,7 +82,7 @@ public class ResourceController extends BaseController {
         Resource resource = dozer.map(data, Resource.class);
 
         resourceService.save(resource);
-        return success(resource);
+        return R.success(resource);
     }
 
     /**
@@ -94,7 +94,7 @@ public class ResourceController extends BaseController {
     public R<Resource> update(@RequestBody @Validated(SuperEntity.Update.class) ResourceUpdateDTO data) {
         Resource resource = dozer.map(data, Resource.class);
         resourceService.updateById(resource);
-        return success(resource);
+        return R.success(resource);
     }
 
     /**
@@ -106,7 +106,7 @@ public class ResourceController extends BaseController {
     @DeleteMapping
     @SysLog("删除资源")
     public R<Boolean> delete(@RequestParam("ids[]") List<Long> ids) {
-        return success(resourceService.removeByIds(ids));
+        return R.success(resourceService.removeByIds(ids));
     }
 
     /**
@@ -115,7 +115,7 @@ public class ResourceController extends BaseController {
     @ApiOperation(value = "查询用户可用的所有资源", notes = "查询用户可用的所有资源")
     @GetMapping
     @SysLog("查询用户可用的所有资源")
-    public R<List<Resource>> visible(ResourceQueryDTO resource) {
+    public List<Resource> visible(ResourceQueryDTO resource) {
         if (resource == null) {
             resource = new ResourceQueryDTO();
         }
@@ -123,7 +123,7 @@ public class ResourceController extends BaseController {
         if (resource.getUserId() == null) {
             resource.setUserId(getUserId());
         }
-        return success(resourceService.findVisibleResource(resource));
+        return resourceService.findVisibleResource(resource);
     }
 
     /**
@@ -132,12 +132,12 @@ public class ResourceController extends BaseController {
     @ApiOperation(value = "查询所有资源", notes = "查询所有资源")
     @GetMapping("/list")
     @SysLog("查询所有资源")
-    public R<List<String>> list() {
+    public List<String> list() {
         List<Resource> list = resourceService.list();
         System.out.println(list);
         List<String> resourceList = list.stream().map((Resource r) -> {
             return r.getMethod() + r.getUrl();
         }).collect(Collectors.toList());
-        return success(resourceList);
+        return resourceList;
     }
 }
