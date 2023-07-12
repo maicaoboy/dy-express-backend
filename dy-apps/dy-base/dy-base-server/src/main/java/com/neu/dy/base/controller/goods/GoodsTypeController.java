@@ -61,6 +61,30 @@ public class GoodsTypeController {
         return dto;
     }
 
+    //update货物类型
+    @PostMapping("/update")
+    @ApiOperation(value = "修改货物类型")
+    public GoodsTypeDto updateGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
+        DyGoodsType dyGoodsType = new DyGoodsType();
+        BeanUtils.copyProperties(dto, dyGoodsType);
+        dyGoodsType = goodsTypeService.saveGoodsType(dyGoodsType);
+        String goodsTypeId = dyGoodsType.getId();
+        //删除货物类型与车辆类型的关联关系
+        //truckTypeGoodsTypeService.deleteByGoodsTypeId(goodsTypeId);
+        //添加货物类型与车辆类型的关联关系
+        if (dto.getTruckTypeIds() != null) {
+            List<DyTruckTypeGoodsType> list = dto.getTruckTypeIds().stream().map(truckTypeId -> {
+                DyTruckTypeGoodsType truckTypeGoodsType = new DyTruckTypeGoodsType();
+                truckTypeGoodsType.setTruckTypeId(truckTypeId);
+                truckTypeGoodsType.setGoodsTypeId(goodsTypeId);
+                return truckTypeGoodsType;
+            }).collect(Collectors.toList());
+            truckTypeGoodsTypeService.batchSave(list);
+        }
+        BeanUtils.copyProperties(dyGoodsType, dto);
+        return dto;
+    }
+
     /**
      * 根据id查询货物类型
      *
@@ -131,7 +155,8 @@ public class GoodsTypeController {
                     truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
             return dto;
         }).collect(Collectors.toList());
-        return PageResponse.<GoodsTypeDto>builder().items(goodsTypeDtoList).counts(goodsTypePage.getTotal()).page(page).pages(goodsTypePage.getPages()).pagesize(pageSize).build();
+        PageResponse<GoodsTypeDto> build = PageResponse.<GoodsTypeDto>builder().items(goodsTypeDtoList).counts(goodsTypePage.getTotal()).page(page).pages(goodsTypePage.getPages()).pagesize(pageSize).build();
+        return build;
     }
 
     /**
@@ -161,14 +186,14 @@ public class GoodsTypeController {
     /**
      * 删除货物类型
      *
-     * @param id 货物类型id
+     * @param request 请求体传参（id）
      * @return 返回信息
      */
-    @PutMapping("/{id}/disable")
+    @PostMapping("/delete")
     @ApiOperation(value = "删除货物类型")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public Result disable(@RequestBody GoodsTypeDto request) {
         DyGoodsType dyGoodsType = new DyGoodsType();
-        dyGoodsType.setId(id);
+        dyGoodsType.setId(request.getId());
         dyGoodsType.setStatus(Constant.DATA_DISABLE_STATUS);
         goodsTypeService.updateById(dyGoodsType);
         return Result.ok();
