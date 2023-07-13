@@ -101,6 +101,7 @@ public class Org extends Entity<Long> {
     @TableField("status")
     private Boolean status;
 
+
     /**
      * 组织覆盖范围
      */

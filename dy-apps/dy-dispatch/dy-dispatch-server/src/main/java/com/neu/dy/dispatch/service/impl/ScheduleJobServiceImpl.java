@@ -8,6 +8,7 @@
 
 package com.neu.dy.dispatch.service.impl;
 
+import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -101,6 +102,7 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobMapper, Sched
         ScheduleJobEntity entity = ConvertUtils.sourceToTarget(dto, ScheduleJobEntity.class);
 
         entity.setStatus(ScheduleStatus.NORMAL.getValue());
+        entity.setCreateDate(DateTime.now());
         baseMapper.insert(entity);
 
         ScheduleUtils.createScheduleJob(scheduler, entity);

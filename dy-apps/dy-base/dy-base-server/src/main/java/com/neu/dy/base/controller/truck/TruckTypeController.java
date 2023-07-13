@@ -87,7 +87,7 @@ public class TruckTypeController {
      * @param allowableVolume 车辆体积
      * @return 车辆类型分页数据
      */
-    @GetMapping("/page")
+        @GetMapping("/page")
     @ApiOperation(value = "获取车辆类型分页数据")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "name", value = "车辆类型名称",
@@ -166,7 +166,7 @@ public class TruckTypeController {
      * @param id 车辆类型Id
      * @return 返回信息
      */
-    @PutMapping("/{id}/disable")
+    @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "删除车辆类型")
     public Result disable(@PathVariable(name = "id") String id) {
         // TODO: 2020/1/8 待实现，是否关联数据
