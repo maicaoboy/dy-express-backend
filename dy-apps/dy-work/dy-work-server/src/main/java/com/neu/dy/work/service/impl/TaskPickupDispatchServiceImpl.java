@@ -45,7 +45,7 @@ public class TaskPickupDispatchServiceImpl extends ServiceImpl<TaskPickupDispatc
         Page<TaskPickupDispatch> iPage = new Page(page, pageSize);
         LambdaQueryWrapper<TaskPickupDispatch> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotBlank(dispatch.getCourierId())) {
-            lambdaQueryWrapper.eq(TaskPickupDispatch::getCourierId, dispatch.getCourierId());
+            lambdaQueryWrapper.like(TaskPickupDispatch::getCourierId, dispatch.getCourierId());
         }
         if (dispatch.getAssignedStatus() != null) {
             lambdaQueryWrapper.eq(TaskPickupDispatch::getAssignedStatus, dispatch.getAssignedStatus());
@@ -55,6 +55,9 @@ public class TaskPickupDispatchServiceImpl extends ServiceImpl<TaskPickupDispatc
         }
         if (dispatch.getStatus() != null) {
             lambdaQueryWrapper.eq(TaskPickupDispatch::getStatus, dispatch.getStatus());
+        }
+        if (dispatch.getAssignedStatus() != null){
+            lambdaQueryWrapper.eq(TaskPickupDispatch::getAssignedStatus, dispatch.getAssignedStatus());
         }
         lambdaQueryWrapper.orderBy(true, false, TaskPickupDispatch::getId);
         return page(iPage, lambdaQueryWrapper);

@@ -105,7 +105,7 @@ public class TransportTripsController {
      * @param id 车次信息
      * @return 返回信息
      */
-    @PutMapping("/{id}/disable")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "删除车次信息")
     public Result disable(@PathVariable(name = "id") String id) {
         transportTripsService.disable(id);

@@ -8,7 +8,9 @@ import com.google.common.collect.Maps;
 import com.neu.dy.exception.BizException;
 import com.neu.dy.exception.code.BaseExceptionCode;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
@@ -18,6 +20,7 @@ import lombok.experimental.Accessors;
  */
 @Getter
 @Setter
+@AllArgsConstructor
 @SuppressWarnings({"AlibabaClassNamingShouldBeCamel"})
 @Accessors(chain = true)
 public class R<T> {
@@ -63,7 +66,7 @@ public class R<T> {
     @ApiModelProperty(value = "响应时间戳")
     private long timestamp = System.currentTimeMillis();
 
-    private R() {
+    public R() {
         super();
     }
 

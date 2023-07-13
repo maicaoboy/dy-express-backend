@@ -17,12 +17,12 @@ import java.util.List;
  */
 @Component
 public class ResourceApiFallback implements ResourceApi {
-    public R<List<String>> list() {
+    public List<String> list() {
         System.out.println("熔断降级");
         return null;
     }
 
-    public R<List<Resource>> visible(ResourceQueryDTO resource) {
+    public List<Resource> visible(ResourceQueryDTO resource) {
         return null;
     }
 }
