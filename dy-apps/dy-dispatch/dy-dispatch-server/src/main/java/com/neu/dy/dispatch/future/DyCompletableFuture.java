@@ -5,8 +5,7 @@ package com.neu.dy.dispatch.future;
 //import com.itheima.pinda.feign.transportline.TransportLineFeign;
 //import com.itheima.pinda.feign.transportline.TransportTripsFeign;
 //import com.itheima.pinda.feign.truck.TruckFeign;
-import com.neu.dy.api.AreaApi;
-import com.neu.dy.api.OrgApi;
+import com.neu.dy.api.*;
 import com.neu.dy.authority.entity.auth.User;
 import com.neu.dy.authority.entity.common.Area;
 import com.neu.dy.authority.entity.core.Org;
@@ -76,41 +75,41 @@ public class DyCompletableFuture {
 //        });
 //    }
 //
-//    public static java.util.concurrent.CompletableFuture<Map<String, TransportLineDto>> transportLineIdMapFuture(TransportLineFeign api, Set<String> transportLineIdSet) {
-//        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
-//            List<String> list = transportLineIdSet.stream().collect(Collectors.toList());
-//            List<TransportLineDto> result = api.findAll(list, null, null);
-//            return result.stream().collect(Collectors.toMap(TransportLineDto::getId, item -> item));
-//        });
-//    }
+    public static java.util.concurrent.CompletableFuture<Map<String, TransportLineDto>> transportLineIdMapFuture(TransportLineFeign api, Set<String> transportLineIdSet) {
+        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+            List<String> list = transportLineIdSet.stream().collect(Collectors.toList());
+            List<TransportLineDto> result = api.findAll(list, null, null);
+            return result.stream().collect(Collectors.toMap(TransportLineDto::getId, item -> item));
+        });
+    }
 //
-//    public static java.util.concurrent.CompletableFuture<Map<String, TransportTripsDto>> tripsMapFuture(TransportTripsFeign api, Set<String> tripsIdSet) {
-//        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
-//            List<String> list = tripsIdSet.stream().collect(Collectors.toList());
-//            List<TransportTripsDto> result = api.findAll(null, list);
-//            return result.stream().collect(Collectors.toMap(TransportTripsDto::getId, item -> item));
-//        });
-//    }
+    public static java.util.concurrent.CompletableFuture<Map<String, TransportTripsDto>> tripsMapFuture(TransportTripsFeign api, Set<String> tripsIdSet) {
+        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+            List<String> list = tripsIdSet.stream().collect(Collectors.toList());
+            List<TransportTripsDto> result = api.findAll(null, list);
+            return result.stream().collect(Collectors.toMap(TransportTripsDto::getId, item -> item));
+        });
+    }
 //
-//    public static java.util.concurrent.CompletableFuture<Map<String, TruckDto>> truckMapFuture(TruckFeign api, Set<String> truckIdSet) {
-//        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
-//            List<String> list = truckIdSet.stream().collect(Collectors.toList());
-//            List<TruckDto> result = api.findAll(list, null);
-//            return result.stream().collect(Collectors.toMap(TruckDto::getId, item -> item));
-//        });
-//    }
-//
-//    public static java.util.concurrent.CompletableFuture<Map<Long, User>> driverMapFuture(UserApi api, Set<String> driverIdSet) {
-//        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
-//            List<Long> list = driverIdSet.stream().filter(item -> StringUtils.isNotBlank(item)).map(item -> Long.parseLong(item)).collect(Collectors.toList());
-//
-//            R<List<User>> result = api.list(list, null, null, null);
-//            if (result.getIsSuccess()) {
-//                return result.getData().stream().collect(Collectors.toMap(User::getId, item -> item));
-//            }
-//            return new HashMap<>();
-//        });
-//    }
+    public static java.util.concurrent.CompletableFuture<Map<String, TruckDto>> truckMapFuture(TruckFeign api, Set<String> truckIdSet) {
+        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+            List<String> list = truckIdSet.stream().collect(Collectors.toList());
+            List<TruckDto> result = api.findAll(list, null);
+            return result.stream().collect(Collectors.toMap(TruckDto::getId, item -> item));
+        });
+    }
+
+    public static java.util.concurrent.CompletableFuture<Map<Long, User>> driverMapFuture(UserApi api, Set<String> driverIdSet) {
+        return java.util.concurrent.CompletableFuture.supplyAsync(() -> {
+            List<Long> list = driverIdSet.stream().filter(item -> StringUtils.isNotBlank(item)).map(item -> Long.parseLong(item)).collect(Collectors.toList());
+
+            R<List<User>> result = api.list(list, null, null, null);
+            if (result.getIsSuccess()) {
+                return result.getData().stream().collect(Collectors.toMap(User::getId, item -> item));
+            }
+            return new HashMap<>();
+        });
+    }
 
     public static final java.util.concurrent.CompletableFuture<Map<Long, Area>> areaMapFuture(AreaApi api, Long parentId, Set<Long> areaSet) {
         R<List<Area>> result = api.findAll(parentId, new ArrayList<>(areaSet));

@@ -1,6 +1,7 @@
 package com.neu.dy.dispatch.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.ImmutableList;
 import com.neu.dy.api.OrgApi;
 import com.neu.dy.authority.entity.core.Org;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,11 +52,15 @@ public class ScheduleJobController {
             @ApiImplicitParam(name = "pageSize", paramType = "query", dataType = "String"),
             @ApiImplicitParam(name = "name", value = "name", paramType = "query", dataType = "String")
     })
-    public R<List<OrgJobTreeDTO>> page(@ApiIgnore @RequestParam Map<String, Object> params) {
-
-        List<OrgJobTreeDTO> tree = scheduleJobService.page(params);
-
-        return R.success(tree);
+    public R page(@ApiIgnore @RequestParam Map<String, Object> params) {
+        Integer page = Integer.valueOf((String) params.get("page"));
+        Integer pageSize = Integer.valueOf((String) params.get("pageSize")) ;
+        Page<ScheduleJobEntity> pageInfo = new Page<>(page,pageSize);
+        String businessId = (String) params.get("businessId");
+        LambdaQueryWrapper<ScheduleJobEntity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ScheduleJobEntity::getBusinessId,businessId);
+        Page<ScheduleJobEntity> page1 = scheduleJobService.page(pageInfo, queryWrapper);
+        return R.success(page1);
     }
 
     @GetMapping("{id}")
@@ -83,9 +89,7 @@ public class ScheduleJobController {
     @PostMapping
     @ApiOperation("保存")
     public R save(@RequestBody ScheduleJobDTO dto) {
-
         scheduleJobService.save(dto);
-
         return R.success();
     }
 
