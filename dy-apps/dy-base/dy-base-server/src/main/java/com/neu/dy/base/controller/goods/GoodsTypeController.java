@@ -2,6 +2,7 @@ package com.neu.dy.base.controller.goods;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.base.IDyGoodsTypeService;
 import com.neu.dy.base.biz.service.truck.IDyTruckTypeGoodsTypeService;
 import com.neu.dy.base.biz.service.truck.IDyTruckTypeService;
@@ -42,7 +43,7 @@ public class GoodsTypeController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加货物类型")
-    public GoodsTypeDto saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
+    public R saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
         //保存货物类型到数据库
         DyGoodsType dyGoodsType = new DyGoodsType();
         /*使用org.apache.commons.beanutils.BeanUtils进行copy对象时，被copy的对象（source/orig）中包含的字段目标对象（target/dest）
@@ -62,32 +63,19 @@ public class GoodsTypeController {
             truckTypeGoodsTypeService.batchSave(list);
         }
         //相较于之前添加了id
-        BeanUtils.copyProperties(dyGoodsType, dto);
-        return dto;
+        GoodsTypeDto result = new GoodsTypeDto();
+        BeanUtils.copyProperties(dyGoodsType, result);
+        return R.success(result);
     }
 
     //update货物类型
     @PostMapping("/update")
     @ApiOperation(value = "修改货物类型")
-    public GoodsTypeDto updateGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
-        DyGoodsType dyGoodsType = new DyGoodsType();
-        BeanUtils.copyProperties(dto, dyGoodsType);
-        dyGoodsType = goodsTypeService.saveGoodsType(dyGoodsType);
-        String goodsTypeId = dyGoodsType.getId();
-        //删除货物类型与车辆类型的关联关系
-        //truckTypeGoodsTypeService.deleteByGoodsTypeId(goodsTypeId);
-        //添加货物类型与车辆类型的关联关系
-        if (dto.getTruckTypeIds() != null) {
-            List<DyTruckTypeGoodsType> list = dto.getTruckTypeIds().stream().map(truckTypeId -> {
-                DyTruckTypeGoodsType truckTypeGoodsType = new DyTruckTypeGoodsType();
-                truckTypeGoodsType.setTruckTypeId(truckTypeId);
-                truckTypeGoodsType.setGoodsTypeId(goodsTypeId);
-                return truckTypeGoodsType;
-            }).collect(Collectors.toList());
-            truckTypeGoodsTypeService.batchSave(list);
-        }
-        BeanUtils.copyProperties(dyGoodsType, dto);
-        return dto;
+    public R updateGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
+        DyGoodsType good = new DyGoodsType();
+        BeanUtils.copyProperties(dto, good);
+        goodsTypeService.updateById(good);
+        return R.success(dto);
     }
 
     /**
