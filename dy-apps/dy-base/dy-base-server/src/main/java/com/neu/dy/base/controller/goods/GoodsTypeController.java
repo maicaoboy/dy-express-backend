@@ -2,13 +2,17 @@ package com.neu.dy.base.controller.goods;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.base.IDyGoodsTypeService;
 import com.neu.dy.base.biz.service.truck.IDyTruckTypeGoodsTypeService;
+import com.neu.dy.base.biz.service.truck.IDyTruckTypeService;
 import com.neu.dy.base.common.Constant;
 import com.neu.dy.base.common.PageResponse;
 import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.base.GoodsTypeDto;
 import com.neu.dy.base.entity.base.DyGoodsType;
+import com.neu.dy.base.entity.truck.DyTruck;
+import com.neu.dy.base.entity.truck.DyTruckType;
 import com.neu.dy.base.entity.truck.DyTruckTypeGoodsType;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +33,8 @@ public class GoodsTypeController {
     private IDyGoodsTypeService goodsTypeService;
     @Autowired
     private IDyTruckTypeGoodsTypeService truckTypeGoodsTypeService;
-
+    @Autowired
+    private IDyTruckTypeService truckTypeService;
     /**
      * 添加货物类型
      *
@@ -37,7 +43,7 @@ public class GoodsTypeController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加货物类型")
-    public GoodsTypeDto saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
+    public R saveGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
         //保存货物类型到数据库
         DyGoodsType dyGoodsType = new DyGoodsType();
         /*使用org.apache.commons.beanutils.BeanUtils进行copy对象时，被copy的对象（source/orig）中包含的字段目标对象（target/dest）
@@ -57,8 +63,19 @@ public class GoodsTypeController {
             truckTypeGoodsTypeService.batchSave(list);
         }
         //相较于之前添加了id
-        BeanUtils.copyProperties(dyGoodsType, dto);
-        return dto;
+        GoodsTypeDto result = new GoodsTypeDto();
+        BeanUtils.copyProperties(dyGoodsType, result);
+        return R.success(result);
+    }
+
+    //update货物类型
+    @PostMapping("/update")
+    @ApiOperation(value = "修改货物类型")
+    public R updateGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
+        DyGoodsType good = new DyGoodsType();
+        BeanUtils.copyProperties(dto, good);
+        goodsTypeService.updateById(good);
+        return R.success(dto);
     }
 
     /**
@@ -129,9 +146,20 @@ public class GoodsTypeController {
             BeanUtils.copyProperties(goodsType, dto);
             dto.setTruckTypeIds(truckTypeGoodsTypeService.findAll(null, dto.getId()).stream().map(truckTypeGoodsType ->
                     truckTypeGoodsType.getTruckTypeId()).collect(Collectors.toList()));
+            //根据车辆类型id查询车辆类型名称
+            if (dto.getTruckTypeIds() != null && dto.getTruckTypeIds().size() > 0) {
+                List<String> truckTypeNames = new ArrayList<String>();
+                for ( String truckTypeIdtemp : dto.getTruckTypeIds()) {
+                    //todo：健壮性判断如果没有查到车辆类型名称，要做判断
+                    String n = truckTypeService.getById(truckTypeIdtemp).getName();
+                    truckTypeNames.add(n);
+                }
+                dto.setTruckTypeNames(truckTypeNames);
+            }
             return dto;
         }).collect(Collectors.toList());
-        return PageResponse.<GoodsTypeDto>builder().items(goodsTypeDtoList).counts(goodsTypePage.getTotal()).page(page).pages(goodsTypePage.getPages()).pagesize(pageSize).build();
+        PageResponse<GoodsTypeDto> build = PageResponse.<GoodsTypeDto>builder().items(goodsTypeDtoList).counts(goodsTypePage.getTotal()).page(page).pages(goodsTypePage.getPages()).pagesize(pageSize).build();
+        return build;
     }
 
     /**
@@ -161,14 +189,14 @@ public class GoodsTypeController {
     /**
      * 删除货物类型
      *
-     * @param id 货物类型id
+     * @param request 请求体传参（id）
      * @return 返回信息
      */
-    @PutMapping("/{id}/disable")
+    @PostMapping("/delete")
     @ApiOperation(value = "删除货物类型")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public Result disable(@RequestBody GoodsTypeDto request) {
         DyGoodsType dyGoodsType = new DyGoodsType();
-        dyGoodsType.setId(id);
+        dyGoodsType.setId(request.getId());
         dyGoodsType.setStatus(Constant.DATA_DISABLE_STATUS);
         goodsTypeService.updateById(dyGoodsType);
         return Result.ok();
