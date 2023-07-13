@@ -74,4 +74,11 @@ public class OrgSaveDTO implements Serializable {
     @Length(max = 255, message = "描述长度不能超过255")
     private String describe;
 
+    /**
+     * 所属城市或区id
+     */
+    @ApiModelProperty(value = "区域ID")
+    @TableField("area_id")
+    private Long areaId;
+
 }

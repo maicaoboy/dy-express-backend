@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.neu.dy.base.entity.SuperEntity;
 
 import io.swagger.annotations.ApiModel;
@@ -78,5 +79,12 @@ public class OrgUpdateDTO implements Serializable {
     @ApiModelProperty(value = "描述")
     @Length(max = 255, message = "描述长度不能超过255")
     private String describe;
+
+    /**
+     * 所属城市或区id
+     */
+    @ApiModelProperty(value = "区域ID")
+    @TableField("area_id")
+    private Long areaId;
 
 }
