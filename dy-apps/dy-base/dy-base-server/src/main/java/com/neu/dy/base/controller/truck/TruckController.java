@@ -1,7 +1,9 @@
 package com.neu.dy.base.controller.truck;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.truck.IDyTruckService;
+import com.neu.dy.base.biz.service.truck.IDyTruckTypeService;
 import com.neu.dy.base.common.PageResponse;
 
 import com.neu.dy.base.common.Result;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 public class TruckController {
     @Autowired
     private IDyTruckService truckService;
+    @Autowired
+    private IDyTruckTypeService truckTypeService;
 
     /**
      * 添加车辆
@@ -38,12 +42,12 @@ public class TruckController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加车辆")
-    public TruckDto saveTruck(@RequestBody TruckDto dto) {
+    public R saveTruck(@RequestBody TruckDto dto) {
         DyTruck dyTruck = new DyTruck();
         BeanUtils.copyProperties(dto, dyTruck);
         dyTruck = truckService.saveTruck(dyTruck);
         BeanUtils.copyProperties(dyTruck, dto);
-        return dto;
+        return R.success(dto);
     }
 
     /**
@@ -94,6 +98,7 @@ public class TruckController {
         truckPage.getRecords().forEach(dyTruck -> {
             TruckDto dto = new TruckDto();
             BeanUtils.copyProperties(dyTruck, dto);
+            dto.setTruckTypeName(truckTypeService.getById(dyTruck.getTruckTypeId()).getName());
             dtoList.add(dto);
         });
         return PageResponse.<TruckDto>builder().items(dtoList).pagesize(pageSize).page(page).counts(truckPage.getTotal())
@@ -151,7 +156,7 @@ public class TruckController {
      * @param id 车辆id
      * @return 返回信息
      */
-    @PutMapping("/{id}/disable")
+    @DeleteMapping("/{id}")
     @ApiOperation(value = "删除车辆")
     public Result disable(@PathVariable(name = "id") String id) {
         //TODO 检查车辆当前状态，如处于非空闲状态，则不允许删除

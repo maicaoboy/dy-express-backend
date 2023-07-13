@@ -22,6 +22,9 @@ public class TruckDto implements Serializable {
      */
     @ApiModelProperty("车辆类型id")
     private String truckTypeId;
+
+    @ApiModelProperty("车辆类型名称")
+    private String truckTypeName;
     /**
      * 所属车队id
      */
