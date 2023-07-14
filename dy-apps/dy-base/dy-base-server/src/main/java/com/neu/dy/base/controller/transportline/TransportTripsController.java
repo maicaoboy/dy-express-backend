@@ -1,5 +1,6 @@
 package com.neu.dy.base.controller.transportline;
 
+import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.transportline.IDyTransportTripsService;
 import com.neu.dy.base.biz.service.transportline.IDyTransportTripsTruckDriverService;
 import com.neu.dy.base.common.Result;
@@ -38,12 +39,12 @@ public class TransportTripsController {
      */
     @PostMapping("")
     @ApiOperation(value = "添加车次")
-    public TransportTripsDto save(@RequestBody TransportTripsDto dto) {
+    public R save(@RequestBody TransportTripsDto dto) {
         DyTransportTrips pdTransportTrips = new DyTransportTrips();
         BeanUtils.copyProperties(dto, pdTransportTrips);
         pdTransportTrips = transportTripsService.saveTransportTrips(pdTransportTrips);
         BeanUtils.copyProperties(pdTransportTrips, dto);
-        return dto;
+        return R.success();
     }
 
     /**
@@ -91,12 +92,12 @@ public class TransportTripsController {
      */
     @PutMapping("/{id}")
     @ApiOperation(value = "更新车次信息")
-    public TransportTripsDto update(@PathVariable(name = "id") String id, @RequestBody TransportTripsDto dto) {
+    public R update(@PathVariable(name = "id") String id, @RequestBody TransportTripsDto dto) {
         dto.setId(id);
         DyTransportTrips pdTransportTrips = new DyTransportTrips();
         BeanUtils.copyProperties(dto, pdTransportTrips);
         transportTripsService.updateById(pdTransportTrips);
-        return dto;
+        return R.success();
     }
 
     /**
@@ -107,9 +108,9 @@ public class TransportTripsController {
      */
     @DeleteMapping("/{id}")
     @ApiOperation(value = "删除车次信息")
-    public Result disable(@PathVariable(name = "id") String id) {
+    public R disable(@PathVariable(name = "id") String id) {
         transportTripsService.disable(id);
-        return Result.ok();
+        return R.success();
     }
 
     /**
