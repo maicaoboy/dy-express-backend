@@ -32,4 +32,9 @@ public class DyAgencyScope implements Serializable {
      * 行政区域id
      */
     private String areaId;
+
+    /**
+     * 多边形经纬度坐标集合
+     */
+    private String  mutiPoints;
 }
