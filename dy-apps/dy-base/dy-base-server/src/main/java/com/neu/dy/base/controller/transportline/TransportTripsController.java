@@ -125,14 +125,14 @@ public class TransportTripsController {
             @ApiImplicitParam(name= "id", value = "车次id", required = true, dataType = "String"),
             @ApiImplicitParam(name= "dtoList", value = "车次与车辆和司机关联关系", required = true, dataType = "List")
     })
-    public Result batchSaveTruckDriver(@PathVariable("id") String transportTripsId, @RequestBody List<TransportTripsTruckDriverDto> dtoList) {
+    public R batchSaveTruckDriver(@PathVariable("id") String transportTripsId, @RequestBody List<TransportTripsTruckDriverDto> dtoList) {
         transportTripsTruckDriverService.batchSave(transportTripsId, dtoList.stream().map(dto -> {
             dto.setTransportTripsId(transportTripsId);
             DyTransportTripsTruckDriver truckTransportTripsTruckDriver = new DyTransportTripsTruckDriver();
             BeanUtils.copyProperties(dto, truckTransportTripsTruckDriver);
             return truckTransportTripsTruckDriver;
         }).collect(Collectors.toList()));
-        return Result.ok();
+        return R.success();
     }
 
     /**
