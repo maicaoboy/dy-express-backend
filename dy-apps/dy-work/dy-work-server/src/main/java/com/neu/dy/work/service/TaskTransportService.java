@@ -30,7 +30,7 @@ public interface TaskTransportService extends IService<TaskTransport> {
      * @param status   运输任务状态
      * @return 运输任务分页数据
      */
-    IPage<TaskTransport> findByPage(Integer page, Integer pageSize, String id, Integer status);
+    IPage<TaskTransport> findByPage(Integer page, Integer pageSize, String id, Integer status, Integer assignedStatus);
 
     /**
      * 获取运输任务列表

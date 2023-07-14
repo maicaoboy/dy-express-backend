@@ -45,7 +45,7 @@ public class TaskTransportServiceImpl extends ServiceImpl<TaskTransportMapper, T
     }
 
     @Override
-    public IPage<TaskTransport> findByPage(Integer page, Integer pageSize, String id, Integer status) {
+    public IPage<TaskTransport> findByPage(Integer page, Integer pageSize, String id, Integer status, Integer assignedStatus) {
         Page<TaskTransport> iPage = new Page(page, pageSize);
         LambdaQueryWrapper<TaskTransport> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         if (StringUtils.isNotEmpty(id)) {
@@ -54,6 +54,9 @@ public class TaskTransportServiceImpl extends ServiceImpl<TaskTransportMapper, T
         if (status != null) {
             lambdaQueryWrapper.eq(TaskTransport::getStatus, status);
         }
+        if (assignedStatus != null) {
+        lambdaQueryWrapper.eq(TaskTransport::getAssignedStatus, assignedStatus);
+    }
         return page(iPage, lambdaQueryWrapper);
     }
 

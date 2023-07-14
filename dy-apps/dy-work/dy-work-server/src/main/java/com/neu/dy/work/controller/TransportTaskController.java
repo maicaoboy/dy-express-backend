@@ -105,7 +105,7 @@ public class TransportTaskController {
             if (dto.getPageSize() != null) {
                 pageSize = dto.getPageSize();
             }
-            IPage<TaskTransport> taskTransportIPage = taskTransportService.findByPage(page, pageSize, dto.getId(), dto.getStatus());
+            IPage<TaskTransport> taskTransportIPage = taskTransportService.findByPage(page, pageSize, dto.getId(), dto.getStatus(), dto.getAssignedStatus());
             taskTransportIPage.getRecords().forEach(taskTransport -> {
                 TaskTransportDTO resultDto = new TaskTransportDTO();
                 BeanUtils.copyProperties(taskTransport, resultDto);

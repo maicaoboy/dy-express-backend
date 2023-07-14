@@ -33,7 +33,7 @@ public interface TransportOrderService extends IService<TransportOrder> {
      * @param schedulingStatus 运单调度状态
      * @return 运单分页数据
      */
-    IPage<TransportOrder> findByPage(Integer page, Integer pageSize, String orderId, Integer status, Integer schedulingStatus);
+    IPage<TransportOrder> findByPage(Integer page, Integer pageSize, String id, String orderId, Integer status, Integer schedulingStatus);
 
     /**
      * 获取运单列表

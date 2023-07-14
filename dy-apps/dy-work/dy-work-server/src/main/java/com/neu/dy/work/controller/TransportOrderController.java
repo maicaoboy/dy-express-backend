@@ -66,6 +66,7 @@ public class TransportOrderController {
      *
      * @param page             页码
      * @param pageSize         页尺寸
+     * @param id               运单ID
      * @param orderId          订单ID
      * @param status           运单状态(1.新建 2.已装车，发往x转运中心 3.到达 4.到达终端网点)
      * @param schedulingStatus 调度状态调度状态(1.待调度2.未匹配线路3.已调度)
@@ -74,10 +75,11 @@ public class TransportOrderController {
     @GetMapping("/page")
     public R findByPage(@RequestParam(name = "page") Integer page,
                         @RequestParam(name = "pageSize") Integer pageSize,
+                        @RequestParam(name = "id", required = false) String id,
                         @RequestParam(name = "orderId", required = false) String orderId,
                         @RequestParam(name = "status", required = false) Integer status,
                         @RequestParam(name = "schedulingStatus", required = false) Integer schedulingStatus) {
-        IPage<TransportOrder> orderIPage = transportOrderService.findByPage(page, pageSize, orderId, status, schedulingStatus);
+        IPage<TransportOrder> orderIPage = transportOrderService.findByPage(page, pageSize, id, orderId, status, schedulingStatus);
         return R.success(orderIPage);
     }
 
