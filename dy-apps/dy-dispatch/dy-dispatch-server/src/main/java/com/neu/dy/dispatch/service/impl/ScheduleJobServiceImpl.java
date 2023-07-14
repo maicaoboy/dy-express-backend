@@ -115,9 +115,11 @@ public class ScheduleJobServiceImpl extends ServiceImpl<ScheduleJobMapper, Sched
 
         BeanUtils.copyProperties(dto, entity, ConvertUtils.getNullPropertyNames(dto));
 
+
+        System.out.println(entity);
         ScheduleUtils.updateScheduleJob(scheduler, entity);
 
-        this.updateById(entity);
+        baseMapper.updateById(entity);
     }
 
     @Override

@@ -124,6 +124,7 @@ public class ScheduleJobController {
     @ApiOperation("修改")
     public R update(@RequestBody ScheduleJobDTO dto) {
 
+        System.out.println(dto);
         scheduleJobService.update(dto);
 
         return R.success();
