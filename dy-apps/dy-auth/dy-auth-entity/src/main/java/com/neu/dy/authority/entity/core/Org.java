@@ -118,6 +118,7 @@ public class Org extends Entity<Long> {
     private String describe;
 
 
+
     @Builder
     public Org(Long id,Long areaId, LocalDateTime createTime, Long createUser, LocalDateTime updateTime, Long updateUser,
                String name, String abbreviation, Long parentId, String treePath, Integer sortValue,Integer orgType,
