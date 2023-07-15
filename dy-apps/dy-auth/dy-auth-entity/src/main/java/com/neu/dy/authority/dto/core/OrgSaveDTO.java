@@ -1,6 +1,8 @@
 package com.neu.dy.authority.dto.core;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
@@ -74,11 +76,8 @@ public class OrgSaveDTO implements Serializable {
     @Length(max = 255, message = "描述长度不能超过255")
     private String describe;
 
-    /**
-     * 所属城市或区id
-     */
-    @ApiModelProperty(value = "区域ID")
-    @TableField("area_id")
-    private Long areaId;
+    private String areaId;
+
+    private List<List<Map>> mutiPoints;
 
 }

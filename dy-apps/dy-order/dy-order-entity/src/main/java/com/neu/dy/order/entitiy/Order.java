@@ -33,7 +33,7 @@ public class Order implements Serializable {
 
 
     /**
-     * 订单类型，1为同城订单，2为城际订单
+     * 订单类型，1:正常，2:退订，3:退货，4:换货
      */
     private Integer orderType;
 

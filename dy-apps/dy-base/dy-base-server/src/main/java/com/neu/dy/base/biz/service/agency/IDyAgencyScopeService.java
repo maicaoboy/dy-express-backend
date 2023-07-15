@@ -1,6 +1,8 @@
 package com.neu.dy.base.biz.service.agency;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.base.entity.agency.DyAgencyScope;
 
 
@@ -31,4 +33,6 @@ public interface IDyAgencyScopeService extends IService<DyAgencyScope> {
     void delete(String areaId, String agencyId);
 
     List<DyAgencyScope> findAll(String areaId, String agencyId, List<String> agencyIds, List<String> areaIds);
+
+    public IPage<DyAgencyScope> getByPage(Integer page, Integer pageSize, DyAgencyScope dyAgencyScope);
 }
