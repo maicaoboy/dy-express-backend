@@ -189,5 +189,6 @@ public class OrderDTO implements Serializable {
     @ApiModelProperty("页尺寸")
     private Integer pageSize;
 
+    @ApiModelProperty("购物车")
     private OrderCargoDto orderCargoDto;
 }

@@ -2,6 +2,11 @@ package com.neu.dy.base.controller.scope;
 
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.agency.IDyAgencyScopeService;
 import com.neu.dy.base.biz.service.user.IDyCourierScopeService;
@@ -33,6 +38,7 @@ public class ScopeController {
     @Autowired
     private IDyCourierScopeService courierScopeService;
 
+
     /**
      * 批量保存机构业务范围
      *
@@ -49,13 +55,24 @@ public class ScopeController {
         return R.success();
     }
 
+    @PostMapping("/agency/save")
+    public R saveAgencyScope(@RequestBody AgencyScopeDto agencyScopeDto) {
+        UpdateWrapper<DyAgencyScope> wrapper = new UpdateWrapper<>();
+//        更新agencyScopeDto对应的数据
+        wrapper.eq("id", agencyScopeDto.getId()).eq("area_id", agencyScopeDto.getAreaId()).eq("agency_id", agencyScopeDto.getAgencyId());
+        DyAgencyScope dyAgencyScope = new DyAgencyScope();
+        BeanUtils.copyProperties(agencyScopeDto, dyAgencyScope);
+        agencyScopService.update(dyAgencyScope, wrapper);
+        return R.success();
+    }
+
     /**
      * 删除机构业务范围信息
      *
      * @param dto 参数
      * @return 返回信息
      */
-    @DeleteMapping("/agency")
+    @DeleteMapping("/agency/delete")
     public R deleteAgencyScope(@RequestBody AgencyScopeDto dto) {
         agencyScopService.delete(dto.getAreaId(), dto.getAgencyId());
         return R.success();
@@ -77,6 +94,38 @@ public class ScopeController {
         }).collect(Collectors.toList());
         return R.success(agencyScopeDtoList);
     }
+
+    /**
+     * 获取Param为AgencyScopeDto
+     * 根据页面大小以及其他条件查询机构范围数据并返回
+     */
+    @PostMapping("/agency/page")
+    public R getByPage(@RequestBody AgencyScopeDto dto) {
+        if (dto.getPage() == null) {
+            dto.setPage(1);
+        }
+        if (dto.getPageSize() == null) {
+            dto.setPageSize(10);
+        }
+        DyAgencyScope queryTask = new DyAgencyScope();
+        BeanUtils.copyProperties(dto, queryTask);
+        Page<DyAgencyScope> page = new Page<>(dto.getPage(), dto.getPageSize());
+//        使用lamdaQueryWrapper进行查询
+        LambdaQueryWrapper<DyAgencyScope> wrapper = new LambdaQueryWrapper<>();
+//         如果areaId不为空则加入查询条件
+        if (dto.getAreaId() != null) {
+            wrapper.like(DyAgencyScope::getAreaId, dto.getAreaId());
+        }
+//        如果agencyId不为空则加入查询条件
+        if (dto.getAgencyId() != null) {
+            wrapper.like(DyAgencyScope::getAgencyId, dto.getAgencyId());
+        }
+//       按照条件进行查询
+        agencyScopService.page(page, wrapper);
+        return R.success((IPage)page);
+    }
+
+
 
     /**
      * 批量保存快递员业务范围
@@ -122,4 +171,5 @@ public class ScopeController {
         }).collect(Collectors.toList());
         return R.success(courierScopeDtoList);
     }
+
 }

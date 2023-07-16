@@ -25,6 +25,7 @@ public class OrderCargoController {
      * @param orderId
      * @return
      */
+    @GetMapping("/findAll")
     public R findAll(@RequestParam(name = "tranOrderId",required = false)String tranOrderId, @RequestParam(name = "orderId",required = false)String orderId){
         List<OrderCargo> orderCargos = cargoService.findAll(tranOrderId, orderId);
         List<OrderCargoDto> orderCargoDtos = orderCargos.stream().map(orderCargo -> {

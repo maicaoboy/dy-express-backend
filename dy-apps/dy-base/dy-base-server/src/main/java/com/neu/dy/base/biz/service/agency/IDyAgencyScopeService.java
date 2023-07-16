@@ -1,6 +1,8 @@
 package com.neu.dy.base.biz.service.agency;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.base.entity.agency.DyAgencyScope;
 
 

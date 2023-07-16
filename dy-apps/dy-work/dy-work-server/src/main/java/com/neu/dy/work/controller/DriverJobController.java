@@ -5,11 +5,14 @@ import com.neu.dy.base.R;
 import com.neu.dy.work.dto.DriverJobDTO;
 import com.neu.dy.work.entity.DriverJob;
 import com.neu.dy.work.service.DriverJobService;
+import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,6 +49,12 @@ public class DriverJobController {
     @PutMapping("/{id}")
     public R updateById(@PathVariable(name = "id")String id, @RequestBody DriverJobDTO driverJobDTO){
         driverJobDTO.setId(id);
+        if (driverJobDTO.getActualDepartureTime() == null&& driverJobDTO.getStatus() == 2){
+            driverJobDTO.setActualDepartureTime(LocalDateTime.now());
+        }
+        if (driverJobDTO.getActualArrivalTime() != null&& driverJobDTO.getStatus() == 3){
+            driverJobDTO.setActualArrivalTime(LocalDateTime.now());
+        }
         DriverJob driverJob = new DriverJob();
         BeanUtils.copyProperties(driverJobDTO,driverJob);
         driverJobService.updateById(driverJob);
@@ -57,7 +66,7 @@ public class DriverJobController {
      * @param driverJobDTO
      * @return
      */
-    @GetMapping("/page")
+    @PostMapping("/page")
     public R findByPage(@RequestBody DriverJobDTO driverJobDTO){
         Integer page = 1;
         Integer pageSize = 10;

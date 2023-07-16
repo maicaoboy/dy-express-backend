@@ -2,6 +2,7 @@ package com.neu.dy.base.controller.truck;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.base.R;
+import com.neu.dy.base.biz.service.transportline.IDyTransportTripsTruckDriverService;
 import com.neu.dy.base.biz.service.truck.IDyTruckService;
 import com.neu.dy.base.biz.service.truck.IDyTruckTypeService;
 import com.neu.dy.base.common.PageResponse;
@@ -33,6 +34,8 @@ public class TruckController {
     private IDyTruckService truckService;
     @Autowired
     private IDyTruckTypeService truckTypeService;
+    @Autowired
+    private IDyTransportTripsTruckDriverService transportTripsTruckDriverService;
 
     /**
      * 添加车辆
@@ -92,13 +95,16 @@ public class TruckController {
                                              @RequestParam(name = "truckTypeId", required = false) String truckTypeId,
                                              @RequestParam(name = "licensePlate", required = false) String licensePlate,
                                              @RequestParam(name = "fleetId", required = false) String fleetId) {
-        // TODO: 2020/1/9 通过车队名称查询待实现
         IPage<DyTruck> truckPage = truckService.findByPage(page, pageSize, truckTypeId, licensePlate, fleetId);
         List<TruckDto> dtoList = new ArrayList<>();
         truckPage.getRecords().forEach(dyTruck -> {
             TruckDto dto = new TruckDto();
             BeanUtils.copyProperties(dyTruck, dto);
             dto.setTruckTypeName(truckTypeService.getById(dyTruck.getTruckTypeId()).getName());
+            dto.setTransportTripsId(transportTripsTruckDriverService.
+                    findAll(null, dyTruck.getId(), null)
+                    .stream().map(transportTripsTruckDriver -> transportTripsTruckDriver.getTransportTripsId())
+                    .collect(Collectors.toList()));
             dtoList.add(dto);
         });
         return PageResponse.<TruckDto>builder().items(dtoList).pagesize(pageSize).page(page).counts(truckPage.getTotal())
@@ -136,17 +142,16 @@ public class TruckController {
     /**
      * 更新车辆信息
      *
-     * @param id  车辆id
      * @param dto 车辆信息
      * @return 车辆信息
      */
-    @PutMapping("/{id}")
+    @PostMapping("/update")
     @ApiOperation(value = "更新车辆信息")
-    public TruckDto update(@PathVariable(name = "id") String id, @RequestBody TruckDto dto) {
-        dto.setId(id);
+    public TruckDto update(@RequestBody TruckDto dto) {
         DyTruck dyTruck = new DyTruck();
         BeanUtils.copyProperties(dto, dyTruck);
         truckService.updateById(dyTruck);
+        BeanUtils.copyProperties(dyTruck, dto);
         return dto;
     }
 
