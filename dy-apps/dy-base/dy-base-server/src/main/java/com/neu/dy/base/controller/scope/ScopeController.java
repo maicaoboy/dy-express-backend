@@ -79,6 +79,25 @@ public class ScopeController {
     }
 
     /**
+     * 获取Param为AgencyScopeDto
+     * 根据页面大小以及其他条件查询机构范围数据并返回
+     */
+    @GetMapping("/agency/page")
+    public R getByPage(AgencyScopeDto dto) {
+        if (dto.getPage() == null) {
+            dto.setPage(1);
+        }
+        if (dto.getPageSize() == null) {
+            dto.setPageSize(10);
+        }
+        DyAgencyScope queryTask = new DyAgencyScope();
+        BeanUtils.copyProperties(dto, queryTask);
+        return R.success(agencyScopService.getByPage(dto.getPage(), dto.getPageSize(), queryTask));
+    }
+
+
+
+    /**
      * 批量保存快递员业务范围
      *
      * @param dtoList 快递员业务范围信息

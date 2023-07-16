@@ -1,11 +1,14 @@
 package com.neu.dy.base.biz.service.agency.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 import com.neu.dy.base.biz.dao.agency.DyAgencyScopMapper;
 import com.neu.dy.base.biz.service.agency.IDyAgencyScopeService;
 import com.neu.dy.base.common.CustomIdGenerator;
+import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.base.entity.agency.DyAgencyScope;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,5 +62,18 @@ public class DyAgencyScopeServiceImpl extends ServiceImpl<DyAgencyScopMapper, Dy
             lambdaQueryWrapper.in(DyAgencyScope::getAreaId, areaIds);
         }
         return baseMapper.selectList(lambdaQueryWrapper);
+    }
+
+    @Override
+    public IPage<DyAgencyScope> getByPage(Integer page, Integer pageSize, DyAgencyScope dyAgencyScope) {
+        Page<DyAgencyScope> iPage = new Page(page, pageSize);
+        LambdaQueryWrapper<DyAgencyScope> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (org.apache.commons.lang.StringUtils.isNotBlank(dyAgencyScope.getAreaId())) {
+            lambdaQueryWrapper.like(DyAgencyScope::getAreaId, dyAgencyScope.getAgencyId());
+        }
+        if (org.apache.commons.lang.StringUtils.isNotBlank(dyAgencyScope.getAgencyId())) {
+            lambdaQueryWrapper.like(DyAgencyScope::getAgencyId, dyAgencyScope.getAgencyId());
+        }
+        return page(iPage, lambdaQueryWrapper);
     }
 }
