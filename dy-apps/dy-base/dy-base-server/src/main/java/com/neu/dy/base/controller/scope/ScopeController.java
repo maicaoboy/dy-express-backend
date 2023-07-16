@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.neu.dy.base.R;
 import com.neu.dy.base.biz.service.agency.IDyAgencyScopeService;
 import com.neu.dy.base.biz.service.user.IDyCourierScopeService;
+import com.neu.dy.base.common.CustomIdGenerator;
 import com.neu.dy.base.common.Result;
 import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.base.dto.user.CourierScopeDto;
@@ -38,6 +39,10 @@ public class ScopeController {
     @Autowired
     private IDyCourierScopeService courierScopeService;
 
+    @Autowired
+    private CustomIdGenerator idGenerator;
+
+
 
     /**
      * 批量保存机构业务范围
@@ -53,6 +58,18 @@ public class ScopeController {
             return scope;
         }).collect(Collectors.toList()));
         return R.success();
+    }
+
+    @PostMapping("/agency/deleteById")
+    public R deleteAgencyScopeById(@RequestBody AgencyScopeDto dto) {
+        LambdaQueryWrapper<DyAgencyScope> wrapper = new LambdaQueryWrapper<>();
+        boolean remove = false;
+        if(dto.getId() != null){
+            wrapper.eq(DyAgencyScope::getId, dto.getId());
+            remove = agencyScopService.remove(wrapper);
+        }
+
+        return R.success(remove);
     }
 
     @PostMapping("/agency/save")
@@ -170,6 +187,14 @@ public class ScopeController {
             return dto;
         }).collect(Collectors.toList());
         return R.success(courierScopeDtoList);
+    }
+
+    @PostMapping("/agency/add")
+    public R addAgencyScope(@RequestBody AgencyScopeDto dto) {
+        DyAgencyScope agencyScope = new DyAgencyScope();
+        BeanUtils.copyProperties(dto, agencyScope);
+        agencyScope.setId(idGenerator.nextId(agencyScope) + "");
+        return R.success(agencyScopService.save(agencyScope));
     }
 
 }
