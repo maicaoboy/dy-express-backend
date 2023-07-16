@@ -60,6 +60,19 @@ public class TransportOrderController {
         return dto;
     }
 
+    /**
+     * 修改运单信息
+     *
+     * @param dto 运单信息
+     * @return 运单信息
+     */
+    @PostMapping("/update")
+    public R update(@RequestBody TransportOrderDTO dto) {
+        TransportOrder transportOrder = new TransportOrder();
+        BeanUtils.copyProperties(dto, transportOrder);
+        transportOrderService.updateById(transportOrder);
+        return R.success(dto);
+    }
 
     /**
      * 获取运单分页数据

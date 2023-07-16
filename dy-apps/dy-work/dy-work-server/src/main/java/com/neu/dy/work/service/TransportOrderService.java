@@ -11,8 +11,6 @@ import java.util.List;
  * 运单表 服务类
  * </p>
  *
- * @author jpf
- * @since 2020-01-06
  */
 public interface TransportOrderService extends IService<TransportOrder> {
     /**

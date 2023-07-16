@@ -42,4 +42,6 @@ public interface TaskTransportService extends IService<TaskTransport> {
      * @return 运输任务列表
      */
     List<TaskTransport> findAll(List<String> ids, String id, Integer status, TaskTransportDTO dto);
+
 }
+

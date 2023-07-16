@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
  * 运单表 Mapper 接口
  * </p>
  *
- * @author jpf
- * @since 2020-01-06
+ * @author zyh
+ * @since 2023-07-06
  */
 @Repository
 public interface TransportOrderMapper extends BaseMapper<TransportOrder> {

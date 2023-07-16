@@ -1,8 +1,11 @@
 package com.neu.dy.work.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.neu.dy.base.R;
 import com.neu.dy.base.common.PageResponse;
+import com.neu.dy.base.dto.base.GoodsTypeDto;
+import com.neu.dy.base.entity.base.DyGoodsType;
 import com.neu.dy.work.dto.TaskTransportDTO;
 import com.neu.dy.work.entity.TaskTransport;
 import com.neu.dy.work.entity.TransportOrderTask;
@@ -123,7 +126,7 @@ public class TransportTaskController {
         return PageResponse.<TaskTransportDTO>builder().items(dtoList).pagesize(pageSize).page(page).counts(total)
                 .pages(pages).build();
     }
-
+    
     /**
      * 获取运单列表
      *
@@ -139,6 +142,9 @@ public class TransportTaskController {
         }).collect(Collectors.toList());
         return R.success(collect);
     }
+
+
+
 
     /**
      * 根据运单id或运输任务id获取运输任务列表
