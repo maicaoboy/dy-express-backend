@@ -73,6 +73,17 @@ public class GoodsTypeController {
     @ApiOperation(value = "修改货物类型")
     public R updateGoodsType(@Validated @RequestBody GoodsTypeDto dto) {
         DyGoodsType good = new DyGoodsType();
+        String goodsTypeId = dto.getId();
+        truckTypeGoodsTypeService.delete(null,goodsTypeId);
+        if (dto.getTruckTypeIds() != null) {
+            List<DyTruckTypeGoodsType> list = dto.getTruckTypeIds().stream().map(truckTypeId -> {
+                DyTruckTypeGoodsType truckTypeGoodsType = new DyTruckTypeGoodsType();
+                truckTypeGoodsType.setTruckTypeId(truckTypeId);
+                truckTypeGoodsType.setGoodsTypeId(goodsTypeId);
+                return truckTypeGoodsType;
+            }).collect(Collectors.toList());
+            truckTypeGoodsTypeService.batchSave(list);
+        }
         BeanUtils.copyProperties(dto, good);
         goodsTypeService.updateById(good);
         return R.success(dto);
