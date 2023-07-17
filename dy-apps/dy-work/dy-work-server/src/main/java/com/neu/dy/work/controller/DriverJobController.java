@@ -57,7 +57,7 @@ public class DriverJobController {
      * @param driverJobDTO
      * @return
      */
-    @GetMapping("/page")
+    @PostMapping("/page")
     public R findByPage(@RequestBody DriverJobDTO driverJobDTO){
         Integer page = 1;
         Integer pageSize = 10;
