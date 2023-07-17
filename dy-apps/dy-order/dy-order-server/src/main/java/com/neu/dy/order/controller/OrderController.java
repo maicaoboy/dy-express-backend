@@ -8,6 +8,7 @@ import com.neu.dy.order.dto.OrderDTO;
 import com.neu.dy.order.dto.OrderSearchDTO;
 import com.neu.dy.order.entitiy.Order;
 import com.neu.dy.order.service.OrderService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/order")
+@Api(value = "Order", tags = "订单")
 public class OrderController {
     @Autowired
     private OrderService orderService;
@@ -70,6 +72,7 @@ public class OrderController {
      * @param orderDTO
      * @return
      */
+    @ApiOperation("根据id更新订单信息")
     @PostMapping("/update/{id}")
     public R updateById(@PathVariable(name = "id")String id, @RequestBody OrderDTO orderDTO){
         orderDTO.setId(id);
@@ -98,6 +101,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("/page")
+    @ApiOperation("分页查询订单信息")
     public R findByPage(@RequestBody OrderDTO orderDTO){
         Order order= new Order();
         BeanUtils.copyProperties(orderDTO,order);
@@ -112,6 +116,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/{id}")
+    @ApiOperation("根据id查询订单信息")
     public R findById(@PathVariable(name = "id") String id){
         OrderDTO orderDTO = new OrderDTO();
         Order order = orderService.getById(id);
@@ -130,6 +135,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("ids")
+    @ApiOperation("根据多个id查询订单信息")
     public R findByIds(@RequestParam(name = "ids")List<String> ids){
         List<Order> orders = orderService.listByIds(ids);
         List<OrderDTO> orderDTOList = orders.stream().map(item -> {
@@ -146,6 +152,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("list")
+    @ApiOperation("根据条件查询订单信息")
     public R list(@RequestBody OrderSearchDTO orderSearchDTO){
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(orderSearchDTO.getStatus() != null,Order::getStatus,orderSearchDTO.getStatus());
