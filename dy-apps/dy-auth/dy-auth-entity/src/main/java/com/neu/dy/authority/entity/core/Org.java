@@ -77,7 +77,7 @@ public class Org extends Entity<Long> {
      */
     @ApiModelProperty(value = "区域ID")
     @TableField("area_id")
-    private Long areaId;
+    private String areaId;
 
     /**
      * 树结构
@@ -120,7 +120,7 @@ public class Org extends Entity<Long> {
 
 
     @Builder
-    public Org(Long id,Long areaId, LocalDateTime createTime, Long createUser, LocalDateTime updateTime, Long updateUser,
+    public Org(Long id,String areaId, LocalDateTime createTime, Long createUser, LocalDateTime updateTime, Long updateUser,
                String name, String abbreviation, Long parentId, String treePath, Integer sortValue,Integer orgType,
                List<List<Map>> mutiPoints,Boolean status, String describe) {
         this.id = id;

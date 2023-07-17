@@ -64,16 +64,4 @@ public class DyAgencyScopeServiceImpl extends ServiceImpl<DyAgencyScopMapper, Dy
         return baseMapper.selectList(lambdaQueryWrapper);
     }
 
-    @Override
-    public IPage<DyAgencyScope> getByPage(Integer page, Integer pageSize, DyAgencyScope dyAgencyScope) {
-        Page<DyAgencyScope> iPage = new Page(page, pageSize);
-        LambdaQueryWrapper<DyAgencyScope> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        if (org.apache.commons.lang.StringUtils.isNotBlank(dyAgencyScope.getAreaId())) {
-            lambdaQueryWrapper.like(DyAgencyScope::getAreaId, dyAgencyScope.getAgencyId());
-        }
-        if (org.apache.commons.lang.StringUtils.isNotBlank(dyAgencyScope.getAgencyId())) {
-            lambdaQueryWrapper.like(DyAgencyScope::getAgencyId, dyAgencyScope.getAgencyId());
-        }
-        return page(iPage, lambdaQueryWrapper);
-    }
 }

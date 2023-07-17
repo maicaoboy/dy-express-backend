@@ -43,7 +43,7 @@ public class DriverJobDTO implements Serializable {
     /**
      * 运输任务id
      */
-    private String taskTransportId;
+            private String taskTransportId;
 
     /**
      * 提货对接人

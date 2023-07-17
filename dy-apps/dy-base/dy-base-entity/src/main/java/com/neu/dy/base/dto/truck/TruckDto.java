@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * TruckDto
@@ -56,12 +57,10 @@ public class TruckDto implements Serializable {
      */
     @ApiModelProperty("准载体积")
     private BigDecimal allowableVolume;
-    /**
-     * 车辆行驶证信息id
 
-    @ApiModelProperty("车辆行驶证信息id（不需要了）")
-    private String truckLicenseId;
-     */
+
+    @ApiModelProperty("车次编号")
+    private List<String> transportTripsId;
 
     /**
      * 状态 0：禁用 1：正常

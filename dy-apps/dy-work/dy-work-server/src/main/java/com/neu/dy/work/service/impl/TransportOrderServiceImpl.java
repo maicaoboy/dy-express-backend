@@ -39,9 +39,12 @@ public class TransportOrderServiceImpl extends ServiceImpl<TransportOrderMapper,
     }
 
     @Override
-    public IPage<TransportOrder> findByPage(Integer page, Integer pageSize, String orderId, Integer status, Integer schedulingStatus) {
+    public IPage<TransportOrder> findByPage(Integer page, Integer pageSize, String id, String orderId, Integer status, Integer schedulingStatus) {
         Page<TransportOrder> iPage = new Page(page, pageSize);
         LambdaQueryWrapper<TransportOrder> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(id)) {
+            lambdaQueryWrapper.like(TransportOrder::getId, id);
+        }
         if (StringUtils.isNotEmpty(orderId)) {
             lambdaQueryWrapper.like(TransportOrder::getOrderId, orderId);
         }
