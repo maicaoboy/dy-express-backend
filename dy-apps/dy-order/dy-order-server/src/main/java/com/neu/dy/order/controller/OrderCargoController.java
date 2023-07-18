@@ -5,6 +5,8 @@ import com.neu.dy.base.R;
 import com.neu.dy.order.dto.OrderCargoDto;
 import com.neu.dy.order.entitiy.OrderCargo;
 import com.neu.dy.order.service.OrderCargoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/cargo")
+@Api(value = "Cargo", tags = "订单商品信息")
 public class OrderCargoController {
 
     @Autowired
@@ -26,6 +29,7 @@ public class OrderCargoController {
      * @return
      */
     @GetMapping("/findAll")
+    @ApiOperation("查询某个订单或运单购买的商品，如果两个参数都没有的话就是获取所有购买的商品信息")
     public R findAll(@RequestParam(name = "tranOrderId",required = false)String tranOrderId, @RequestParam(name = "orderId",required = false)String orderId){
         List<OrderCargo> orderCargos = cargoService.findAll(tranOrderId, orderId);
         List<OrderCargoDto> orderCargoDtos = orderCargos.stream().map(orderCargo -> {
@@ -42,6 +46,7 @@ public class OrderCargoController {
      * @return
      */
     @GetMapping("/list")
+    @ApiOperation("根据多个orderId获取购买的商品信息")
     public R list(@RequestParam(name = "orderIds",required = false)List<String> orderIds){
         LambdaQueryWrapper<OrderCargo> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -64,6 +69,7 @@ public class OrderCargoController {
      * @return
      */
     @PostMapping
+    @ApiOperation("向购物车中添加商品,如果存在就修改对应的信息（例如数量），不存在就新增")
     public R save(@RequestBody OrderCargoDto orderCargoDto){
         OrderCargo orderCargo = new OrderCargo();
         BeanUtils.copyProperties(orderCargoDto,orderCargo);
@@ -79,6 +85,7 @@ public class OrderCargoController {
      * @return
      */
     @PutMapping("/{id}")
+    @ApiOperation("更新货物信息")
     public R update(@PathVariable(name = "id") String id, @RequestBody OrderCargoDto orderCargoDto){
         orderCargoDto.setId(id);
         OrderCargo orderCargo = new OrderCargo();
@@ -94,6 +101,7 @@ public class OrderCargoController {
      * @return 返回信息
      */
     @DeleteMapping("/{id}")
+    @ApiOperation("删除货物信息")
     public R del(@PathVariable(name = "id") String id) {
         cargoService.removeById(id);
         return R.success();
@@ -106,6 +114,7 @@ public class OrderCargoController {
      * @return 货物详情
      */
     @GetMapping("/{id}")
+    @ApiOperation("根据id获取货物详情")
     public R findById(@PathVariable(name = "id") String id) {
         OrderCargo orderCargo = cargoService.getById(id);
         OrderCargoDto orderCargoDto = new OrderCargoDto();

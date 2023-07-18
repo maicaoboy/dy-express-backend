@@ -41,6 +41,7 @@ public class ScopeController {
     @Autowired
     private IdGenerate<Long> idGenerate;
 
+
     /**
      * 批量保存机构业务范围
      *
@@ -57,6 +58,7 @@ public class ScopeController {
         return R.success();
     }
 
+    @PostMapping("/agency/save")
     @PostMapping("/agency/save")
     public R saveAgencyScope(@RequestBody AgencyScopeDto dto) {
         LambdaQueryWrapper<DyAgencyScope> wrapper = new LambdaQueryWrapper<>();
@@ -190,5 +192,11 @@ public class ScopeController {
         }).collect(Collectors.toList());
         return R.success(courierScopeDtoList);
     }
-
+    @PostMapping("/agency/add")
+    public R addAgencyScope(@RequestBody AgencyScopeDto dto) {
+        DyAgencyScope agencyScope = new DyAgencyScope();
+        BeanUtils.copyProperties(dto, agencyScope);
+        agencyScope.setId(idGenerator.nextId(agencyScope) + "");
+        return R.success(agencyScopService.save(agencyScope));
+    }
 }
