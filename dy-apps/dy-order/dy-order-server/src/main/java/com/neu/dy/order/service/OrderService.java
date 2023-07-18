@@ -2,15 +2,21 @@ package com.neu.dy.order.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.neu.dy.base.R;
+import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.order.dto.OrderDTO;
 import com.neu.dy.order.dto.OrderSearchDTO;
 import com.neu.dy.order.entitiy.Order;
-//import com.itheima.pinda.DTO.OrderDTO;
-//import com.itheima.pinda.DTO.OrderSearchDTO;
-//import com.itheima.pinda.entity.Order;
+import com.neu.dy.utils.EntCoordSyncJob;
+import lombok.SneakyThrows;
 
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+
 /**
  * 订单
  */
@@ -56,4 +62,6 @@ public interface OrderService extends IService<Order> {
     public Map calculateAmount(OrderDTO orderDTO);
 
     Integer calculatetime(OrderDTO orderDTO);
+
+    String caculateAgencyId(Order order);
 }

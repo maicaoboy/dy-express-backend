@@ -1,10 +1,21 @@
 package com.neu.dy.order.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.reflect.TypeToken;
+import com.neu.dy.api.AgencyScopeFeign;
+import com.neu.dy.api.AreaApi;
+import com.neu.dy.authority.entity.common.Area;
+import com.neu.dy.base.R;
 import com.neu.dy.base.common.CustomIdGenerator;
+import com.neu.dy.base.dto.angency.AgencyScopeDto;
+
 import com.neu.dy.order.dto.OrderDTO;
 import com.neu.dy.order.dto.OrderSearchDTO;
 import com.neu.dy.order.entitiy.Order;
@@ -13,20 +24,25 @@ import com.neu.dy.order.entitiy.fact.AddressRule;
 import com.neu.dy.order.enums.OrderPaymentStatus;
 import com.neu.dy.order.enums.OrderPickupType;
 import com.neu.dy.order.enums.OrderStatus;
+import com.neu.dy.order.future.DyCompletableFuture;
 import com.neu.dy.order.mapper.OrderMapper;
 import com.neu.dy.order.service.OrderService;
 import com.neu.dy.utils.BaiduMapUtils;
+import com.neu.dy.utils.EntCoordSyncJob;
+import lombok.SneakyThrows;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.kie.api.runtime.KieSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+
 
 /**
  * 订单服务实现类
@@ -35,6 +51,20 @@ import java.util.Map;
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
     @Autowired
     private CustomIdGenerator idGenerator;
+
+    @Autowired
+    private AreaApi areaApi;
+
+    @Autowired
+    private AgencyScopeFeign agencyScopeFeign;
+
+    private void exceptionHappend(String s) {
+        try {
+            throw new Exception(s);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 生成订单
@@ -223,6 +253,79 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         return orderDTO;
     }
+
+    @Override
+    @SneakyThrows
+    public String caculateAgencyId(Order order){
+        StringBuffer stringBuffer = new StringBuffer(); //线程安全
+
+        Long provinceId = Long.valueOf(order.getReceiverProvinceId());
+        Long cityId = Long.valueOf(order.getReceiverCityId());
+        Long countyId = Long.valueOf(order.getReceiverCountyId());
+
+        Set<Long> areaSet = new HashSet<>();
+        areaSet.add(provinceId);
+        areaSet.add(cityId);
+        areaSet.add(countyId);
+
+        //调用Feign接口获取对应省市区Area对象
+        CompletableFuture<Map<String, Area>> future = DyCompletableFuture.areaMapFutureByCodes(areaApi, null, areaSet);
+        Map<String, Area> areaMap = future.get();
+
+        //根据id获取对应的区域Area对象
+        String provinceName = areaMap.get(provinceId.toString()).getName();
+        String cityName = areaMap.get(cityId.toString()).getName();
+        String countyName = areaMap.get(countyId.toString()).getName();
+
+        stringBuffer.append(provinceName).append(cityName).append(countyName).append(order.getReceiverAddress());
+
+        String location =  stringBuffer.toString();
+
+
+        List<AgencyScopeDto> agencyScopes = agencyScopeFeign.findAllAgencyScopeFix(order.getSenderCountyId() + "", null, null, null);;
+        if(agencyScopes == null || agencyScopes.size() == 0){
+            exceptionHappend("根据区域无法从机构范围获取网点信息列表");
+        }
+        String agencyId = null;
+        //遍历机构范围集合
+        for (AgencyScopeDto agencyScopeDto : agencyScopes){
+            System.out.println("stepinto");
+            List<List<Map>> mutiPoints = parseData(agencyScopeDto.getMutiPoints());
+            //遍历某个机构下的保存的业务访问坐标值
+            for(List<Map> maps : mutiPoints){
+                String[] originArray = location.split(",");
+                //判断某个点是否在指定区域范围内
+                boolean flag = EntCoordSyncJob.isInScope(maps, Double.parseDouble(areaMap.get(countyId.toString()).getLng()), Double.parseDouble(areaMap.get(countyId.toString()).getLat()));
+                if (flag) {
+                    return agencyId = agencyScopeDto.getAgencyId();
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public static List<List<Map>> parseData(String inputData) {
+//        List<List<Map<String, Object>>> resultList = new ArrayList<>();
+//        JSONArray jsonArray = JSON.parseArray(inputData);
+//        for (int i = 0; i < jsonArray.size(); i++) {
+//            JSONArray innerArray = jsonArray.getJSONArray(i);
+//            List<Map<String, Object>> innerList = new ArrayList<>();
+//            for (int j = 0; j < innerArray.size(); j++) {
+//                JSONObject jsonObject = innerArray.getJSONObject(j);
+//                Map<String, Object> map = jsonObject.getInnerMap();
+//                innerList.add(map);
+//            }
+//            resultList.add(innerList);
+//        }
+        List<List<Map<String, Object>>> result = JSON.parseObject(inputData, new TypeReference<List<List<Map<String, Object>>>>(){});
+        return (List<List<Map>>)(List<?>)result;
+    }
+
+
+
+
+
 
 //    private CustomIdGenerator idGenerator;
 //

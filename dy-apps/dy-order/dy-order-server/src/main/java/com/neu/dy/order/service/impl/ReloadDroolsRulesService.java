@@ -1,8 +1,6 @@
 package com.neu.dy.order.service.impl;
 
 //import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-//import com.itheima.pinda.entity.Rule;
-//import com.itheima.pinda.mapper.RuleMapper;
 //import org.kie.api.KieServices;
 //import org.kie.api.builder.KieBuilder;
 //import org.kie.api.builder.KieFileSystem;
