@@ -168,6 +168,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         System.out.println("触发了" + i + "条规则");
         kieSession.destroy();
 
+        //TODO 订单价格
+        if(!addressCheckResult.isPostCodeResult()){
+            System.out.println("规则匹配失败，订单价格为：" + addressCheckResult.getResult());
+            orderDTO.setAmount(new BigDecimal("25.0"));
+
+            Map map = new HashMap();
+            map.put("orderDto",orderDTO);
+            map.put("amount",new BigDecimal("25.0"));
+
+            return map;
+        }
+
         if(addressCheckResult.isPostCodeResult()){
             System.out.println("规则匹配成功，订单价格为：" + addressCheckResult.getResult());
             orderDTO.setAmount(new BigDecimal(addressCheckResult.getResult()));

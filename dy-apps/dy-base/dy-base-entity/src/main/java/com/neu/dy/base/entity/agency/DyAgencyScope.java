@@ -36,5 +36,5 @@ public class DyAgencyScope implements Serializable {
     /**
      * 多边形经纬度坐标集合
      */
-    private String  mutiPoints;
+    private String mutiPoints;
 }

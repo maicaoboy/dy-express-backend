@@ -3,6 +3,7 @@ package com.neu.dy.work.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.base.R;
+import com.neu.dy.base.common.CustomIdGenerator;
 import com.neu.dy.work.dto.TaskPickupDispatchDTO;
 import com.neu.dy.work.entity.TaskPickupDispatch;
 import com.neu.dy.work.enums.pickuptask.PickupDispatchTaskAssignedStatus;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,6 +31,8 @@ public class PickupDispatchTaskController {
     @Autowired
     private TaskPickupDispatchService taskPickupDispatchService;
 
+    @Autowired
+    private CustomIdGenerator idGenerator;
     /**
      * 新增取派件任务
      *
@@ -141,6 +145,34 @@ public class PickupDispatchTaskController {
             dto = null;
         }
         return R.success(dto);
+    }
+
+//    添加订单信息
+    @PostMapping("/addOrder")
+    public R addOrder(@RequestBody TaskPickupDispatchDTO dto) {
+        TaskPickupDispatch dispatch = new TaskPickupDispatch();
+        BeanUtils.copyProperties(dto, dispatch);
+        dispatch.setId(idGenerator.nextId(TaskPickupDispatch.class).toString());
+        dispatch.setCreateTime(LocalDateTime.now());
+        if(dispatch.getStatus() == null) dispatch.setStatus(1);
+        if(dispatch.getAssignedStatus() == null) dispatch.setAssignedStatus(1);
+        log.info("新增取派件任务:{}    {}", dto, dispatch);
+        taskPickupDispatchService.save(dispatch);
+        TaskPickupDispatchDTO result = new TaskPickupDispatchDTO();
+        BeanUtils.copyProperties(dispatch, result);
+        return R.success(result);
+    }
+
+//    修改订单信息
+    @PostMapping("/updateOrder")
+    public R updateOrder(@RequestBody TaskPickupDispatchDTO dto) {
+        TaskPickupDispatch dispatch = new TaskPickupDispatch();
+        BeanUtils.copyProperties(dto, dispatch);
+        log.info("修改取派件任务:{}    {}", dto, dispatch);
+        taskPickupDispatchService.updateById(dispatch);
+        TaskPickupDispatchDTO result = new TaskPickupDispatchDTO();
+        BeanUtils.copyProperties(dispatch, result);
+        return R.success(result);
     }
 
 }

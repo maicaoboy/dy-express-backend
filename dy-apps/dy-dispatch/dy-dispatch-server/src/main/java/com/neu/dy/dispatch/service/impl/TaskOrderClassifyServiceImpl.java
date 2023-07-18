@@ -339,7 +339,7 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
     private R caculate(List<AgencyScopeDto> agencyScopes, String location){
         //遍历机构范围集合
         for (AgencyScopeDto agencyScopeDto : agencyScopes){
-            List<List<Map>> mutiPoints = agencyScopeDto.getMutiPoints();
+            List<List<Map>> mutiPoints = parseData(agencyScopeDto.getMutiPoints());
             //遍历某个机构下的保存的业务访问坐标值
             for(List<Map> maps : mutiPoints){
                 String[] originArray = location.split(",");
@@ -351,6 +351,42 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
             }
         }
         return R.fail(5000, "获取网点失败");
+    }
+
+    public static List<List<Map>> parseData(String inputData) {
+        List<List<Map>> data = new ArrayList<>();
+
+        // Remove leading and trailing brackets
+        String trimmedData = inputData.substring(1, inputData.length() - 1);
+
+        // Split by comma to get sublists
+        String[] sublistStrings = trimmedData.split(",");
+
+        for (String sublistString : sublistStrings) {
+            // Remove leading and trailing brackets
+            String trimmedSublist = sublistString.trim().substring(1, sublistString.length() - 1);
+
+            // Split by comma to get longitude and latitude
+            String[] coordinateStrings = trimmedSublist.split(",");
+
+            List<Map> sublist = new ArrayList<>();
+
+            for (String coordinateString : coordinateStrings) {
+                // Split by colon to get longitude and latitude values
+                String[] coordinateValues = coordinateString.trim().split(":");
+
+                // Create a map to store longitude and latitude
+                Map coordinateMap = new HashMap<>();
+                coordinateMap.put("longitude", Double.parseDouble(coordinateValues[0]));
+                coordinateMap.put("latitude", Double.parseDouble(coordinateValues[1]));
+
+                sublist.add(coordinateMap);
+            }
+
+            data.add(sublist);
+        }
+
+        return data;
     }
 
 
