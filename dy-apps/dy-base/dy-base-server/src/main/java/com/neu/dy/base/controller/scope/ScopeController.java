@@ -15,6 +15,7 @@ import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.base.dto.user.CourierScopeDto;
 import com.neu.dy.base.entity.agency.DyAgencyScope;
 import com.neu.dy.base.entity.user.DyCourierScope;
+import com.neu.dy.base.id.IdGenerate;
 import lombok.extern.java.Log;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,8 @@ public class ScopeController {
     private IDyAgencyScopeService agencyScopService;
     @Autowired
     private IDyCourierScopeService courierScopeService;
-
+    @Autowired
+    private IdGenerate<Long> idGenerate;
 
     /**
      * 批量保存机构业务范围
@@ -56,14 +58,31 @@ public class ScopeController {
     }
 
     @PostMapping("/agency/save")
-    public R saveAgencyScope(@RequestBody AgencyScopeDto agencyScopeDto) {
-        UpdateWrapper<DyAgencyScope> wrapper = new UpdateWrapper<>();
+    public R saveAgencyScope(@RequestBody AgencyScopeDto dto) {
+        LambdaQueryWrapper<DyAgencyScope> wrapper = new LambdaQueryWrapper<>();
+        DyAgencyScope queryTask = new DyAgencyScope();
+        BeanUtils.copyProperties(dto, queryTask);
+//        如果agencyId不为空则加入查询条件
+        if (dto.getAgencyId() != null) {
+            wrapper.eq(DyAgencyScope::getAgencyId, queryTask.getAgencyId());
+            if (agencyScopService.getOne(wrapper) != null) {
+                UpdateWrapper<DyAgencyScope> updateWrapper = new UpdateWrapper<>();
 //        更新agencyScopeDto对应的数据
-        wrapper.eq("id", agencyScopeDto.getId()).eq("area_id", agencyScopeDto.getAreaId()).eq("agency_id", agencyScopeDto.getAgencyId());
-        DyAgencyScope dyAgencyScope = new DyAgencyScope();
-        BeanUtils.copyProperties(agencyScopeDto, dyAgencyScope);
-        agencyScopService.update(dyAgencyScope, wrapper);
-        return R.success();
+                updateWrapper.eq("agency_id", dto.getAgencyId());
+                updateWrapper.set("muti_points", dto.getMutiPoints());
+                agencyScopService.update(updateWrapper);
+                return R.success();
+            }else{
+                queryTask.setId(idGenerate.generate()+"");
+                agencyScopService.save(queryTask);
+                return R.success();
+            }
+        }else{
+            return R.fail("机构id不能为空");
+        }
+
+
+
     }
 
     /**
