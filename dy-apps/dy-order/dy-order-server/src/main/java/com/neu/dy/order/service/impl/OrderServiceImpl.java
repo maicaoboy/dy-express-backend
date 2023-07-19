@@ -306,18 +306,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
     public static List<List<Map>> parseData(String inputData) {
-//        List<List<Map<String, Object>>> resultList = new ArrayList<>();
-//        JSONArray jsonArray = JSON.parseArray(inputData);
-//        for (int i = 0; i < jsonArray.size(); i++) {
-//            JSONArray innerArray = jsonArray.getJSONArray(i);
-//            List<Map<String, Object>> innerList = new ArrayList<>();
-//            for (int j = 0; j < innerArray.size(); j++) {
-//                JSONObject jsonObject = innerArray.getJSONObject(j);
-//                Map<String, Object> map = jsonObject.getInnerMap();
-//                innerList.add(map);
-//            }
-//            resultList.add(innerList);
-//        }
         List<List<Map<String, Object>>> result = JSON.parseObject(inputData, new TypeReference<List<List<Map<String, Object>>>>(){});
         return (List<List<Map>>)(List<?>)result;
     }
