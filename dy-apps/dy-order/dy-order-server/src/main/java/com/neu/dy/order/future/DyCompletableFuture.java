@@ -1,15 +1,13 @@
-package com.neu.dy.dispatch.future;
+package com.neu.dy.order.future;
 
 import com.neu.dy.api.*;
 import com.neu.dy.authority.entity.auth.User;
 import com.neu.dy.authority.entity.common.Area;
 import com.neu.dy.authority.entity.core.Org;
 import com.neu.dy.base.R;
-import com.neu.dy.base.dto.angency.AgencyScopeDto;
 import com.neu.dy.base.dto.transportline.TransportLineDto;
 import com.neu.dy.base.dto.transportline.TransportTripsDto;
 import com.neu.dy.base.dto.truck.TruckDto;
-import com.neu.dy.order.dto.OrderCargoDto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -110,5 +108,11 @@ public class DyCompletableFuture {
         R<List<Area>> result = api.findAll(parentId, new ArrayList<>(areaSet));
         return java.util.concurrent.CompletableFuture.supplyAsync(() ->
                 result.getData().stream().collect(Collectors.toMap(Area::getId, vo -> vo)));
+    }
+
+    public static final java.util.concurrent.CompletableFuture<Map<String, Area>> areaMapFutureByCodes(AreaApi api, Long parentId, Set<Long> areaSet) {
+        R<List<Area>> result = api.findAllByCodes(parentId, new ArrayList<>(areaSet));
+        return java.util.concurrent.CompletableFuture.supplyAsync(() ->
+                result.getData().stream().collect(Collectors.toMap(Area::getAreaCode, vo -> vo)));
     }
 }

@@ -56,4 +56,17 @@ public class AreaController {
         List<Area> areaList = areaService.list(queryWrapper);
         return R.success(areaList);
     }
+
+    @GetMapping("/codes")
+    R<List<Area>> findAllByCodes(@RequestParam(value = "parentId", required = false) Long parentId, @RequestParam(value = "ids", required = false) List<Long> ids){
+        LambdaQueryWrapper<Area> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(parentId != null,Area::getParentId,parentId);
+        if(ids != null && ids.size() > 0){
+            queryWrapper.in(Area::getAreaCode,ids);
+        }
+        List<Area> areaList = areaService.list(queryWrapper);
+        return R.success(areaList);
+    }
+
+
 }

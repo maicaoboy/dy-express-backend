@@ -20,4 +20,8 @@ public interface AreaApi {
   
   @GetMapping
   R<List<Area>> findAll(@RequestParam(value = "parentId", required = false) Long paramLong, @RequestParam(value = "ids", required = false) List<Long> paramList);
+
+  @GetMapping("/codes")
+  R<List<Area>> findAllByCodes(@RequestParam(value = "parentId", required = false) Long paramLong, @RequestParam(value = "ids", required = false) List<Long> paramList);
+
 }

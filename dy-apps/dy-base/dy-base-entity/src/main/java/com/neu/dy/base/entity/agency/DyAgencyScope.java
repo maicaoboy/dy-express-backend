@@ -1,12 +1,18 @@
 package com.neu.dy.base.entity.agency;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
+import com.neu.dy.base.handler.MutiPointsTypeHandler;
 import lombok.*;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 
 @Data
@@ -14,7 +20,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ToString(callSuper = true)
 @Accessors(chain = true)
-@TableName("dy_agency_scope")
+@TableName(value = "dy_agency_scope", autoResultMap = true)
 public class DyAgencyScope implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -36,5 +42,7 @@ public class DyAgencyScope implements Serializable {
     /**
      * 多边形经纬度坐标集合
      */
-    private String mutiPoints;
+//   自定义转化规则
+    @TableField(typeHandler= MutiPointsTypeHandler.class)
+    private List<List<Map>> mutiPoints;
 }

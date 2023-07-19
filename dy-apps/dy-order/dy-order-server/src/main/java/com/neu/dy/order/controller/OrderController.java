@@ -55,10 +55,19 @@ public class OrderController {
         if("send error msg".equals(orderDTO.getSenderAddress()) || "receive error msg".equals(orderDTO.getReceiverAddress())){
             return R.success(orderDTO);
         }
+
+        //Todo 修改为获取快递员的当前网点
+        //获取订单当前网点
+        String agencyId = orderService.caculateAgencyId(order);
+        order.setCurrentAgencyId(agencyId);
         //如果amount为空的话，默认为23
         order.setAmount(new BigDecimal(map.getOrDefault("amount", "23").toString()));
         orderService.saveOrder(order);
         log.info("订单信息入库:{}", order);
+
+
+
+
 
         //返回order对象
         OrderDTO result = new OrderDTO();
