@@ -225,4 +225,16 @@ public class UserController extends BaseController {
         return R.success(users);
     }
 
+//    查询网点下所有的快递员身份的所有人
+    @GetMapping("/courier/listByStationId")
+    R<List<User>> listByStationId(@RequestParam(name = "stationId", required = false) Long stationId){
+        System.out.println("stationId = " + stationId);
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(stationId!=null,User::getOrgId,stationId);
+//        queryWrapper.eq(User::getRoleCode,"courier");
+//        status 1 为正常
+//        queryWrapper.eq(User::getStatus,1);
+        List<User> users = userService.list(queryWrapper);
+        return R.success(users);
+    }
 }
