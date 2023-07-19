@@ -21,7 +21,7 @@ public interface OrderFeign {
      * @param orderSearchDTO
      * @return
      */
-    @PostMapping("list")
+    @PostMapping("/list")
     R list(@RequestBody OrderSearchDTO orderSearchDTO);
 
     @PostMapping("/update/{id}")

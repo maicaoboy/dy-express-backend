@@ -20,6 +20,8 @@ public interface AgencyScopeFeign {
     @GetMapping("/agency")
     public R findAllAgencyScope(@RequestParam(name = "areaId", required = false) String areaId, @RequestParam(name = "agencyId", required = false) String agencyId, @RequestParam(name = "agencyIds", required = false) List<String> agencyIds, @RequestParam(name = "areaIds", required = false) List<String> areaIds);
 
+    @GetMapping("/agencyFix")
+    public List<AgencyScopeDto> findAllAgencyScopeFix(@RequestParam(name = "areaId", required = false) String areaId, @RequestParam(name = "agencyId", required = false) String agencyId, @RequestParam(name = "agencyIds", required = false) List<String> agencyIds, @RequestParam(name = "areaIds", required = false) List<String> areaIds);
     @PostMapping("/courier/batch")
     public R batchSaveCourierScope(@RequestBody List<CourierScopeDto> dtoList);
 

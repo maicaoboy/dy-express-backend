@@ -4,7 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.base.R;
 import com.neu.dy.work.dto.DriverJobDTO;
 import com.neu.dy.work.entity.DriverJob;
+import com.neu.dy.work.entity.TransportOrder;
+import com.neu.dy.work.entity.TransportOrderTask;
 import com.neu.dy.work.service.DriverJobService;
+import com.neu.dy.work.service.TransportOrderService;
+import com.neu.dy.work.service.TransportOrderTaskService;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +28,29 @@ public class DriverJobController {
 
     @Autowired
     private DriverJobService driverJobService;
+    @Autowired
+    private TransportOrderTaskService transportOrderTaskService;
+    @Autowired
+    private TransportOrderService transportOrderService;
+
+    /**
+     * 根据司机作业单获取对应的运单实体集合
+     */
+    @PostMapping("/getorderids")
+    public R getOrderIds(@RequestBody DriverJobDTO driverJobDTO){
+        //查询出司机作业单对应的运单id集合
+        List<TransportOrderTask> transportOrderTaskList = transportOrderTaskService.findAll(null, driverJobDTO.getTaskTransportId());
+        List<String> orderIds = transportOrderTaskList.stream().map(TransportOrderTask::getTransportOrderId).collect(Collectors.toList());
+        //创建一个集合用于存放运单
+        List<TransportOrder> transportOrders= new ArrayList<>();
+        for (String orderId : orderIds) {
+            //根据运单id查询出运单信息
+            TransportOrder transportOrder = transportOrderService.getById(orderId);
+            //将订单id放入集合中
+            transportOrders.add(transportOrder);
+        }
+        return R.success(transportOrders);
+    }
 
     /**
      * 新增司机作业单

@@ -338,18 +338,18 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
      */
     private R caculate(List<AgencyScopeDto> agencyScopes, String location){
         //遍历机构范围集合
-        for (AgencyScopeDto agencyScopeDto : agencyScopes){
-            List<List<Map>> mutiPoints = agencyScopeDto.getMutiPoints();
-            //遍历某个机构下的保存的业务访问坐标值
-            for(List<Map> maps : mutiPoints){
-                String[] originArray = location.split(",");
-                //判断某个点是否在指定区域范围内
-                boolean flag = EntCoordSyncJob.isInScope(maps, Double.parseDouble(originArray[0]), Double.parseDouble(originArray[1]));
-                if (flag) {
-                    return R.success().put("agencyId", agencyScopeDto.getAgencyId());
-                }
-            }
-        }
+//        for (AgencyScopeDto agencyScopeDto : agencyScopes){
+//            List<List<Map>> mutiPoints = agencyScopeDto.getMutiPoints();
+//            //遍历某个机构下的保存的业务访问坐标值
+//            for(List<Map> maps : mutiPoints){
+//                String[] originArray = location.split(",");
+//                //判断某个点是否在指定区域范围内
+//                boolean flag = EntCoordSyncJob.isInScope(maps, Double.parseDouble(originArray[0]), Double.parseDouble(originArray[1]));
+//                if (flag) {
+//                    return R.success().put("agencyId", agencyScopeDto.getAgencyId());
+//                }
+//            }
+//        }
         return R.fail(5000, "获取网点失败");
     }
 

@@ -68,19 +68,30 @@ public class ScopeController {
             wrapper.eq(DyAgencyScope::getId, dto.getId());
             remove = agencyScopService.remove(wrapper);
         }
-
         return R.success(remove);
     }
 
     @PostMapping("/agency/save")
     public R saveAgencyScope(@RequestBody AgencyScopeDto agencyScopeDto) {
-        UpdateWrapper<DyAgencyScope> wrapper = new UpdateWrapper<>();
-//        更新agencyScopeDto对应的数据
-        wrapper.eq("id", agencyScopeDto.getId()).eq("area_id", agencyScopeDto.getAreaId()).eq("agency_id", agencyScopeDto.getAgencyId());
-        DyAgencyScope dyAgencyScope = new DyAgencyScope();
-        BeanUtils.copyProperties(agencyScopeDto, dyAgencyScope);
-        agencyScopService.update(dyAgencyScope, wrapper);
-        return R.success();
+//        查询在表格中是否存在agencyScopeDto对应的agency_id
+        QueryWrapper<DyAgencyScope> wrapper = new QueryWrapper<>();
+        wrapper.eq("agency_id", agencyScopeDto.getAgencyId());
+        List<DyAgencyScope> list = agencyScopService.list(wrapper);
+        if (list.size() == 0) {
+            DyAgencyScope scope = new DyAgencyScope();
+            BeanUtils.copyProperties(agencyScopeDto, scope);
+            scope.setId(idGenerator.nextId(scope).toString());
+            agencyScopService.save(scope);
+            return R.success();
+        } else {
+//            更新数据
+            UpdateWrapper<DyAgencyScope> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("agency_id", agencyScopeDto.getAgencyId());
+            DyAgencyScope scope = new DyAgencyScope();
+            BeanUtils.copyProperties(agencyScopeDto, scope);
+            agencyScopService.update(scope, updateWrapper);
+            return R.success();
+        }
     }
 
     /**
@@ -112,6 +123,16 @@ public class ScopeController {
         return R.success(agencyScopeDtoList);
     }
 
+    @GetMapping("/agencyFix")
+    public List<AgencyScopeDto> findAllAgencyScopeFix(@RequestParam(name = "areaId", required = false) String areaId, @RequestParam(name = "agencyId", required = false) String agencyId, @RequestParam(name = "agencyIds", required = false) List<String> agencyIds, @RequestParam(name = "areaIds", required = false) List<String> areaIds) {
+        List<AgencyScopeDto> agencyScopeDtoList = agencyScopService.findAll(areaId, agencyId, agencyIds, areaIds).stream().map(scope -> {
+            AgencyScopeDto dto = new AgencyScopeDto();
+            BeanUtils.copyProperties(scope, dto);
+            return dto;
+        }).collect(Collectors.toList());
+        return agencyScopeDtoList;
+    }
+
     /**
      * 获取Param为AgencyScopeDto
      * 根据页面大小以及其他条件查询机构范围数据并返回
@@ -139,6 +160,13 @@ public class ScopeController {
         }
 //       按照条件进行查询
         agencyScopService.page(page, wrapper);
+        if(page.getRecords().size()>0){
+            System.out.println("查询成功");
+//            打印records中所有信息
+            for(DyAgencyScope scope:page.getRecords()){
+                System.out.println(scope);
+            }
+        }
         return R.success((IPage)page);
     }
 
