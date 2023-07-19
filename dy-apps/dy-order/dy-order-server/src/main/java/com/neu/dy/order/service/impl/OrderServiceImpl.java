@@ -290,7 +290,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //遍历机构范围集合
         for (AgencyScopeDto agencyScopeDto : agencyScopes){
             System.out.println("stepinto");
-            List<List<Map>> mutiPoints = parseData(agencyScopeDto.getMutiPoints());
+            List<List<Map>> mutiPoints = agencyScopeDto.getMutiPoints();
             //遍历某个机构下的保存的业务访问坐标值
             for(List<Map> maps : mutiPoints){
                 String[] originArray = location.split(",");
