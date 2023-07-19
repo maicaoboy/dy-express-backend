@@ -4,10 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.neu.dy.base.R;
+import com.neu.dy.feign.PickupDispatchTaskFeign;
+import com.neu.dy.feign.TransportOrderFeign;
+import com.neu.dy.feign.TransportTaskFeign;
 import com.neu.dy.order.dto.OrderDTO;
 import com.neu.dy.order.dto.OrderSearchDTO;
 import com.neu.dy.order.entitiy.Order;
 import com.neu.dy.order.service.OrderService;
+import com.neu.dy.work.dto.TaskPickupDispatchDTO;
+import com.neu.dy.work.dto.TaskTransportDTO;
+import com.neu.dy.work.dto.TransportOrderDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +37,14 @@ import java.util.stream.Collectors;
 public class OrderController {
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    PickupDispatchTaskFeign pickupDispatchTaskFeign;
+
+    @Autowired
+    TransportOrderFeign transportOrderFeign;
+
+
 
     /**
      * 生成一个新订单，需要计算运费
@@ -57,6 +71,8 @@ public class OrderController {
         }
 
         //Todo 修改为获取快递员的当前网点
+
+
         //获取订单当前网点
         String agencyId = orderService.caculateAgencyId(order);
         order.setCurrentAgencyId(agencyId);
@@ -66,8 +82,45 @@ public class OrderController {
         orderService.saveOrder(order);
         log.info("订单信息入库:{}", order);
 
+        //添加运单
+        TransportOrderDTO transportOrderDTO = new TransportOrderDTO();
+        transportOrderDTO.setOrderId(order.getId());
+        transportOrderDTO.setStatus(1);
+        transportOrderDTO.setSchedulingStatus(1);
+        R resultsave = transportOrderFeign.save(transportOrderDTO);
+        if(resultsave.getIsError()) {
+            log.error("添加运单失败：{}", resultsave);
+            log.info("重试添加运单");
+            resultsave = transportOrderFeign.save(transportOrderDTO);
+            if(resultsave.getIsError()) {
+                orderService.removeById(order.getId());
+                log.error("重试添加运单失败：{}", resultsave);
+                return R.fail("添加运单失败");
+            }
+        }
 
-
+        //添加取件任务单
+        TaskPickupDispatchDTO taskPickupDispatchDTO = new TaskPickupDispatchDTO();
+        taskPickupDispatchDTO.setOrderId(order.getId());
+        taskPickupDispatchDTO.setAgencyId(agencyId);
+        taskPickupDispatchDTO.setTaskType(1);
+        taskPickupDispatchDTO.setStatus(1);
+        taskPickupDispatchDTO.setSignStatus(1);
+        taskPickupDispatchDTO.setEstimatedStartTime(LocalDateTime.now());
+        taskPickupDispatchDTO.setAssignedStatus(1);
+        R<TaskPickupDispatchDTO> save = pickupDispatchTaskFeign.save(taskPickupDispatchDTO);
+        if(save.getIsError()) {
+            log.error("添加取件任务单失败：{}", save);
+            log.info("重试添加取件任务单");
+            save = pickupDispatchTaskFeign.save(taskPickupDispatchDTO);
+            if(save.getIsError()) {
+                log.error("重试添加取件任务单失败：{}", save);
+                return R.fail("添加取件任务单失败");
+            }
+            //删除订单
+            orderService.removeById(order.getId());
+            return R.fail("添加取件任务单失败");
+        }
 
 
         //返回order对象

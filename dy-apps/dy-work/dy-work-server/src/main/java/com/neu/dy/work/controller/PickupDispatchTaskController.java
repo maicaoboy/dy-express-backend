@@ -41,7 +41,7 @@ public class PickupDispatchTaskController {
      * @return 取派件任务信息
      */
     @PostMapping("")
-    public R save(@RequestBody TaskPickupDispatchDTO dto) {
+    public R<TaskPickupDispatchDTO> save(@RequestBody TaskPickupDispatchDTO dto) {
         TaskPickupDispatch dispatch = new TaskPickupDispatch();
         BeanUtils.copyProperties(dto, dispatch);
         log.info("新增取派件任务:{}    {}", dto, dispatch);

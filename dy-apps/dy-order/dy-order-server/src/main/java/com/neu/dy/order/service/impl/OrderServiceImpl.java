@@ -130,7 +130,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         if (StringUtils.isNotEmpty(order.getReceiverCountyId())) {
             lambdaQueryWrapper.eq(Order::getReceiverCountyId, order.getReceiverCountyId());
         }
-        lambdaQueryWrapper.orderBy(true, false, Order::getId);
+        lambdaQueryWrapper.orderBy(true, false, Order::getCreateTime);
         return page(iPage, lambdaQueryWrapper);
     }
 

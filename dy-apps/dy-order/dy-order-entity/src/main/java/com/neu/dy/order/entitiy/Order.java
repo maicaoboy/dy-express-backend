@@ -20,7 +20,8 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @TableName("dy_order")
 @ApiModel
-public class Order implements Serializable {
+public class
+Order implements Serializable {
 
 
     private static final long serialVersionUID = 1L;
