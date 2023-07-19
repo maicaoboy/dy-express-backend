@@ -123,6 +123,16 @@ public class ScopeController {
         return R.success(agencyScopeDtoList);
     }
 
+    @GetMapping("/agencyFix")
+    public List<AgencyScopeDto> findAllAgencyScopeFix(@RequestParam(name = "areaId", required = false) String areaId, @RequestParam(name = "agencyId", required = false) String agencyId, @RequestParam(name = "agencyIds", required = false) List<String> agencyIds, @RequestParam(name = "areaIds", required = false) List<String> areaIds) {
+        List<AgencyScopeDto> agencyScopeDtoList = agencyScopService.findAll(areaId, agencyId, agencyIds, areaIds).stream().map(scope -> {
+            AgencyScopeDto dto = new AgencyScopeDto();
+            BeanUtils.copyProperties(scope, dto);
+            return dto;
+        }).collect(Collectors.toList());
+        return agencyScopeDtoList;
+    }
+
     /**
      * 获取Param为AgencyScopeDto
      * 根据页面大小以及其他条件查询机构范围数据并返回

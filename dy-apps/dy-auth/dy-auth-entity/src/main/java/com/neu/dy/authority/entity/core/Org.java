@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.neu.dy.authority.handler.MutiPointsTypeHandler;
 import com.neu.dy.base.entity.Entity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -106,7 +107,7 @@ public class Org extends Entity<Long> {
      * 组织覆盖范围
      */
     @ApiModelProperty(value = "组织覆盖范围")
-    @TableField("muti_points")
+    @TableField(value = "muti_points", typeHandler = MutiPointsTypeHandler.class)
     private List<List<Map>> mutiPoints;
 
     /**

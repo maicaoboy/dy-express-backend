@@ -76,6 +76,7 @@ public class OrgSaveDTO implements Serializable {
     @Length(max = 255, message = "描述长度不能超过255")
     private String describe;
 
+
     private List<List<Map>> mutiPoints;
     /**
      * 所属城市或区id
