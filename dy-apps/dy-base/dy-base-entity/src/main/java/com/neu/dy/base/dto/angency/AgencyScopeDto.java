@@ -26,7 +26,7 @@ public class AgencyScopeDto implements Serializable {
     /**
      * 多边形经纬度坐标集合
      */
-    private String  mutiPoints;
+    private List<List<Map>>  mutiPoints;
 
 
     /**
