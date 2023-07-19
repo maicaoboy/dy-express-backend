@@ -85,6 +85,7 @@ public class PickupDispatchTaskController {
             dto.setPageSize(10);
         }
         TaskPickupDispatch queryTask = new TaskPickupDispatch();
+
         BeanUtils.copyProperties(dto, queryTask);
         IPage<TaskPickupDispatch> orderIPage = taskPickupDispatchService.findByPage(dto.getPage(), dto.getPageSize(), queryTask);
         return R.success(orderIPage);

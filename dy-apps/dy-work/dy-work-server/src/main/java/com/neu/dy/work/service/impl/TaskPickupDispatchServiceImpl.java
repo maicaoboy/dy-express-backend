@@ -59,7 +59,7 @@ public class TaskPickupDispatchServiceImpl extends ServiceImpl<TaskPickupDispatc
         if (dispatch.getAssignedStatus() != null){
             lambdaQueryWrapper.eq(TaskPickupDispatch::getAssignedStatus, dispatch.getAssignedStatus());
         }
-        lambdaQueryWrapper.orderBy(true, false, TaskPickupDispatch::getId);
+        lambdaQueryWrapper.orderByDesc(TaskPickupDispatch::getCreateTime);
         return page(iPage, lambdaQueryWrapper);
     }
 
