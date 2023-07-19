@@ -22,7 +22,6 @@ import java.net.UnknownHostException;
 @EnableAsync
 @EnableHystrix
 public class DyWorkServerApplication {
-
     public static void main(String[] args) throws UnknownHostException {
         ConfigurableApplicationContext application = SpringApplication.run(DyWorkServerApplication.class, args);
         Environment env = application.getEnvironment();
@@ -31,5 +30,4 @@ public class DyWorkServerApplication {
                 InetAddress.getLocalHost().getHostAddress(),
                 env.getProperty("server.port"));
     }
-
 }
