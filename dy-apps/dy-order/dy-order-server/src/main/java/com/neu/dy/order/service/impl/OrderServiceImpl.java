@@ -259,9 +259,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public String caculateAgencyId(Order order){
         StringBuffer stringBuffer = new StringBuffer(); //线程安全
 
-        Long provinceId = Long.valueOf(order.getReceiverProvinceId());
-        Long cityId = Long.valueOf(order.getReceiverCityId());
-        Long countyId = Long.valueOf(order.getReceiverCountyId());
+        Long provinceId = Long.valueOf(order.getSenderProvinceId());
+        Long cityId = Long.valueOf(order.getSenderCityId());
+        Long countyId = Long.valueOf(order.getSenderCountyId());
 
         Set<Long> areaSet = new HashSet<>();
         areaSet.add(provinceId);

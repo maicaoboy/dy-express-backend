@@ -22,7 +22,7 @@ public interface OrderFeign {
      * @return
      */
     @PostMapping("/list")
-    R list(@RequestBody OrderSearchDTO orderSearchDTO);
+    R<List<Order>> list(@RequestBody OrderSearchDTO orderSearchDTO);
 
     @PostMapping("/update/{id}")
     public R updateById(@PathVariable(name = "id")String id, @RequestBody OrderDTO orderDTO);

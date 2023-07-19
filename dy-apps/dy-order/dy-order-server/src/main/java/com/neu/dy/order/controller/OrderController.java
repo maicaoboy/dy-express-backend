@@ -60,7 +60,8 @@ public class OrderController {
         //获取订单当前网点
         String agencyId = orderService.caculateAgencyId(order);
         order.setCurrentAgencyId(agencyId);
-        //如果amount为空的话，默认为23
+        if(agencyId == null) return R.fail("当前网点不存在");
+        //如果amount为空的话，默认为2
         order.setAmount(new BigDecimal(map.getOrDefault("amount", "23").toString()));
         orderService.saveOrder(order);
         log.info("订单信息入库:{}", order);
@@ -162,7 +163,7 @@ public class OrderController {
      */
     @PostMapping("list")
     @ApiOperation("根据条件查询订单信息")
-    public R list(@RequestBody OrderSearchDTO orderSearchDTO){
+    public R<List<Order>> list(@RequestBody OrderSearchDTO orderSearchDTO){
         LambdaQueryWrapper<Order> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(orderSearchDTO.getStatus() != null,Order::getStatus,orderSearchDTO.getStatus());
         queryWrapper.in(!CollectionUtils.isEmpty(orderSearchDTO.getReceiverCountyIds()),Order::getReceiverCountyId,orderSearchDTO.getReceiverCountyIds());
