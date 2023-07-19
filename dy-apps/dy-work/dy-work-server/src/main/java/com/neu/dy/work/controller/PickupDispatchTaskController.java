@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -152,15 +153,24 @@ public class PickupDispatchTaskController {
     public R addOrder(@RequestBody TaskPickupDispatchDTO dto) {
         TaskPickupDispatch dispatch = new TaskPickupDispatch();
         BeanUtils.copyProperties(dto, dispatch);
-        dispatch.setId(idGenerator.nextId(TaskPickupDispatch.class).toString());
-        dispatch.setCreateTime(LocalDateTime.now());
-        if(dispatch.getStatus() == null) dispatch.setStatus(1);
-        if(dispatch.getAssignedStatus() == null) dispatch.setAssignedStatus(1);
-        log.info("新增取派件任务:{}    {}", dto, dispatch);
-        taskPickupDispatchService.save(dispatch);
-        TaskPickupDispatchDTO result = new TaskPickupDispatchDTO();
-        BeanUtils.copyProperties(dispatch, result);
-        return R.success(result);
+        if(dispatch.getId() != null && !Objects.equals(dispatch.getId(), "")){
+//            更新
+            log.info("更新取派件任务:{}    {}", dto, dispatch);
+            taskPickupDispatchService.updateById(dispatch);
+            TaskPickupDispatchDTO result = new TaskPickupDispatchDTO();
+            BeanUtils.copyProperties(dispatch, result);
+            return R.success(result);
+        }else{
+            dispatch.setId(idGenerator.nextId(TaskPickupDispatch.class).toString());
+            dispatch.setCreateTime(LocalDateTime.now());
+            if(dispatch.getStatus() == null) dispatch.setStatus(1);
+            if(dispatch.getAssignedStatus() == null) dispatch.setAssignedStatus(1);
+            log.info("新增取派件任务:{}    {}", dto, dispatch);
+            taskPickupDispatchService.save(dispatch);
+            TaskPickupDispatchDTO result = new TaskPickupDispatchDTO();
+            BeanUtils.copyProperties(dispatch, result);
+            return R.success(result);
+        }
     }
 
 //    修改订单信息
