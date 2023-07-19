@@ -266,7 +266,7 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
         orderSearchDTO.setStatus(OrderStatus.OUTLETS_WAREHOUSE.getCode());
         //订单当前所在机构
         orderSearchDTO.setCurrentAgencyId(agencyId);
-        List<Order> orders  = (List<Order>) orderFeign.list(orderSearchDTO).getData();
+        List<Order> orders  = orderFeign.list(orderSearchDTO).getData();
         log.info("查询【网点入库】状态订单：{}条",orders.size());
 
         OrderClassifyDTO.OrderClassifyDTOBuilder builder = OrderClassifyDTO.builder();
@@ -310,24 +310,24 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
 
         //根据adcode(区域编码查询我们系统中的区域信息)
         String adcode = (String) map.get("adcode"); //区域编码，对应areacode
-        R<Area> areaR = areaApi.getByCode("adcode" + "000000");
+        R<Area> areaR = areaApi.getByCode(adcode);
         Area area = areaR.getData();
         if(area == null){
             exceptionHappend("没有查询到区域数据");
         }
-        if(!order.getReceiverCountyId().equals(area.getId())){
+        if(!order.getReceiverCountyId().equals(area.getAreaCode())){
             exceptionHappend("收获地址区域id和根据坐标计算出的区域不一致");
         }
         //查询当前区县下的所有网点
-        R r = agencyScopeFeign.findAllAgencyScope(area.getId() + "", null, null, null);
-        List<AgencyScopeDto> agencyScopes = (List<AgencyScopeDto>) r.getData();
+        R<List<AgencyScopeDto>> r = agencyScopeFeign.findAllAgencyScope(area.getAreaCode() + "", null, null, null);
+        List<AgencyScopeDto> agencyScopes = r.getData();
         if(agencyScopes == null || agencyScopes.size() == 0){
             exceptionHappend("根据区域无法从机构范围获取网点信息列表");
         }
         //计算当前区域下所有网点距离收件人最近的网点
         //TODO:
-        R caculate = caculate(agencyScopes, location);
-        return (String) caculate.getData();
+        R<String> caculate = caculate(agencyScopes, location);
+        return caculate.getData();
     }
 
     /**
@@ -336,17 +336,17 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
      * @param location
      * @return
      */
-    private R caculate(List<AgencyScopeDto> agencyScopes, String location){
+    private R<String> caculate(List<AgencyScopeDto> agencyScopes, String location){
         //遍历机构范围集合
         for (AgencyScopeDto agencyScopeDto : agencyScopes){
-            List<List<Map>> mutiPoints = parseData(agencyScopeDto.getMutiPoints());
+            List<List<Map>> mutiPoints = agencyScopeDto.getMutiPoints();
             //遍历某个机构下的保存的业务访问坐标值
             for(List<Map> maps : mutiPoints){
                 String[] originArray = location.split(",");
                 //判断某个点是否在指定区域范围内
                 boolean flag = EntCoordSyncJob.isInScope(maps, Double.parseDouble(originArray[0]), Double.parseDouble(originArray[1]));
                 if (flag) {
-                    return R.success().put("agencyId", agencyScopeDto.getAgencyId());
+                    return R.success(agencyScopeDto.getAgencyId());
                 }
             }
         }
@@ -420,13 +420,15 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
         areaSet.add(countyId);
 
         //调用Feign接口获取对应省市区Area对象
-        CompletableFuture<Map<Long, Area>> future = DyCompletableFuture.areaMapFuture(areaApi, null, areaSet);
-        Map<Long, Area> areaMap = future.get();
+        CompletableFuture<Map<String, Area>> future = DyCompletableFuture.areaMapFutureByCodes(areaApi, null, areaSet);
+        Map<String, Area> areaMap = future.get();
+//        CompletableFuture<Map<Long, Area>> future = DyCompletableFuture.areaMapFuture(areaApi, null, areaSet);
+//        Map<Long, Area> areaMap = future.get();
 
         //根据id获取对应的区域Area对象
-        String provinceName = areaMap.get(provinceId).getName();
-        String cityName = areaMap.get(cityId).getName();
-        String countyName = areaMap.get(countyId).getName();
+        String provinceName = areaMap.get(provinceId.toString()).getName();
+        String cityName = areaMap.get(cityId.toString()).getName();
+        String countyName = areaMap.get(countyId.toString()).getName();
 
         stringBuffer.append(provinceName).append(cityName).append(countyName).append(order.getReceiverAddress());
 

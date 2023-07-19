@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "dy-work-server",path = "/transport-task")
 public interface TransportTaskFeign {
     @PostMapping("")
-    public R save(@RequestBody TaskTransportDTO dto);
+    public R<TaskTransportDTO> save(@RequestBody TaskTransportDTO dto);
 
     @PutMapping("/{id}")
     public R updateById(@PathVariable(name = "id") String id, @RequestBody TaskTransportDTO dto);

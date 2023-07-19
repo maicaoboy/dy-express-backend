@@ -106,9 +106,15 @@ public class DyCompletableFuture {
         });
     }
 
-    public static final java.util.concurrent.CompletableFuture<Map<Long, Area>> areaMapFuture(AreaApi api, Long parentId, Set<Long> areaSet) {
+    public static final java.util.concurrent.CompletableFuture<Map<Long, Area>>     areaMapFuture(AreaApi api, Long parentId, Set<Long> areaSet) {
         R<List<Area>> result = api.findAll(parentId, new ArrayList<>(areaSet));
         return java.util.concurrent.CompletableFuture.supplyAsync(() ->
                 result.getData().stream().collect(Collectors.toMap(Area::getId, vo -> vo)));
+    }
+
+    public static final java.util.concurrent.CompletableFuture<Map<String, Area>> areaMapFutureByCodes(AreaApi api, Long parentId, Set<Long> areaSet) {
+        R<List<Area>> result = api.findAllByCodes(parentId, new ArrayList<>(areaSet));
+        return java.util.concurrent.CompletableFuture.supplyAsync(() ->
+                result.getData().stream().collect(Collectors.toMap(Area::getAreaCode, vo -> vo)));
     }
 }

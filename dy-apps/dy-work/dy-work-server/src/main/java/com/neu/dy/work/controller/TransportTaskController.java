@@ -41,7 +41,7 @@ public class TransportTaskController {
      * @return 运输任务信息
      */
     @PostMapping("")
-    public R save(@RequestBody TaskTransportDTO dto) {
+    public R<TaskTransportDTO> save(@RequestBody TaskTransportDTO dto) {
         TaskTransport transportOrder = new TaskTransport();
         BeanUtils.copyProperties(dto, transportOrder);
         taskTransportService.saveTaskTransport(transportOrder);

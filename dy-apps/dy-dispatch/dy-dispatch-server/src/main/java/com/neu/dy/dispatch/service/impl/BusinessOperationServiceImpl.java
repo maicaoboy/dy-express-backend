@@ -100,7 +100,7 @@ public class BusinessOperationServiceImpl implements BusinessOperationService {
             taskTranSportDto.setAssignedStatus(TransportTaskAssignedStatus.TO_BE_DISTRIBUTED.getCode());
             taskTranSportDto.setLoadingStatus(TransportTaskLoadingStatus.HALF.getCode());
             taskTranSportDto.setTransportOrderIds(transportOrderIds);
-            taskTranSportDto = (TaskTransportDTO) transportTaskFeign.save(taskTranSportDto).getData();
+            taskTranSportDto = transportTaskFeign.save(taskTranSportDto).getData();
 
             log.info("创建运输任务:{}", taskTranSportDto);
 

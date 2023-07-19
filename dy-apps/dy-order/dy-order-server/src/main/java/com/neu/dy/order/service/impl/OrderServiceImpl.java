@@ -259,9 +259,9 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     public String caculateAgencyId(Order order){
         StringBuffer stringBuffer = new StringBuffer(); //线程安全
 
-        Long provinceId = Long.valueOf(order.getReceiverProvinceId());
-        Long cityId = Long.valueOf(order.getReceiverCityId());
-        Long countyId = Long.valueOf(order.getReceiverCountyId());
+        Long provinceId = Long.valueOf(order.getSenderProvinceId());
+        Long cityId = Long.valueOf(order.getSenderCityId());
+        Long countyId = Long.valueOf(order.getSenderCountyId());
 
         Set<Long> areaSet = new HashSet<>();
         areaSet.add(provinceId);
@@ -290,7 +290,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //遍历机构范围集合
         for (AgencyScopeDto agencyScopeDto : agencyScopes){
             System.out.println("stepinto");
-            List<List<Map>> mutiPoints = parseData(agencyScopeDto.getMutiPoints());
+            List<List<Map>> mutiPoints = agencyScopeDto.getMutiPoints();
             //遍历某个机构下的保存的业务访问坐标值
             for(List<Map> maps : mutiPoints){
                 String[] originArray = location.split(",");
