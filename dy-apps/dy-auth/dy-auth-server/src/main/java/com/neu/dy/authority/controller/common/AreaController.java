@@ -42,8 +42,9 @@ public class AreaController {
     R<Area> getByCode(@PathVariable String code){
         LambdaQueryWrapper<Area> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(code!=null,Area::getAreaCode,code);
-        Area area = areaService.getOne(queryWrapper);
-        return R.success(area);
+        List<Area> list = areaService.list(queryWrapper);
+        if(list.size()>0)  return R.success(list.get(0));
+        else return R.success(null);
     }
 
     @GetMapping

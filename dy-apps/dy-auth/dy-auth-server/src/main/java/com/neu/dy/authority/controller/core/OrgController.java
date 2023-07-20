@@ -136,5 +136,10 @@ public class OrgController extends BaseController {
         return R.success(list);
     }
 
+    @GetMapping("/list")
+    R<List<Org>> list(){
+        List<Org> list = orgService.list();
+        return R.success(list);
+    }
 
 }

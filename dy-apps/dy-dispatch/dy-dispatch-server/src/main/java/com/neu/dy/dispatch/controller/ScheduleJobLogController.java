@@ -93,7 +93,6 @@ public class ScheduleJobLogController {
             BeanUtils.copyProperties(item, scheduleJobLogDTO);
             return scheduleJobLogDTO;
         }).collect(Collectors.toList());
-
         return PageResponse.<ScheduleJobLogDTO>builder()
                 .page(Integer.valueOf(String.valueOf(page.getCurrent())))
                 .pagesize(Integer.valueOf(String.valueOf(page.getSize())))
