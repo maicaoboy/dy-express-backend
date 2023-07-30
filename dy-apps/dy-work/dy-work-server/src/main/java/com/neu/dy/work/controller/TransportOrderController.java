@@ -37,11 +37,11 @@ public class TransportOrderController {
      * @return 运单信息
      */
     @PostMapping("")
-    public R save(@RequestBody TransportOrderDTO dto) {
+    public TransportOrderDTO save(@RequestBody TransportOrderDTO dto) {
         TransportOrder transportOrder = new TransportOrder();
         BeanUtils.copyProperties(dto, transportOrder);
         transportOrderService.saveTransportOrder(transportOrder);
-        return R.success(transportOrder);
+        return dto;
     }
 
     /**

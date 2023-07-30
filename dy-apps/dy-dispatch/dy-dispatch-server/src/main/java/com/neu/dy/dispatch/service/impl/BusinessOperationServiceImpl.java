@@ -21,6 +21,8 @@ import com.neu.dy.work.dto.DriverJobDTO;
 import com.neu.dy.work.dto.TaskTransportDTO;
 import com.neu.dy.work.dto.TransportOrderDTO;
 import com.neu.dy.work.enums.driverjob.DriverJobStatus;
+import com.neu.dy.work.enums.transportorder.TransportOrderSchedulingStatus;
+import com.neu.dy.work.enums.transportorder.TransportOrderStatus;
 import com.neu.dy.work.enums.transporttask.TransportTaskAssignedStatus;
 import com.neu.dy.work.enums.transporttask.TransportTaskLoadingStatus;
 import com.neu.dy.work.enums.transporttask.TransportTaskStatus;
@@ -71,13 +73,13 @@ public class BusinessOperationServiceImpl implements BusinessOperationService {
                 if (orderClassify.isNew()) {
                     // 新订单  更新运单信息
                     orderClassify.getOrders().forEach(item -> {
-//                        // 此处无需创建，由快递员交件时创建运单
-//                        TransportOrderDTO transportOrderDto = new TransportOrderDTO();
-//                        transportOrderDto.setStatus(TransportOrderStatus.CREATED.getCode());
-//                        transportOrderDto.setSchedulingStatus(TransportOrderSchedulingStatus.TO_BE_SCHEDULED.getCode());
-//                        transportOrderDto.setOrderId(item.getId());
-//                        transportOrderDto = transportOrderFeign.save(transportOrderDto);
-//                        transportOrderIds.add(transportOrderDto.getId());
+                        // 此处无需创建，由快递员交件时创建运单
+                        TransportOrderDTO transportOrderDto = new TransportOrderDTO();
+                        transportOrderDto.setStatus(TransportOrderStatus.CREATED.getCode());
+                        transportOrderDto.setSchedulingStatus(TransportOrderSchedulingStatus.TO_BE_SCHEDULED.getCode());
+                        transportOrderDto.setOrderId(item.getId());
+                        transportOrderDto = transportOrderFeign.save(transportOrderDto);
+                        transportOrderIds.add(transportOrderDto.getId());
 
                         // 更新订单状态为待装车
                         OrderDTO orderDto = new OrderDTO();

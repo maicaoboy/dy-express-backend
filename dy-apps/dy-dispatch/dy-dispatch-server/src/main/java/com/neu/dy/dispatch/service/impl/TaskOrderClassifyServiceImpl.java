@@ -212,14 +212,14 @@ public class TaskOrderClassifyServiceImpl implements TaskOrderClassifyService {
             exceptionHappend("收获地址区域id和根据坐标计算出的区域不一致");
         }
         //查询当前区县下的所有网点
-        R r = agencyScopeFeign.findAllAgencyScope(area.getId() + "", null, null, null);
-        List<AgencyScopeDto> agencyScopes = (List<AgencyScopeDto>) r.getData();
+        R<List<AgencyScopeDto>> r = agencyScopeFeign.findAllAgencyScope(area.getId() + "", null, null, null);
+        List<AgencyScopeDto> agencyScopes = r.getData();
         if(agencyScopes == null || agencyScopes.size() == 0){
             exceptionHappend("根据区域无法从机构范围获取网点信息列表");
         }
         //计算当前区域下所有网点距离发件人最近的网点
-        R caculate = caculate(agencyScopes, location);
-        return (String) caculate.getData();
+        R<String> caculate = caculate(agencyScopes, location);
+        return caculate.getData();
     }
 
     /**

@@ -26,7 +26,6 @@ public class DispatchCommandLineRunner implements CommandLineRunner {
         log.info("开始进行定时任务初始化...");
         //查询定时任务表schedule_job中所有的数据
         List<ScheduleJobEntity> list = scheduleJobMapper.selectList(null);
-
         for(ScheduleJobEntity scheduleJobEntity : list){
             //获得触发器对象
             CronTrigger cronTrigger = ScheduleUtils.getCronTrigger(scheduler,scheduleJobEntity.getId());
