@@ -41,7 +41,7 @@ public class PickupDispatchTaskController {
      * @return 取派件任务信息
      */
     @PostMapping("")
-    public R save(@RequestBody TaskPickupDispatchDTO dto) {
+    public R<TaskPickupDispatchDTO> save(@RequestBody TaskPickupDispatchDTO dto) {
         TaskPickupDispatch dispatch = new TaskPickupDispatch();
         BeanUtils.copyProperties(dto, dispatch);
         log.info("新增取派件任务:{}    {}", dto, dispatch);
@@ -85,6 +85,7 @@ public class PickupDispatchTaskController {
             dto.setPageSize(10);
         }
         TaskPickupDispatch queryTask = new TaskPickupDispatch();
+
         BeanUtils.copyProperties(dto, queryTask);
         IPage<TaskPickupDispatch> orderIPage = taskPickupDispatchService.findByPage(dto.getPage(), dto.getPageSize(), queryTask);
         return R.success(orderIPage);

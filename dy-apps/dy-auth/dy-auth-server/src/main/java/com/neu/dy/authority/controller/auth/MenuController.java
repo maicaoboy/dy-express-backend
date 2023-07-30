@@ -183,12 +183,15 @@ public class MenuController extends BaseController {
         if (userId == null || userId <= 0) {
             userId = getUserId();
         }
+        //从Token获取用户ID
         if(userId == 0){
             String userToken = request.getHeader("token");
             JwtUserInfo userInfo = jwtTokenServerUtils.getUserInfo(userToken);
             userId = userInfo.getUserId();
         }
+        //获取用户菜单
         List<Menu> list = menuService.findVisibleMenu(group, userId);
+        //使用dozer转换Menu对象为VueRouter
         List<VueRouter> treeList = dozer.mapList(list, VueRouter.class);
         return success(TreeUtil.build(treeList));
     }
